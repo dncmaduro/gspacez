@@ -49,7 +49,7 @@ export const SignInForm = () => {
           <FocusTrap active>
             <Stack align="center" gap={16}>
               <TextInput
-                w={350}
+                w={400}
                 {...register('email', {
                   required: { value: true, message: 'Email is required' }
                 })}
@@ -61,7 +61,7 @@ export const SignInForm = () => {
                 withAsterisk
               />
               <TextInput
-                w={350}
+                w={400}
                 {...register('password', {
                   required: { value: true, message: 'Password is required' }
                 })}
