@@ -1,9 +1,10 @@
+import { Button } from '@mantine/core'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  component: RouteComponent,
+  component: RouteComponent
 })
 
 function RouteComponent() {
-  return <div className='text-red-500'>Hello "/"!</div>
+  return <Button>Hello "/"!</Button>
 }
