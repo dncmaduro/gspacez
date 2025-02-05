@@ -9,7 +9,7 @@ import { createTheme, MantineProvider } from '@mantine/core'
 const router = createRouter({ routeTree })
 
 const theme = createTheme({
-  primaryColor: 'cyan',
+  primaryColor: 'violet',
   luminanceThreshold: 0.5
 })
 
