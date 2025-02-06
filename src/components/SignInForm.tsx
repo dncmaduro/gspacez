@@ -10,6 +10,9 @@ import {
 import { useForm } from 'react-hook-form'
 import { GIcon } from './common/GIcon'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useAuth } from '../hooks/useAuth'
+import { GToast } from './common/GToast'
 
 type SignInType = {
   email: string
@@ -18,6 +21,7 @@ type SignInType = {
 
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const { signIn } = useAuth()
 
   const formMethods = useForm({
     defaultValues: {
@@ -32,8 +36,22 @@ export const SignInForm = () => {
     handleSubmit
   } = formMethods
 
+  const { mutate: mutateSignIn, isPending: isSignInLoading } = useMutation({
+    mutationFn: signIn,
+    onSuccess: () => {
+      GToast.success({
+        title: 'Sign in successfully'
+      })
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Failed to signin'
+      })
+    }
+  })
+
   const onSubmit = (values: SignInType) => {
-    console.log(values)
+    mutateSignIn(values)
   }
 
   return (
@@ -59,6 +77,7 @@ export const SignInForm = () => {
                 label="Email"
                 size="md"
                 withAsterisk
+                disabled={isSignInLoading}
               />
               <TextInput
                 w={400}
@@ -72,6 +91,7 @@ export const SignInForm = () => {
                 withAsterisk
                 leftSection={<GIcon name="Lock" size="18" />}
                 type={showPassword ? 'text' : 'password'}
+                disabled={isSignInLoading}
                 rightSection={
                   <ActionIcon
                     variant="subtle"
@@ -83,7 +103,7 @@ export const SignInForm = () => {
               />
             </Stack>
           </FocusTrap>
-          <Button type="submit" disabled={!isDirty}>
+          <Button type="submit" disabled={!isDirty} loading={isSignInLoading}>
             Sign in
           </Button>
         </Stack>
