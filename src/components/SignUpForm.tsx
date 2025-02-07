@@ -11,6 +11,9 @@ import {
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { GIcon } from './common/GIcon'
+import { useMutation } from '@tanstack/react-query'
+import { useAuth } from '../hooks/useAuth'
+import { GToast } from './common/GToast'
 
 type SignUpType = {
   email: string
@@ -22,6 +25,7 @@ type SignUpType = {
 
 export const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const { signUp } = useAuth()
 
   const formMethods = useForm({
     defaultValues: {
@@ -36,11 +40,38 @@ export const SignUpForm = () => {
   const {
     register,
     formState: { isDirty, errors },
-    handleSubmit
+    handleSubmit,
+    setError
   } = formMethods
 
+  const { mutate: mutateSignUp, isPending: isSignUpLoading } = useMutation({
+    mutationFn: signUp,
+    onSuccess: () => {
+      GToast.success({
+        title: 'Sign up successfully'
+      })
+    },
+    onError: (response) => {
+      GToast.error({
+        title: 'Failed to sign up',
+        subtitle: response.message
+      })
+    }
+  })
+
   const onSubmit = (values: SignUpType) => {
-    console.log(values)
+    if (values.confirmation !== values.password) {
+      setError('confirmation', {
+        message: 'Password confirmation is not match'
+      })
+    } else {
+      mutateSignUp({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName
+      })
+    }
   }
 
   return (
@@ -70,6 +101,7 @@ export const SignUpForm = () => {
                 label="Email"
                 size="md"
                 withAsterisk
+                disabled={isSignUpLoading}
               />
               <Group w={400} justify="space-between">
                 <TextInput
@@ -82,6 +114,7 @@ export const SignUpForm = () => {
                   label="First name"
                   size="md"
                   withAsterisk
+                  disabled={isSignUpLoading}
                 />
                 <TextInput
                   w={190}
@@ -93,6 +126,7 @@ export const SignUpForm = () => {
                   label="Last name"
                   size="md"
                   withAsterisk
+                  disabled={isSignUpLoading}
                 />
               </Group>
               <TextInput
@@ -121,6 +155,7 @@ export const SignUpForm = () => {
                     <GIcon name={showPassword ? 'EyeOff' : 'Eye'} />
                   </ActionIcon>
                 }
+                disabled={isSignUpLoading}
               />
               <TextInput
                 w={400}
@@ -142,10 +177,11 @@ export const SignUpForm = () => {
                     <GIcon name={showPassword ? 'EyeOff' : 'Eye'} />
                   </ActionIcon>
                 }
+                disabled={isSignUpLoading}
               />
             </Stack>
           </FocusTrap>
-          <Button type="submit" disabled={!isDirty}>
+          <Button type="submit" disabled={!isDirty} loading={isSignUpLoading}>
             Sign up
           </Button>
         </Stack>

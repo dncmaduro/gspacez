@@ -1,5 +1,10 @@
 import { callApi } from '../utils/axios'
-import { SignInRequest, SignInResponse } from './models'
+import {
+  SignInRequest,
+  SignInResponse,
+  SignUpRequest,
+  SignUpResponse
+} from './models'
 
 export const useAuth = () => {
   const signIn = async (req: SignInRequest) => {
@@ -10,5 +15,13 @@ export const useAuth = () => {
     })
   }
 
-  return { signIn }
+  const signUp = async (req: SignUpRequest) => {
+    return callApi<SignUpRequest, SignUpResponse>({
+      data: req,
+      path: '/v1/identity/users/register',
+      method: 'POST'
+    })
+  }
+
+  return { signIn, signUp }
 }
