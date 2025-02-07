@@ -45,7 +45,7 @@ export const SignInForm = () => {
     },
     onError: () => {
       GToast.error({
-        title: 'Failed to signin'
+        title: 'Failed to sign in'
       })
     }
   })
