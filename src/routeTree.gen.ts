@@ -15,30 +15,31 @@ import { Route as PostImport } from './routes/post'
 import { Route as IndexImport } from './routes/index'
 import { Route as PostIndexImport } from './routes/post/index'
 import { Route as AppIndexImport } from './routes/app/index'
+
 // Create/Update Routes
 
 const PostRoute = PostImport.update({
   id: '/post',
   path: '/post',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostIndexRoute = PostIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => PostRoute
+  getParentRoute: () => PostRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -83,7 +84,7 @@ interface PostRouteChildren {
 }
 
 const PostRouteChildren: PostRouteChildren = {
-  PostIndexRoute: PostIndexRoute
+  PostIndexRoute: PostIndexRoute,
 }
 
 const PostRouteWithChildren = PostRoute._addFileChildren(PostRouteChildren)
@@ -127,7 +128,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PostRoute: PostRouteWithChildren,
-  AppIndexRoute: AppIndexRoute
+  AppIndexRoute: AppIndexRoute,
 }
 
 export const routeTree = rootRoute
