@@ -1,4 +1,8 @@
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import {
+  RouterProvider,
+  createBrowserHistory,
+  createRouter
+} from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { Notifications } from '@mantine/notifications'
 
@@ -9,7 +13,7 @@ import '@mantine/notifications/styles.css'
 import { createTheme, MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, history: createBrowserHistory() })
 
 const theme = createTheme({
   primaryColor: 'indigo',
