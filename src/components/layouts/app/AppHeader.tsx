@@ -14,7 +14,7 @@ import { GIcon } from '../../common/GIcon'
 
 export const AppHeader = () => {
   return (
-    <Box w="100%" h={56} className="shadow-sm">
+    <Box w="100%" h="100%" className="shadow-sm">
       <Flex align="center" px={16} h="100%" justify="space-between">
         <Group gap={16}>
           <Link to="/app">
@@ -25,16 +25,11 @@ export const AppHeader = () => {
           leftSection={<GIcon name="ZoomCode" size={20} />}
           w={400}
           radius="xl"
-          size="md"
           placeholder="Search in GspaceZ"
         />
         <Group gap={16}>
-          <Button
-            size="md"
-            radius="xl"
-            leftSection={<GIcon name="Sparkles" size={18} />}
-          >
-            Create your new post
+          <Button radius="xl" leftSection={<GIcon name="Sparkles" size={18} />}>
+            Create my new post
           </Button>
           <Menu>
             <Menu.Target>
