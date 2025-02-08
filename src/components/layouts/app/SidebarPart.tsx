@@ -15,11 +15,11 @@ export const SidebarPart = ({
   icon,
   opened: sidebarOpened
 }: Props) => {
+  const [opened, { toggle }] = useDisclosure(true)
+
   if (!title) {
     return children
   }
-
-  const [opened, { toggle }] = useDisclosure(true)
 
   return (
     <Stack gap={8}>
