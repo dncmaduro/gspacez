@@ -4,7 +4,9 @@ export type SignInRequest = {
 }
 
 export type SignInResponse = {
-  message: string
+  message?: string
+  token: string
+  refreshToken: string
 }
 
 export type SignUpRequest = {
@@ -16,4 +18,26 @@ export type SignUpRequest = {
 
 export type SignUpResponse = {
   message: string
+}
+
+export type IntrospectRequest = {
+  token: string
+}
+
+export type IntrospectResponse = {
+  message?: string
+  result: {
+    valid: boolean
+  }
+}
+
+export type RefreshTokenRequest = {
+  accessTokenExpired: string
+  refreshToken: string
+}
+
+export type RefreshTokenResponse = {
+  message?: string
+  token: string
+  refreshToken: string
 }

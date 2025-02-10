@@ -13,6 +13,8 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
 import { GToast } from './common/GToast'
+import { useAppDispatch } from '../store/store'
+import { setAuth } from '../store/authSlice'
 
 type SignInType = {
   email: string
@@ -22,6 +24,7 @@ type SignInType = {
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { signIn } = useAuth()
+  const dispatch = useAppDispatch()
 
   const formMethods = useForm({
     defaultValues: {
@@ -38,10 +41,11 @@ export const SignInForm = () => {
 
   const { mutate: mutateSignIn, isPending: isSignInLoading } = useMutation({
     mutationFn: signIn,
-    onSuccess: () => {
+    onSuccess: (response) => {
       GToast.success({
         title: 'Sign in successfully'
       })
+      dispatch(setAuth({ token: response.data.token }))
     },
     onError: () => {
       GToast.error({

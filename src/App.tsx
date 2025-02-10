@@ -12,6 +12,8 @@ import '@mantine/notifications/styles.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 
 const router = createRouter({ routeTree, history: createBrowserHistory() })
 
@@ -26,8 +28,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
-        <Notifications />
-        <RouterProvider router={router} />
+        <Provider store={store}>
+          <Notifications />
+          <RouterProvider router={router} />
+        </Provider>
       </MantineProvider>
     </QueryClientProvider>
   )
