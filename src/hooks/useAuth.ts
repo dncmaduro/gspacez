@@ -1,5 +1,9 @@
 import { callApi } from '../utils/axios'
 import {
+  IntrospectRequest,
+  IntrospectResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
@@ -23,5 +27,21 @@ export const useAuth = () => {
     })
   }
 
-  return { signIn, signUp }
+  const introspect = async (req: IntrospectRequest) => {
+    return callApi<IntrospectRequest, IntrospectResponse>({
+      data: req,
+      path: '/v1/identity/auth/introspect',
+      method: 'POST'
+    })
+  }
+
+  const refresh = async (req: RefreshTokenRequest) => {
+    return callApi<RefreshTokenRequest, RefreshTokenResponse>({
+      data: req,
+      path: '/v1/identity/auth/refresh',
+      method: 'POST'
+    })
+  }
+
+  return { signIn, signUp, introspect, refresh }
 }
