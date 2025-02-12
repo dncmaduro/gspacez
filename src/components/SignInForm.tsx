@@ -15,6 +15,7 @@ import { useAuth } from '../hooks/useAuth'
 import { GToast } from './common/GToast'
 import { useAppDispatch } from '../store/store'
 import { setAuth } from '../store/authSlice'
+import { GoogleSignIn } from './GoogleSignIn'
 
 type SignInType = {
   email: string
@@ -63,7 +64,7 @@ export const SignInForm = () => {
       px={32}
       pb={32}
       pt={24}
-      className="rounded-xl border border-violet-400 shadow-md"
+      className="rounded-xl border border-indigo-400 shadow-md"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={24} align="center">
@@ -110,6 +111,7 @@ export const SignInForm = () => {
           <Button type="submit" disabled={!isDirty} loading={isSignInLoading}>
             Sign in
           </Button>
+          <GoogleSignIn />
         </Stack>
       </form>
     </Box>
