@@ -2,6 +2,7 @@ import { callApi } from '../utils/axios'
 import {
   IntrospectRequest,
   IntrospectResponse,
+  LoginByGoogleResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
   SignInRequest,
@@ -43,5 +44,12 @@ export const useAuth = () => {
     })
   }
 
-  return { signIn, signUp, introspect, refresh }
+  const loginWithGoogle = async (code: string) => {
+    return callApi<never, LoginByGoogleResponse>({
+      path: `/v1/identity/auth/oauth2?code=${code}`,
+      method: 'POST'
+    })
+  }
+
+  return { signIn, signUp, introspect, refresh, loginWithGoogle }
 }

@@ -79,7 +79,7 @@ export const SignUpForm = () => {
       px={32}
       pb={32}
       pt={24}
-      className="rounded-xl border border-violet-400 shadow-md"
+      className="rounded-xl border border-indigo-400 shadow-md"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={24} align="center">

@@ -41,3 +41,9 @@ export type RefreshTokenResponse = {
   token: string
   refreshToken: string
 }
+
+export type LoginByGoogleResponse = {
+  message?: string
+  token: string
+  refreshToken: string
+}
