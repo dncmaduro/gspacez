@@ -16,6 +16,7 @@ import { GToast } from './common/GToast'
 import { useAppDispatch } from '../store/store'
 import { setAuth } from '../store/authSlice'
 import { GoogleSignIn } from './GoogleSignIn'
+import { useNavigate } from '@tanstack/react-router'
 
 type SignInType = {
   email: string
@@ -26,6 +27,7 @@ export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { signIn } = useAuth()
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const formMethods = useForm({
     defaultValues: {
@@ -46,7 +48,13 @@ export const SignInForm = () => {
       GToast.success({
         title: 'Sign in successfully'
       })
-      dispatch(setAuth({ token: response.data.token }))
+      dispatch(
+        setAuth({
+          token: response.data.result.token,
+          refreshToken: response.data.result.refreshToken
+        })
+      )
+      navigate({ to: '/app' })
     },
     onError: () => {
       GToast.error({

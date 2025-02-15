@@ -1,3 +1,5 @@
+import { IPost } from './interface'
+
 export type SignInRequest = {
   email: string
   password: string
@@ -5,8 +7,10 @@ export type SignInRequest = {
 
 export type SignInResponse = {
   message?: string
-  token: string
-  refreshToken: string
+  result: {
+    token: string
+    refreshToken: string
+  }
 }
 
 export type SignUpRequest = {
@@ -46,4 +50,14 @@ export type LoginByGoogleResponse = {
   message?: string
   token: string
   refreshToken: string
+}
+
+export type GetNewsfeedRequest = {
+  pageNum: number
+  pageSize: number
+}
+
+export type GetNewsfeedResponse = {
+  message?: string
+  result: IPost[]
 }

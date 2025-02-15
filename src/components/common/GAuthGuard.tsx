@@ -20,7 +20,7 @@ export const GAuthGuard = ({ children }: ChildProps) => {
   const hasMounted = useRef(false)
 
   const { data } = useQuery({
-    queryKey: ['introspect'],
+    queryKey: ['introspect', token],
     queryFn: () => introspect({ token }),
     refetchIntervalInBackground: true,
     refetchInterval: 60000,
@@ -43,11 +43,16 @@ export const GAuthGuard = ({ children }: ChildProps) => {
   })
 
   useEffect(() => {
-    if (!data?.data.result.valid && hasMounted.current) {
+    if (data && !data?.data.result.valid && hasMounted.current && !!token) {
+      console.log(data, hasMounted.current, token)
       mutateRefresh({
         accessTokenExpired: token,
         refreshToken
       })
+    }
+
+    if (!token && hasMounted.current) {
+      navigate({ to: '/' })
     }
   }, [data?.data.result.valid])
 
