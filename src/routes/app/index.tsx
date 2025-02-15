@@ -83,7 +83,7 @@ function RouteComponent() {
                 <GPost post={post} />
               </Grid.Col>
             ))}
-            {[0, 1, 2, 3].map((index) => (
+            {['a', 'b', 'c', 'd'].map((index) => (
               <Grid.Col
                 ref={loaderRef}
                 span={{ base: 12, md: 6, lg: 4, xl: 3 }}
