@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-interface AuthState {
-  token: string
-}
-
-const initialState: AuthState = {
+const initialState = {
   token: ''
 }
 
