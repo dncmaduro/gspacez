@@ -61,3 +61,12 @@ export type GetNewsfeedResponse = {
   message?: string
   result: IPost[]
 }
+
+export type GetPostRequest = {
+  id: string
+}
+
+export type GetPostResponse = {
+  message?: string
+  result: IPost
+}

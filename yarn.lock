@@ -741,10 +741,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mantine/carousel@^7.16.2":
-  version "7.16.2"
-  resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-7.16.2.tgz#7a1f738a65414e26c8ff9920af889945d3fe8456"
-  integrity sha512-wXb5X3RYQ7HTRKFzXcoR5uK0lE0fheUZshKxuRqwvgfCvtAetQ9wFyHRERMrQ2lycOH11XrIWa3cfcZ595GoaA==
+"@mantine/carousel@^7.16.3":
+  version "7.16.3"
+  resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-7.16.3.tgz#b388f71ec0bf56aaf17df16661bbdabd3af2aac1"
+  integrity sha512-VbM9c21Ah2lLaGWdzOvpxYCmjHrDgIQaKPtzOWlE4j6/wD/GAs9eeEihPwpwuYthBh0NwbRanUj3DeWHMYS9SA==
 
 "@mantine/core@^7.16.2":
   version "7.16.2"

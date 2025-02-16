@@ -5,10 +5,12 @@ import {
 } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { Notifications } from '@mantine/notifications'
+import { ModalsProvider } from '@mantine/modals'
 
 import './App.css'
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
+import '@mantine/carousel/styles.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -29,8 +31,10 @@ function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <MantineProvider theme={theme}>
-          <Notifications />
-          <RouterProvider router={router} />
+          <ModalsProvider>
+            <Notifications />
+            <RouterProvider router={router} />
+          </ModalsProvider>
         </MantineProvider>
       </QueryClientProvider>
     </Provider>

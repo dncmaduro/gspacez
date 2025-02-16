@@ -1,5 +1,10 @@
 import { callApi } from '../utils/axios'
-import { GetNewsfeedRequest, GetNewsfeedResponse } from './models'
+import {
+  GetNewsfeedRequest,
+  GetNewsfeedResponse,
+  GetPostRequest,
+  GetPostResponse
+} from './models'
 
 export const usePost = () => {
   const getNewsfeed = async (req: GetNewsfeedRequest, token: string) => {
@@ -10,5 +15,13 @@ export const usePost = () => {
     })
   }
 
-  return { getNewsfeed }
+  const getPost = async (req: GetPostRequest, token: string) => {
+    return callApi<GetPostRequest, GetPostResponse>({
+      method: 'GET',
+      path: `/v1/post-service/posts/${req.id}`,
+      token
+    })
+  }
+
+  return { getNewsfeed, getPost }
 }
