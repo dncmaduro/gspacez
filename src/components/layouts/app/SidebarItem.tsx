@@ -9,7 +9,6 @@ interface Props extends NavLinkProps {
 
 export const SidebarItem = ({ icon, label, href }: Props) => {
   const location = useLocation()
-  console.log(location.pathname === href, href)
 
   return (
     <Link to={href} className="w-full">

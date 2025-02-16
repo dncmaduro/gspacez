@@ -11,19 +11,12 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PostImport } from './routes/post'
 import { Route as IndexImport } from './routes/index'
-import { Route as PostIndexImport } from './routes/post/index'
 import { Route as AppIndexImport } from './routes/app/index'
+import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
 
 // Create/Update Routes
-
-const PostRoute = PostImport.update({
-  id: '/post',
-  path: '/post',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -31,15 +24,15 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PostIndexRoute = PostIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PostRoute,
-} as any)
-
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostPostIdRoute = PostPostIdImport.update({
+  id: '/post/$postId',
+  path: '/post/$postId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,18 +53,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/post': {
-      id: '/post'
-      path: '/post'
-      fullPath: '/post'
-      preLoaderRoute: typeof PostImport
-      parentRoute: typeof rootRoute
-    }
     '/integration/callback': {
       id: '/integration/callback'
       path: '/integration/callback'
       fullPath: '/integration/callback'
       preLoaderRoute: typeof IntegrationCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/post/$postId': {
+      id: '/post/$postId'
+      path: '/post/$postId'
+      fullPath: '/post/$postId'
+      preLoaderRoute: typeof PostPostIdImport
       parentRoute: typeof rootRoute
     }
     '/app/': {
@@ -81,72 +74,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexImport
       parentRoute: typeof rootRoute
     }
-    '/post/': {
-      id: '/post/'
-      path: '/'
-      fullPath: '/post/'
-      preLoaderRoute: typeof PostIndexImport
-      parentRoute: typeof PostImport
-    }
   }
 }
 
 // Create and export the route tree
 
-interface PostRouteChildren {
-  PostIndexRoute: typeof PostIndexRoute
-}
-
-const PostRouteChildren: PostRouteChildren = {
-  PostIndexRoute: PostIndexRoute,
-}
-
-const PostRouteWithChildren = PostRoute._addFileChildren(PostRouteChildren)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/post': typeof PostRouteWithChildren
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/post/$postId': typeof PostPostIdRoute
   '/app': typeof AppIndexRoute
-  '/post/': typeof PostIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/post/$postId': typeof PostPostIdRoute
   '/app': typeof AppIndexRoute
-  '/post': typeof PostIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/post': typeof PostRouteWithChildren
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/post/$postId': typeof PostPostIdRoute
   '/app/': typeof AppIndexRoute
-  '/post/': typeof PostIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/post' | '/integration/callback' | '/app' | '/post/'
+  fullPaths: '/' | '/integration/callback' | '/post/$postId' | '/app'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/integration/callback' | '/app' | '/post'
-  id: '__root__' | '/' | '/post' | '/integration/callback' | '/app/' | '/post/'
+  to: '/' | '/integration/callback' | '/post/$postId' | '/app'
+  id: '__root__' | '/' | '/integration/callback' | '/post/$postId' | '/app/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PostRoute: typeof PostRouteWithChildren
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
+  PostPostIdRoute: typeof PostPostIdRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PostRoute: PostRouteWithChildren,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
+  PostPostIdRoute: PostPostIdRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -161,29 +135,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/post",
         "/integration/callback",
+        "/post/$postId",
         "/app/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/post": {
-      "filePath": "post.tsx",
-      "children": [
-        "/post/"
-      ]
-    },
     "/integration/callback": {
       "filePath": "integration/callback.tsx"
     },
+    "/post/$postId": {
+      "filePath": "post/$postId.tsx"
+    },
     "/app/": {
       "filePath": "app/index.tsx"
-    },
-    "/post/": {
-      "filePath": "post/index.tsx",
-      "parent": "/post"
     }
   }
 }
