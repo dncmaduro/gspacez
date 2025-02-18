@@ -70,3 +70,14 @@ export type GetPostResponse = {
   message?: string
   result: IPost
 }
+
+export type CreatePostRequest = {
+  title: string
+  text: string
+  hashTags?: string[]
+}
+
+export type CreatePostReponse = {
+  message?: string
+  result: IPost
+}

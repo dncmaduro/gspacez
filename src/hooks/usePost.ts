@@ -1,5 +1,7 @@
 import { callApi } from '../utils/axios'
 import {
+  CreatePostReponse,
+  CreatePostRequest,
   GetNewsfeedRequest,
   GetNewsfeedResponse,
   GetPostRequest,
@@ -23,5 +25,14 @@ export const usePost = () => {
     })
   }
 
-  return { getNewsfeed, getPost }
+  const createPost = async (req: CreatePostRequest, token: string) => {
+    return callApi<CreatePostRequest, CreatePostReponse>({
+      method: 'POST',
+      path: `/v1/post-service/posts/create`,
+      data: req,
+      token
+    })
+  }
+
+  return { getNewsfeed, getPost, createPost }
 }
