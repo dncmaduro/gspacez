@@ -5,10 +5,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { Avatar, Box, Flex, Loader, Text } from '@mantine/core'
-import { GPostParagraph } from '../../components/common/GPostParagraph'
-import { GPostCarousel } from '../../components/common/GPostCarousel'
-import { useMemo } from 'react'
-import { GMediaProps } from '../../components/common/GMedia'
+import ReactMarkdown from 'react-markdown'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent
@@ -29,19 +26,6 @@ function RouteComponent() {
 
   const postData = data?.data.result
 
-  const medias = useMemo(() => {
-    return [
-      ...((postData?.content.imageUrls || []).map((image) => ({
-        src: image,
-        type: 'image'
-      })) as GMediaProps[]),
-      ...((postData?.content.videoUrls || []).map((video) => ({
-        src: video,
-        type: 'video'
-      })) as GMediaProps[])
-    ]
-  }, [postData])
-
   return (
     <AppLayout>
       <Box
@@ -56,17 +40,16 @@ function RouteComponent() {
         ) : (
           <>
             <Flex align="center" gap={8}>
-              <Avatar src={postData?.avatarUrl} />
-              <Text>{postData?.profileName || 'Name Name'}</Text>
+              <Avatar src={postData?.avatarUrl} size="sm" />
+              <Text className="!text-sm">
+                {postData?.profileName || 'Name Name'}
+              </Text>
             </Flex>
             <Text className="!text-2xl !font-bold" mt={16}>
               {postData?.title || 'Title'}
             </Text>
             <Box mt={24}>
-              <GPostParagraph content={postData?.content.text || ''} />
-            </Box>
-            <Box mt={24}>
-              <GPostCarousel medias={medias} />
+              <ReactMarkdown>{postData?.content.text || ''}</ReactMarkdown>
             </Box>
           </>
         )}
