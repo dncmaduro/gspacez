@@ -28,7 +28,12 @@ export const AppHeader = () => {
           placeholder="Search in GspaceZ"
         />
         <Group gap={16}>
-          <Button radius="xl" leftSection={<GIcon name="Sparkles" size={18} />}>
+          <Button
+            component={Link}
+            to="/post/new"
+            radius="xl"
+            leftSection={<GIcon name="Sparkles" size={18} />}
+          >
             Create my new post
           </Button>
           <Menu>

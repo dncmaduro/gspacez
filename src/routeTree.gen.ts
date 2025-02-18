@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
+import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
 
@@ -27,6 +28,12 @@ const IndexRoute = IndexImport.update({
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostNewRoute = PostNewImport.update({
+  id: '/post/new',
+  path: '/post/new',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostPostIdImport
       parentRoute: typeof rootRoute
     }
+    '/post/new': {
+      id: '/post/new'
+      path: '/post/new'
+      fullPath: '/post/new'
+      preLoaderRoute: typeof PostNewImport
+      parentRoute: typeof rootRoute
+    }
     '/app/': {
       id: '/app/'
       path: '/app'
@@ -83,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/post/new': typeof PostNewRoute
   '/app': typeof AppIndexRoute
 }
 
@@ -90,6 +105,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/post/new': typeof PostNewRoute
   '/app': typeof AppIndexRoute
 }
 
@@ -98,15 +114,27 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/post/new': typeof PostNewRoute
   '/app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/integration/callback' | '/post/$postId' | '/app'
+  fullPaths:
+    | '/'
+    | '/integration/callback'
+    | '/post/$postId'
+    | '/post/new'
+    | '/app'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/integration/callback' | '/post/$postId' | '/app'
-  id: '__root__' | '/' | '/integration/callback' | '/post/$postId' | '/app/'
+  to: '/' | '/integration/callback' | '/post/$postId' | '/post/new' | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/integration/callback'
+    | '/post/$postId'
+    | '/post/new'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 
@@ -114,6 +142,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
   PostPostIdRoute: typeof PostPostIdRoute
+  PostNewRoute: typeof PostNewRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
@@ -121,6 +150,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
   PostPostIdRoute: PostPostIdRoute,
+  PostNewRoute: PostNewRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -137,6 +167,7 @@ export const routeTree = rootRoute
         "/",
         "/integration/callback",
         "/post/$postId",
+        "/post/new",
         "/app/"
       ]
     },
@@ -148,6 +179,9 @@ export const routeTree = rootRoute
     },
     "/post/$postId": {
       "filePath": "post/$postId.tsx"
+    },
+    "/post/new": {
+      "filePath": "post/new.tsx"
     },
     "/app/": {
       "filePath": "app/index.tsx"
