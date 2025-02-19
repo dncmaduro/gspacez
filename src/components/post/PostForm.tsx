@@ -126,6 +126,7 @@ export const PostForm = () => {
                     border: 'none'
                   }
                 }}
+                value={getValues('hashTags')}
                 size="sm"
                 className="grow"
                 onChange={(value) => setValue('hashTags', value)}
@@ -136,9 +137,9 @@ export const PostForm = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value="preview">
-          <Box className="rounded-b-lg border-x border-b border-gray-300 p-12">
+          <Box className="rounded-b-lg border-x border-b border-gray-300 p-8">
             <ReactMarkdown>{getValues('text')}</ReactMarkdown>
-            <PillGroup>
+            <PillGroup mt={8}>
               {getValues('hashTags')?.map((tag, index) => {
                 return (
                   <Pill key={index} size="sm">

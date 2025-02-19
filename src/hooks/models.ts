@@ -81,3 +81,14 @@ export type CreatePostReponse = {
   message?: string
   result: IPost
 }
+
+export type UpdatePostRequest = {
+  title: string
+  text: string
+  hashTags?: string[]
+}
+
+export type UpdatePostResponse = {
+  message?: string
+  result: IPost
+}

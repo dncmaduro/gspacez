@@ -9,10 +9,12 @@ import {
   TextInput
 } from '@mantine/core'
 import Logo from '../../../public/Logo.png'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { GIcon } from '../../common/GIcon'
 
 export const AppHeader = () => {
+  const { location } = useRouterState()
+
   return (
     <Box w="100%" h="100%" className="shadow-sm">
       <Flex align="center" px={16} h="100%" justify="space-between">
@@ -28,14 +30,16 @@ export const AppHeader = () => {
           placeholder="Search in GspaceZ"
         />
         <Group gap={16}>
-          <Button
-            component={Link}
-            to="/post/new"
-            radius="xl"
-            leftSection={<GIcon name="Sparkles" size={18} />}
-          >
-            Create my new post
-          </Button>
+          {location.pathname !== '/post/new' && (
+            <Button
+              component={Link}
+              to="/post/new"
+              radius="xl"
+              leftSection={<GIcon name="Sparkles" size={18} />}
+            >
+              Create my new post
+            </Button>
+          )}
           <Menu>
             <Menu.Target>
               <Avatar className="cursor-pointer" size="md" />
