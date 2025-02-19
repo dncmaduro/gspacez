@@ -5,7 +5,9 @@ import {
   GetNewsfeedRequest,
   GetNewsfeedResponse,
   GetPostRequest,
-  GetPostResponse
+  GetPostResponse,
+  UpdatePostRequest,
+  UpdatePostResponse
 } from './models'
 
 export const usePost = () => {
@@ -34,5 +36,18 @@ export const usePost = () => {
     })
   }
 
-  return { getNewsfeed, getPost, createPost }
+  const updatePost = async (
+    id: string,
+    req: UpdatePostRequest,
+    token: string
+  ) => {
+    return callApi<UpdatePostRequest, UpdatePostResponse>({
+      method: 'PUT',
+      path: `/v1/post-service/posts/update/${id}`,
+      data: req,
+      token
+    })
+  }
+
+  return { getNewsfeed, getPost, createPost, updatePost }
 }
