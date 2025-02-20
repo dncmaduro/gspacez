@@ -21,6 +21,7 @@ import {
 } from '@mantine/core'
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../../components/common/GIcon'
+import { ReactNode } from 'react'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent
@@ -42,6 +43,11 @@ function RouteComponent() {
 
   const postData = data?.data.result
 
+  const privacyIcons: Record<string, ReactNode> = {
+    PUBLIC: <GIcon name="World" size={16} color="gray" />,
+    PRIVATE: <GIcon name="LockFilled" size={16} color="gray" />
+  }
+
   return (
     <AppLayout>
       <Box mx="auto" px={12}>
@@ -62,6 +68,8 @@ function RouteComponent() {
                 <Text className="!text-lg">
                   {postData?.profileName || 'Name Name'}
                 </Text>
+                <GIcon name="PointFilled" size={8} color="gray" />
+                <span>{privacyIcons[postData?.privacy || 'PUBLIC']}</span>
               </Flex>
               <Button
                 component={Link}

@@ -75,6 +75,7 @@ export type CreatePostRequest = {
   title: string
   text: string
   hashTags?: string[]
+  privacy: string
 }
 
 export type CreatePostReponse = {
@@ -86,6 +87,7 @@ export type UpdatePostRequest = {
   title: string
   text: string
   hashTags?: string[]
+  privacy: string
 }
 
 export type UpdatePostResponse = {

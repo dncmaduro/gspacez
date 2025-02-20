@@ -3,8 +3,11 @@ import {
   Divider,
   FileInput,
   Flex,
+  Group,
   Pill,
   PillGroup,
+  Select,
+  SelectProps,
   Stack,
   Tabs,
   TagsInput,
@@ -16,7 +19,7 @@ import { PostFormType } from '../../routes/post/new'
 import { GIcon } from '../common/GIcon'
 import { useCloudinary } from '../../hooks/useCloudinary'
 import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { mediaText } from '../../utils/mediatText'
 import ReactMarkdown from 'react-markdown'
 
@@ -25,7 +28,8 @@ export const PostForm = () => {
     register,
     formState: { errors },
     setValue,
-    getValues
+    getValues,
+    watch
   } = useFormContext<PostFormType>()
 
   const { uploadMedia } = useCloudinary()
@@ -51,19 +55,59 @@ export const PostForm = () => {
 
   const [fileValue, setFileValue] = useState<File | null>(null)
 
+  const privacyOptions = [
+    {
+      label: 'Public',
+      value: 'PUBLIC'
+    },
+    {
+      label: 'Private',
+      value: 'PRIVATE'
+    }
+  ]
+
+  const privacyIcons: Record<string, ReactNode> = {
+    PUBLIC: <GIcon name="World" size={16} />,
+    PRIVATE: <GIcon name="LockFilled" size={16} />
+  }
+
+  const RenderOption: SelectProps['renderOption'] = ({ option, checked }) => {
+    return (
+      <Group>
+        {privacyIcons[option.value]}
+        {option.label}
+        {checked && <GIcon name="Check" size={20} color="gray" />}
+      </Group>
+    )
+  }
+
   return (
     <Stack gap={24}>
-      <TextInput
-        w="100%"
-        {...register('title', {
-          required: { value: true, message: 'Title is required' }
-        })}
-        error={errors.title?.message}
-        placeholder="Your title"
-        size="md"
-        label="Title"
-        radius="md"
-      />
+      <Flex justify="space-between" gap={16}>
+        <TextInput
+          w="75%"
+          {...register('title', {
+            required: { value: true, message: 'Title is required' }
+          })}
+          error={errors.title?.message}
+          placeholder="Your title"
+          size="md"
+          label="Title"
+          radius="md"
+        />
+        <Select
+          data={privacyOptions}
+          onChange={(value) => setValue('privacy', value || 'PUBLIC')}
+          value={watch('privacy')}
+          defaultValue={'PUBLIC'}
+          allowDeselect={false}
+          renderOption={RenderOption}
+          label="Choose your post privacy"
+          radius="md"
+          size="md"
+          className="grow"
+        />
+      </Flex>
       <Tabs defaultValue="write">
         <Tabs.List className="rounded-t-lg border border-gray-300">
           <Tabs.Tab
@@ -138,7 +182,7 @@ export const PostForm = () => {
 
         <Tabs.Panel value="preview">
           <Box className="rounded-b-lg border-x border-b border-gray-300 p-8">
-            <ReactMarkdown>{getValues('text')}</ReactMarkdown>
+            <ReactMarkdown>{watch('text')}</ReactMarkdown>
             <PillGroup mt={8}>
               {getValues('hashTags')?.map((tag, index) => {
                 return (

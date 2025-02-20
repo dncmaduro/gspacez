@@ -19,6 +19,7 @@ export type PostFormType = {
   title: string
   text: string
   hashTags?: string[]
+  privacy: string | null
 }
 
 function RouteComponent() {
@@ -58,7 +59,7 @@ function RouteComponent() {
 
   const submit = (values: PostFormType) => {
     mutatePost({
-      req: values,
+      req: { ...values, privacy: values.privacy || 'PUBLIC' },
       token
     })
   }
