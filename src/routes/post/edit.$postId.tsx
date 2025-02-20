@@ -78,7 +78,7 @@ function RouteComponent() {
   const submit = (values: PostFormType) => {
     mutateUpdate({
       id: postId,
-      req: values,
+      req: { ...values, privacy: values.privacy || 'PUBLIC' },
       token
     })
   }
