@@ -1,4 +1,4 @@
-import { IPost } from './interface'
+import { IComment, IPost } from './interface'
 
 export type SignInRequest = {
   email: string
@@ -93,4 +93,32 @@ export type UpdatePostRequest = {
 export type UpdatePostResponse = {
   message?: string
   result: IPost
+}
+
+export type CreateCommentRequest = {
+  comment: {
+    parentId: string
+    content: {
+      text: string
+    }
+  }
+}
+
+export type CreateCommentResponse = {
+  message?: string
+}
+
+export type GetMeResponse = {
+  message?: string
+  result: {
+    id: string
+    avatarUrl: string
+    firstName: string
+    lastName: string
+  }
+}
+
+export type GetCommentsReponse = {
+  message?: string
+  result: IComment[]
 }

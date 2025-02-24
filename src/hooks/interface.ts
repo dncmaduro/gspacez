@@ -9,7 +9,7 @@ export interface IPost {
     feeling: string
     tag: string[]
   }
-  comments: string[]
+  commentIds: string[]
   reacts: string[]
   shares: string[]
   privacy: string
@@ -23,4 +23,18 @@ export interface IPost {
   trendingPoint: number
   hidden: boolean
   hashTags: string[]
+}
+
+export interface IComment {
+  id: string
+  postId: string
+  profileId: string
+  content: {
+    text: string
+  }
+  parentId: string | null
+  profileName: string
+  profileImageUrl: string
+  createdAt: string
+  updatedAt: string | null
 }

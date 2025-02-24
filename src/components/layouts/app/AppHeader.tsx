@@ -35,6 +35,7 @@ export const AppHeader = () => {
               component={Link}
               to="/post/new"
               radius="xl"
+              variant="light"
               leftSection={<GIcon name="Sparkles" size={18} />}
             >
               Create my new post
