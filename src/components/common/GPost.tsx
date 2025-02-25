@@ -3,10 +3,12 @@ import {
   Avatar,
   Badge,
   Box,
+  CopyButton,
   Flex,
   Image,
   Stack,
-  Text
+  Text,
+  Tooltip
 } from '@mantine/core'
 import { IPost } from '../../hooks/interface'
 import { useMemo } from 'react'
@@ -67,22 +69,34 @@ export const GPost = ({ post }: Props) => {
             fit="cover"
             style={{ objectPosition: 'center' }}
           />
-          <Flex justify="space-between" mt={12}>
-            <ActionIcon variant="subtle" size="lg" color="gray.9">
-              <GIcon name="ThumbUp" size={24} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" size="lg" color="gray.9">
-              <GIcon name="ThumbDown" size={24} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" size="lg" color="gray.9">
-              <GIcon name="Message" size={24} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" size="lg" color="gray.9">
-              <GIcon name="Link" size={24} />
-            </ActionIcon>
-          </Flex>
         </Stack>
       </Link>
+      <Flex justify="space-between" mt={16}>
+        <ActionIcon variant="subtle" size="lg" color="gray.9">
+          <GIcon name="ThumbUp" size={24} />
+        </ActionIcon>
+        <ActionIcon variant="subtle" size="lg" color="gray.9">
+          <GIcon name="ThumbDown" size={24} />
+        </ActionIcon>
+        <ActionIcon variant="subtle" size="lg" color="gray.9">
+          <GIcon name="Message" size={24} />
+        </ActionIcon>
+
+        <CopyButton value={`${window.location.origin}/post/${post.id}`}>
+          {({ copied, copy }) => (
+            <Tooltip label={copied ? 'Copied' : 'Copy post link'}>
+              <ActionIcon
+                variant="subtle"
+                size="lg"
+                color="gray.9"
+                onClick={copy}
+              >
+                <GIcon name="Link" size={24} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+        </CopyButton>
+      </Flex>
     </Box>
   )
 }
