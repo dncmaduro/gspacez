@@ -120,6 +120,13 @@ export const SignInForm = () => {
             Sign in
           </Button>
           <GoogleSignIn />
+          <Button
+            variant="subtle"
+            color="red"
+            onClick={() => navigate({ to: '/recovery' })}
+          >
+            Forgot password?
+          </Button>
         </Stack>
       </form>
     </Box>

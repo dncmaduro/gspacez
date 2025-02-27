@@ -1,11 +1,11 @@
 import { IComment, IPost } from './interface'
 
-export type SignInRequest = {
+export interface SignInRequest {
   email: string
   password: string
 }
 
-export type SignInResponse = {
+export interface SignInResponse {
   message?: string
   result: {
     token: string
@@ -13,89 +13,89 @@ export type SignInResponse = {
   }
 }
 
-export type SignUpRequest = {
+export interface SignUpRequest {
   email: string
   password: string
   firstName: string
   lastName: string
 }
 
-export type SignUpResponse = {
+export interface SignUpResponse {
   message: string
 }
 
-export type IntrospectRequest = {
+export interface IntrospectRequest {
   token: string
 }
 
-export type IntrospectResponse = {
+export interface IntrospectResponse {
   message?: string
   result: {
     valid: boolean
   }
 }
 
-export type RefreshTokenRequest = {
+export interface RefreshTokenRequest {
   accessTokenExpired: string
   refreshToken: string
 }
 
-export type RefreshTokenResponse = {
+export interface RefreshTokenResponse {
   message?: string
   token: string
   refreshToken: string
 }
 
-export type LoginByGoogleResponse = {
+export interface LoginByGoogleResponse {
   message?: string
   token: string
   refreshToken: string
 }
 
-export type GetNewsfeedRequest = {
+export interface GetNewsfeedRequest {
   pageNum: number
   pageSize: number
 }
 
-export type GetNewsfeedResponse = {
+export interface GetNewsfeedResponse {
   message?: string
   result: IPost[]
 }
 
-export type GetPostRequest = {
+export interface GetPostRequest {
   id: string
 }
 
-export type GetPostResponse = {
+export interface GetPostResponse {
   message?: string
   result: IPost
 }
 
-export type CreatePostRequest = {
+export interface CreatePostRequest {
   title: string
   text: string
   hashTags?: string[]
   privacy: string
 }
 
-export type CreatePostReponse = {
+export interface CreatePostReponse {
   message?: string
   result: IPost
 }
 
-export type UpdatePostRequest = {
+export interface UpdatePostRequest {
   title: string
   text: string
   hashTags?: string[]
   privacy: string
 }
 
-export type UpdatePostResponse = {
+export interface UpdatePostResponse {
   message?: string
   result: IPost
 }
 
-export type CreateCommentRequest = {
+export interface CreateCommentRequest {
   comment: {
     parentId: string
     content: {
@@ -104,11 +104,11 @@ export type CreateCommentRequest = {
   }
 }
 
-export type CreateCommentResponse = {
+export interface CreateCommentResponse {
   message?: string
 }
 
-export type GetMeResponse = {
+export interface GetMeResponse {
   message?: string
   result: {
     id: string
@@ -118,7 +118,28 @@ export type GetMeResponse = {
   }
 }
 
-export type GetCommentsReponse = {
+export interface GetCommentsReponse {
   message?: string
   result: IComment[]
+}
+
+export interface ForgotPasswordRequest {
+  email: string
+}
+
+export interface ForgotPasswordResponse {
+  message?: string
+  result: {
+    message: string
+  }
+}
+
+export interface VerifyOtpRequest {
+  email: string
+  otp: string
+}
+
+export interface ResetPasswordRequest {
+  email: string
+  newPassword: string
 }
