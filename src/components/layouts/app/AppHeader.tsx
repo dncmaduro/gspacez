@@ -9,11 +9,24 @@ import {
   TextInput
 } from '@mantine/core'
 import Logo from '../../../public/Logo.png'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { GIcon } from '../../common/GIcon'
+import { useAppDispatch } from '../../../store/store'
+import { logout } from '../../../store/authSlice'
+import { GToast } from '../../common/GToast'
 
 export const AppHeader = () => {
   const { location } = useRouterState()
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const signOut = () => {
+    dispatch(logout())
+    navigate({ to: '/' })
+    GToast.success({
+      title: 'Sign ou successfully!'
+    })
+  }
 
   return (
     <Box w="100%" h="100%" className="shadow-sm">
@@ -58,6 +71,7 @@ export const AppHeader = () => {
               <Menu.Item
                 leftSection={<GIcon name="Power" size={14} />}
                 color="red"
+                onClick={() => signOut()}
               >
                 Sign out
               </Menu.Item>

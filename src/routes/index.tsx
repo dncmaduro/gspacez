@@ -35,7 +35,7 @@ function RouteComponent() {
             <Stack gap={16}>
               {isSignIn ? <SignInForm /> : <SignUpForm />}
               <Button
-                variant="subtle"
+                variant="light"
                 size="sm"
                 onClick={() => setIsSignIn(!isSignIn)}
               >

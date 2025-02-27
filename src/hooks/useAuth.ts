@@ -1,14 +1,18 @@
 import { callApi } from '../utils/axios'
 import {
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   IntrospectRequest,
   IntrospectResponse,
   LoginByGoogleResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
+  ResetPasswordRequest,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
-  SignUpResponse
+  SignUpResponse,
+  VerifyOtpRequest
 } from './models'
 
 export const useAuth = () => {
@@ -51,5 +55,38 @@ export const useAuth = () => {
     })
   }
 
-  return { signIn, signUp, introspect, refresh, loginWithGoogle }
+  const forgotPassword = async (req: ForgotPasswordRequest) => {
+    return callApi<ForgotPasswordRequest, ForgotPasswordResponse>({
+      path: `/v1/identity/auth/forget-password`,
+      method: 'POST',
+      data: req
+    })
+  }
+
+  const verifyOtp = async (req: VerifyOtpRequest) => {
+    return callApi<VerifyOtpRequest, never>({
+      path: `/v1/identity/auth/verify-otp`,
+      method: 'POST',
+      data: req
+    })
+  }
+
+  const resetPassword = async (req: ResetPasswordRequest) => {
+    return callApi<ResetPasswordRequest, never>({
+      path: `/v1/identity/auth/reset-password`,
+      method: 'POST',
+      data: req
+    })
+  }
+
+  return {
+    signIn,
+    signUp,
+    introspect,
+    refresh,
+    loginWithGoogle,
+    forgotPassword,
+    verifyOtp,
+    resetPassword
+  }
 }
