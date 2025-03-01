@@ -66,7 +66,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" px={32} py={20}>
+      <Box maw={1000} mx="auto" px={32} py={20}>
         <Group align="center" mt={20} gap={8}>
           <ActionIcon
             size="md"
