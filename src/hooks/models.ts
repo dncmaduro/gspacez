@@ -143,3 +143,14 @@ export interface ResetPasswordRequest {
   email: string
   newPassword: string
 }
+
+export interface GetProfileResponse {
+  message?: string
+  result: {
+    id: string
+    avatarUrl: string
+    firstName: string
+    lastName: string
+    dob: string
+  }
+}

@@ -24,7 +24,6 @@ import {
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../../components/common/GIcon'
 import { ReactNode } from 'react'
-import { useMe } from '../../hooks/useMe'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CommentForm } from '../../components/post/CommentForm'
 import { useDisclosure } from '@mantine/hooks'
@@ -46,8 +45,6 @@ function RouteComponent() {
   const router = useRouter()
 
   const { getPost, createComment } = usePost()
-  const me = useMe()
-  console.log(me)
 
   const { data, isLoading } = useQuery({
     queryKey: ['post', postId],
@@ -94,7 +91,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" px={12}>
+      <Box mx="auto" maw={1000} px={12}>
         {isLoading ? (
           <Loader />
         ) : (

@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as RecoveryImport } from './routes/recovery'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
+import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
@@ -36,6 +37,12 @@ const IndexRoute = IndexImport.update({
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProfileProfileIdRoute = ProfileProfileIdImport.update({
+  id: '/profile/$profileId',
+  path: '/profile/$profileId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostNewImport
       parentRoute: typeof rootRoute
     }
+    '/profile/$profileId': {
+      id: '/profile/$profileId'
+      path: '/profile/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdImport
+      parentRoute: typeof rootRoute
+    }
     '/app/': {
       id: '/app/'
       path: '/app'
@@ -127,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -137,6 +152,7 @@ export interface FileRoutesByTo {
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -148,6 +164,7 @@ export interface FileRoutesById {
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
   '/app/': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -160,6 +177,7 @@ export interface FileRouteTypes {
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
+    | '/profile/$profileId'
     | '/app'
     | '/post/edit/$postId'
   fileRoutesByTo: FileRoutesByTo
@@ -169,6 +187,7 @@ export interface FileRouteTypes {
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
+    | '/profile/$profileId'
     | '/app'
     | '/post/edit/$postId'
   id:
@@ -178,6 +197,7 @@ export interface FileRouteTypes {
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
+    | '/profile/$profileId'
     | '/app/'
     | '/post/edit/$postId'
   fileRoutesById: FileRoutesById
@@ -189,6 +209,7 @@ export interface RootRouteChildren {
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
+  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
   AppIndexRoute: typeof AppIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
 }
@@ -199,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntegrationCallbackRoute: IntegrationCallbackRoute,
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
+  ProfileProfileIdRoute: ProfileProfileIdRoute,
   AppIndexRoute: AppIndexRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
 }
@@ -218,6 +240,7 @@ export const routeTree = rootRoute
         "/integration/callback",
         "/post/$postId",
         "/post/new",
+        "/profile/$profileId",
         "/app/",
         "/post/edit/$postId"
       ]
@@ -236,6 +259,9 @@ export const routeTree = rootRoute
     },
     "/post/new": {
       "filePath": "post/new.tsx"
+    },
+    "/profile/$profileId": {
+      "filePath": "profile/$profileId.tsx"
     },
     "/app/": {
       "filePath": "app/index.tsx"

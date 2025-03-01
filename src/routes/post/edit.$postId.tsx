@@ -90,7 +90,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box w={1000} mx="auto" px={32} py={20}>
+      <Box maw={1000} mx="auto" px={32} py={20}>
         {isLoading ? (
           <Loader />
         ) : (

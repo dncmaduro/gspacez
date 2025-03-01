@@ -1,5 +1,5 @@
 import { callApi } from '../utils/axios'
-import { GetMeResponse } from './models'
+import { GetMeResponse, GetProfileResponse } from './models'
 
 export const useProfile = () => {
   const getMe = async (token: string) => {
@@ -10,5 +10,12 @@ export const useProfile = () => {
     })
   }
 
-  return { getMe }
+  const getProfile = async (id: string) => {
+    return callApi<never, GetProfileResponse>({
+      path: `/v1/profile-service/info/${id}`,
+      method: 'GET'
+    })
+  }
+
+  return { getMe, getProfile }
 }
