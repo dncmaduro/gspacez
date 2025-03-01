@@ -105,10 +105,12 @@ function RouteComponent() {
             </ActionIcon>
             <Group justify="space-between" mt={16}>
               <Flex align="center" gap={8}>
-                <Avatar src={postData?.avatarUrl} size="md" />
-                <Text className="!text-lg">
-                  {postData?.profileName || 'Name Name'}
-                </Text>
+                <Link to={`/profile/${postData?.profileId}}`}>
+                  <Avatar src={postData?.avatarUrl} size="md" />
+                  <Text className="!text-lg">
+                    {postData?.profileName || 'Name Name'}
+                  </Text>
+                </Link>
                 <GIcon name="PointFilled" size={8} color="gray" />
                 <span>{privacyIcons[postData?.privacy || 'PUBLIC']}</span>
               </Flex>
