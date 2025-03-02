@@ -52,7 +52,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             <Divider my={2} w="100%" />
             <SidebarItem icon="Html" label="Web Development" />
             <SidebarItem icon="DeviceMobile" label="Mobile Development" />
-            <SidebarItem icon="Ai" label="AI" />
+            <SidebarItem icon="Ai" label="AI" href="/ai" />
             <SidebarItem icon="Database" label="Database" />
             <SidebarItem icon="Cloud" label="Cloud" />
             {opened ? (

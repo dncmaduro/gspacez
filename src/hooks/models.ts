@@ -154,3 +154,7 @@ export interface GetProfileResponse {
     dob: string
   }
 }
+
+export interface GenerateTextRequest {
+  prompt: string
+}
