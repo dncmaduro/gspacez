@@ -170,7 +170,7 @@ export const PostForm = () => {
                     border: 'none'
                   }
                 }}
-                value={getValues('hashTags')}
+                value={watch('hashTags')}
                 size="sm"
                 className="grow"
                 onChange={(value) => setValue('hashTags', value)}
