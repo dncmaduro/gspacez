@@ -19,6 +19,7 @@ import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
+import { Route as DevCropImport } from './routes/dev/crop'
 import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 
 // Create/Update Routes
@@ -26,55 +27,61 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProfileProfileIdRoute = ProfileProfileIdImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DevCropRoute = DevCropImport.update({
+  id: '/dev/crop',
+  path: '/dev/crop',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -93,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/recovery'
       fullPath: '/recovery'
       preLoaderRoute: typeof RecoveryImport
+      parentRoute: typeof rootRoute
+    }
+    '/dev/crop': {
+      id: '/dev/crop'
+      path: '/dev/crop'
+      fullPath: '/dev/crop'
+      preLoaderRoute: typeof DevCropImport
       parentRoute: typeof rootRoute
     }
     '/integration/callback': {
@@ -152,6 +166,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
+  '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
@@ -164,6 +179,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
+  '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
@@ -177,6 +193,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
+  '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
@@ -191,6 +208,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/recovery'
+    | '/dev/crop'
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
@@ -202,6 +220,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/recovery'
+    | '/dev/crop'
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
@@ -213,6 +232,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/recovery'
+    | '/dev/crop'
     | '/integration/callback'
     | '/post/$postId'
     | '/post/new'
@@ -226,6 +246,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RecoveryRoute: typeof RecoveryRoute
+  DevCropRoute: typeof DevCropRoute
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
@@ -238,13 +259,14 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RecoveryRoute: RecoveryRoute,
+  DevCropRoute: DevCropRoute,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
-  PostEditPostIdRoute: PostEditPostIdRoute
+  PostEditPostIdRoute: PostEditPostIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -259,6 +281,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/recovery",
+        "/dev/crop",
         "/integration/callback",
         "/post/$postId",
         "/post/new",
@@ -273,6 +296,9 @@ export const routeTree = rootRoute
     },
     "/recovery": {
       "filePath": "recovery.tsx"
+    },
+    "/dev/crop": {
+      "filePath": "dev/crop.tsx"
     },
     "/integration/callback": {
       "filePath": "integration/callback.tsx"
