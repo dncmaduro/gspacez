@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as RecoveryImport } from './routes/recovery'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
+import { Route as AiIndexImport } from './routes/ai/index'
 import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
@@ -25,49 +26,55 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
+} as any)
+
+const AiIndexRoute = AiIndexImport.update({
+  id: '/ai/',
+  path: '/ai/',
+  getParentRoute: () => rootRoute
 } as any)
 
 const ProfileProfileIdRoute = ProfileProfileIdImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -116,6 +123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdImport
       parentRoute: typeof rootRoute
     }
+    '/ai/': {
+      id: '/ai/'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AiIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/app/': {
       id: '/app/'
       path: '/app'
@@ -142,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -153,6 +168,7 @@ export interface FileRoutesByTo {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -165,6 +181,7 @@ export interface FileRoutesById {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
@@ -178,6 +195,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/ai'
     | '/app'
     | '/post/edit/$postId'
   fileRoutesByTo: FileRoutesByTo
@@ -188,6 +206,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/ai'
     | '/app'
     | '/post/edit/$postId'
   id:
@@ -198,6 +217,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/ai/'
     | '/app/'
     | '/post/edit/$postId'
   fileRoutesById: FileRoutesById
@@ -210,6 +230,7 @@ export interface RootRouteChildren {
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
   ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
 }
@@ -221,8 +242,9 @@ const rootRouteChildren: RootRouteChildren = {
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
+  AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
-  PostEditPostIdRoute: PostEditPostIdRoute,
+  PostEditPostIdRoute: PostEditPostIdRoute
 }
 
 export const routeTree = rootRoute
@@ -241,6 +263,7 @@ export const routeTree = rootRoute
         "/post/$postId",
         "/post/new",
         "/profile/$profileId",
+        "/ai/",
         "/app/",
         "/post/edit/$postId"
       ]
@@ -262,6 +285,9 @@ export const routeTree = rootRoute
     },
     "/profile/$profileId": {
       "filePath": "profile/$profileId.tsx"
+    },
+    "/ai/": {
+      "filePath": "ai/index.tsx"
     },
     "/app/": {
       "filePath": "app/index.tsx"
