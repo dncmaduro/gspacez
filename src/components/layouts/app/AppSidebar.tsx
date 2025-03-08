@@ -10,6 +10,7 @@ import {
 import { SidebarPart } from './SidebarPart'
 import { GIcon } from '../../common/GIcon'
 import { SidebarItem } from './SidebarItem'
+import { Link } from '@tanstack/react-router'
 
 interface Props {
   opened: boolean
@@ -61,6 +62,8 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
                 leftSection={<GIcon name="Plus" size={16} />}
                 color="indigo.6"
                 variant="subtle"
+                component={Link}
+                to="/squad/new"
               >
                 Create squad
               </Button>
