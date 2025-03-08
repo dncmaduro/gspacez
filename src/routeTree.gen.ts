@@ -15,6 +15,7 @@ import { Route as RecoveryImport } from './routes/recovery'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as AiIndexImport } from './routes/ai/index'
+import { Route as SquadNewImport } from './routes/squad/new'
 import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
@@ -45,6 +46,12 @@ const AppIndexRoute = AppIndexImport.update({
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SquadNewRoute = SquadNewImport.update({
+  id: '/squad/new',
+  path: '/squad/new',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -137,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdImport
       parentRoute: typeof rootRoute
     }
+    '/squad/new': {
+      id: '/squad/new'
+      path: '/squad/new'
+      fullPath: '/squad/new'
+      preLoaderRoute: typeof SquadNewImport
+      parentRoute: typeof rootRoute
+    }
     '/ai/': {
       id: '/ai/'
       path: '/ai'
@@ -171,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/new': typeof SquadNewRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
@@ -184,6 +199,7 @@ export interface FileRoutesByTo {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/new': typeof SquadNewRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
@@ -198,6 +214,7 @@ export interface FileRoutesById {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/new': typeof SquadNewRoute
   '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
@@ -213,6 +230,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/new'
     | '/ai'
     | '/app'
     | '/post/edit/$postId'
@@ -225,6 +243,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/new'
     | '/ai'
     | '/app'
     | '/post/edit/$postId'
@@ -237,6 +256,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/new'
     | '/ai/'
     | '/app/'
     | '/post/edit/$postId'
@@ -251,6 +271,7 @@ export interface RootRouteChildren {
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
   ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  SquadNewRoute: typeof SquadNewRoute
   AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
@@ -264,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
+  SquadNewRoute: SquadNewRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
@@ -286,6 +308,7 @@ export const routeTree = rootRoute
         "/post/$postId",
         "/post/new",
         "/profile/$profileId",
+        "/squad/new",
         "/ai/",
         "/app/",
         "/post/edit/$postId"
@@ -311,6 +334,9 @@ export const routeTree = rootRoute
     },
     "/profile/$profileId": {
       "filePath": "profile/$profileId.tsx"
+    },
+    "/squad/new": {
+      "filePath": "squad/new.tsx"
     },
     "/ai/": {
       "filePath": "ai/index.tsx"
