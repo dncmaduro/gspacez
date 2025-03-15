@@ -19,11 +19,12 @@ import {
   Flex,
   Group,
   Loader,
-  Text
+  Text,
+  Tooltip
 } from '@mantine/core'
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../../components/common/GIcon'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CommentForm } from '../../components/post/CommentForm'
 import { useDisclosure } from '@mantine/hooks'
@@ -89,6 +90,20 @@ function RouteComponent() {
     mutateCreateComment({ req })
   }
 
+  const [tooltipText, setTooltipText] = useState<string>('Copy link to post')
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setTooltipText('Copied!')
+      setTimeout(() => setTooltipText('Copy link to post'), 2000) // Reset tooltip after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy link:', err)
+      setTooltipText('Failed to copy')
+      setTimeout(() => setTooltipText('Copy link to post'), 2000)
+    }
+  }
+
   return (
     <AppLayout>
       <Box mx="auto" maw={1000} px={12}>
@@ -150,9 +165,16 @@ function RouteComponent() {
                 <ActionIcon variant="subtle" color="gray" size="lg">
                   <GIcon name="Message" size={24} />
                 </ActionIcon>
-                <ActionIcon variant="subtle" color="gray" size="lg">
-                  <GIcon name="Link" size={24} />
-                </ActionIcon>
+                <Tooltip label={tooltipText} position="bottom" withArrow>
+                  <ActionIcon
+                    variant="subtle"
+                    color="gray"
+                    size="lg"
+                    onClick={handleCopyLink}
+                  >
+                    <GIcon name="Link" size={24} />
+                  </ActionIcon>
+                </Tooltip>
               </Group>
             </Box>
             <Button
