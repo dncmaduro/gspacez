@@ -1,6 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { Box, Button, Flex, Group, Stack, Text, TextInput } from '@mantine/core'
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Stack,
+  Text,
+  TextInput
+} from '@mantine/core'
 import { useState } from 'react'
 import { GIcon } from '../../components/common/GIcon'
 import { useGemini } from '../../hooks/useGemini'
@@ -9,6 +18,7 @@ import { GToast } from '../../components/common/GToast'
 import { MessageBox } from '../../components/ai/MessageBox'
 
 export interface GeminiMessage {
+  id: number
   createdAt: Date
   message: string
   isFromGemini: boolean
@@ -21,25 +31,45 @@ export const Route = createFileRoute('/ai/')({
 function RouteComponent() {
   const [prompt, setPrompt] = useState<string>('')
   const [messages, setMessages] = useState<GeminiMessage[]>([])
+  const [loadingId, setLoadingId] = useState<number>()
 
   const { generateText } = useGemini()
 
   const { mutate: sendPrompt, isPending: isSendingPrompt } = useMutation({
     mutationKey: ['sendPrompt', new Date().toDateString()],
-    mutationFn: () => {
+    mutationFn: ({ prompt }: { prompt: string; id?: number }) => {
       return generateText({ prompt })
     },
-    onSuccess: (response) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          createdAt: new Date(),
-          // @ts-expect-error type
-          message: response.response.candidates[0].content.parts[0].text || '',
-          isFromGemini: true
-        }
-      ])
-      setPrompt('')
+    onSuccess: (response, variables) => {
+      const id = variables.id
+
+      if (id) {
+        setMessages((prev) => {
+          setLoadingId(id)
+          prev[id] = {
+            ...prev[id],
+            message:
+              // @ts-expect-error type
+              response.response.candidates[0].content.parts[0].text || '',
+            createdAt: new Date()
+          }
+          setLoadingId(undefined)
+          return prev
+        })
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: messages.length,
+            createdAt: new Date(),
+            message:
+              // @ts-expect-error type
+              response.response.candidates[0].content.parts[0].text || '',
+            isFromGemini: true
+          }
+        ])
+        setPrompt('')
+      }
     },
     onError: () => {
       GToast.error({
@@ -54,19 +84,38 @@ function RouteComponent() {
     setMessages((prev) => [
       ...prev,
       {
+        id: messages.length,
         createdAt: new Date(),
         message: prompt,
         isFromGemini: false
       }
     ])
-    sendPrompt()
+    sendPrompt({ prompt })
+  }
+
+  const regenerateMessage = (id: number) => {
+    const message = messages.find((m) => m.id === id)
+    if (message) {
+      setLoadingId(id + 1)
+      sendPrompt({ prompt: message.message, id: id + 1 })
+    }
   }
 
   return (
     <AppLayout>
       <Box mx="auto" maw={1000}>
         <Stack align="center" mt={12}>
-          <Text className="!text-2xl !font-bold">Chat with AI</Text>
+          <Group gap={8}>
+            <Text className="!text-2xl !font-bold">Chat with AI</Text>
+            <ActionIcon
+              size="sm"
+              onClick={() => setMessages([])}
+              variant="subtle"
+              disabled={!messages.length}
+            >
+              <GIcon name="Eraser" size={18} />
+            </ActionIcon>
+          </Group>
           <Box
             className="rounded-xl border border-indigo-200"
             w="100%"
@@ -76,6 +125,9 @@ function RouteComponent() {
               <MessageBox
                 messages={messages}
                 isSendingPrompt={isSendingPrompt}
+                setMessages={setMessages}
+                regenerateMessage={regenerateMessage}
+                loadingId={loadingId}
               />
             ) : (
               <Flex mt={300} justify="center">
