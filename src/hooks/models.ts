@@ -112,9 +112,12 @@ export interface GetMeResponse {
   message?: string
   result: {
     id: string
-    avatarUrl: string
+    avatarUrl?: string
+    country?: string
+    description?: string
     firstName: string
     lastName: string
+    dob: string
   }
 }
 
@@ -148,7 +151,9 @@ export interface GetProfileResponse {
   message?: string
   result: {
     id: string
-    avatarUrl: string
+    avatarUrl?: string
+    country?: string
+    description?: string
     firstName: string
     lastName: string
     dob: string
@@ -157,4 +162,37 @@ export interface GetProfileResponse {
 
 export interface GenerateTextRequest {
   prompt: string
+}
+
+export interface GetCountriesResponse {
+  error: boolean
+  msg: string
+  data: {
+    name: string
+    flag: string
+    iso2: string
+    iso3: string
+  }[]
+}
+
+export interface UpdateMeRequest {
+  avatarUrl?: string
+  country?: string
+  description?: string
+  firstName: string
+  lastName: string
+  dob: string
+}
+
+export interface UpdateMeResponse {
+  message?: string
+  result: {
+    id: string
+    avatarUrl?: string
+    country?: string
+    description?: string
+    firstName: string
+    lastName: string
+    dob: string
+  }
 }

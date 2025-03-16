@@ -12,5 +12,7 @@ export const useMe = () => {
     queryFn: () => getMe(token)
   })
 
-  return data.data?.data.result
+  return {
+    data: data.data?.data.result
+  }
 }

@@ -19,6 +19,7 @@ import { Route as SquadNewImport } from './routes/squad/new'
 import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
+import { Route as MeEditImport } from './routes/me/edit'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
 import { Route as DevCropImport } from './routes/dev/crop'
 import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
@@ -28,67 +29,73 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProfileProfileIdRoute = ProfileProfileIdImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MeEditRoute = MeEditImport.update({
+  id: '/me/edit',
+  path: '/me/edit',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -121,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/integration/callback'
       fullPath: '/integration/callback'
       preLoaderRoute: typeof IntegrationCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/me/edit': {
+      id: '/me/edit'
+      path: '/me/edit'
+      fullPath: '/me/edit'
+      preLoaderRoute: typeof MeEditImport
       parentRoute: typeof rootRoute
     }
     '/post/$postId': {
@@ -182,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -196,6 +211,7 @@ export interface FileRoutesByTo {
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -211,6 +227,7 @@ export interface FileRoutesById {
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
   '/integration/callback': typeof IntegrationCallbackRoute
+  '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -227,6 +244,7 @@ export interface FileRouteTypes {
     | '/recovery'
     | '/dev/crop'
     | '/integration/callback'
+    | '/me/edit'
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
@@ -240,6 +258,7 @@ export interface FileRouteTypes {
     | '/recovery'
     | '/dev/crop'
     | '/integration/callback'
+    | '/me/edit'
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
@@ -253,6 +272,7 @@ export interface FileRouteTypes {
     | '/recovery'
     | '/dev/crop'
     | '/integration/callback'
+    | '/me/edit'
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
@@ -268,6 +288,7 @@ export interface RootRouteChildren {
   RecoveryRoute: typeof RecoveryRoute
   DevCropRoute: typeof DevCropRoute
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
+  MeEditRoute: typeof MeEditRoute
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
   ProfileProfileIdRoute: typeof ProfileProfileIdRoute
@@ -282,13 +303,14 @@ const rootRouteChildren: RootRouteChildren = {
   RecoveryRoute: RecoveryRoute,
   DevCropRoute: DevCropRoute,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
+  MeEditRoute: MeEditRoute,
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
   SquadNewRoute: SquadNewRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
-  PostEditPostIdRoute: PostEditPostIdRoute
+  PostEditPostIdRoute: PostEditPostIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -305,6 +327,7 @@ export const routeTree = rootRoute
         "/recovery",
         "/dev/crop",
         "/integration/callback",
+        "/me/edit",
         "/post/$postId",
         "/post/new",
         "/profile/$profileId",
@@ -325,6 +348,9 @@ export const routeTree = rootRoute
     },
     "/integration/callback": {
       "filePath": "integration/callback.tsx"
+    },
+    "/me/edit": {
+      "filePath": "me/edit.tsx"
     },
     "/post/$postId": {
       "filePath": "post/$postId.tsx"
