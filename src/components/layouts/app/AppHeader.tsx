@@ -59,7 +59,11 @@ export const AppHeader = () => {
               <Avatar className="cursor-pointer" size="md" />
             </Menu.Target>
             <Menu.Dropdown w={180}>
-              <Menu.Item leftSection={<GIcon name="User" size={14} />}>
+              <Menu.Item
+                component={Link}
+                to="/me"
+                leftSection={<GIcon name="User" size={14} />}
+              >
                 Profile
               </Menu.Item>
               <Menu.Item leftSection={<GIcon name="Settings" size={14} />}>
