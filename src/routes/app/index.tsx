@@ -10,6 +10,7 @@ import { GIcon } from '../../components/common/GIcon'
 import { GPost } from '../../components/common/GPost'
 import { GPostSkeleton } from '../../components/common/GPostSkeleton'
 import { IPost } from '../../hooks/interface'
+import { Helmet } from 'react-helmet-async'
 
 export const Route = createFileRoute('/app/')({
   component: RouteComponent
@@ -62,39 +63,47 @@ function RouteComponent() {
   }, [isLoading, loadMorePosts])
 
   return (
-    <AppLayout>
-      <Box px={32} py={24}>
-        <Button
-          variant="light"
-          radius="md"
-          size="md"
-          leftSection={<GIcon name="AdjustmentsCode" size={20} />}
-        >
-          Custom your feed
-        </Button>
-        {isLoading && !posts.length ? (
-          <Box>
-            <Loader mt={32} />
-          </Box>
-        ) : (
-          <Grid mt={32} gutter={{ base: 5, md: 24, xl: 32 }}>
-            {posts.map((post) => (
-              <Grid.Col span={{ base: 12, md: 6, lg: 4, xl: 3 }} key={post.id}>
-                <GPost post={post} />
-              </Grid.Col>
-            ))}
-            {['a', 'b', 'c', 'd'].map((index) => (
-              <Grid.Col
-                ref={loaderRef}
-                span={{ base: 12, md: 6, lg: 4, xl: 3 }}
-                key={index}
-              >
-                <GPostSkeleton />
-              </Grid.Col>
-            ))}
-          </Grid>
-        )}
-      </Box>
-    </AppLayout>
+    <>
+      <Helmet>
+        <title>GspaceZ Home</title>
+      </Helmet>
+      <AppLayout>
+        <Box px={32} py={24}>
+          <Button
+            variant="light"
+            radius="md"
+            size="md"
+            leftSection={<GIcon name="AdjustmentsCode" size={20} />}
+          >
+            Custom your feed
+          </Button>
+          {isLoading && !posts.length ? (
+            <Box>
+              <Loader mt={32} />
+            </Box>
+          ) : (
+            <Grid mt={32} gutter={{ base: 5, md: 24, xl: 32 }}>
+              {posts.map((post) => (
+                <Grid.Col
+                  span={{ base: 12, md: 6, lg: 4, xl: 3 }}
+                  key={post.id}
+                >
+                  <GPost post={post} />
+                </Grid.Col>
+              ))}
+              {['a', 'b', 'c', 'd'].map((index) => (
+                <Grid.Col
+                  ref={loaderRef}
+                  span={{ base: 12, md: 6, lg: 4, xl: 3 }}
+                  key={index}
+                >
+                  <GPostSkeleton />
+                </Grid.Col>
+              ))}
+            </Grid>
+          )}
+        </Box>
+      </AppLayout>
+    </>
   )
 }
