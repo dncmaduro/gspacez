@@ -144,10 +144,10 @@ function RouteComponent() {
   return (
     <AppLayout>
       <Stack maw={1000} mx={'auto'} mt={32}>
-        <Text className="!text-[20px] !font-bold">
+        <Text className="!text-2xl !font-bold">
           Update things that people should know about you
         </Text>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
           <Stack>
             <Flex align="flex-start">
               <Stack flex={3}>
@@ -163,7 +163,7 @@ function RouteComponent() {
                         label="First name"
                         placeholder="Your first name"
                         radius="md"
-                        size="sm"
+                        size="md"
                         className="grow"
                         disabled={isLoading}
                       />
@@ -180,7 +180,7 @@ function RouteComponent() {
                         label="Last name"
                         placeholder="Your last name"
                         radius="md"
-                        size="sm"
+                        size="md"
                         className="grow"
                         disabled={isLoading}
                       />
@@ -206,7 +206,7 @@ function RouteComponent() {
                         label="Date of Birth"
                         placeholder="Select your date of birth"
                         radius="md"
-                        size="sm"
+                        size="md"
                         disabled={isLoading}
                         leftSection={<GIcon name="Calendar" size={16} />}
                         withAsterisk
@@ -227,7 +227,7 @@ function RouteComponent() {
                       label="Where do you live?"
                       withAsterisk
                       radius="md"
-                      size="sm"
+                      size="md"
                       disabled={isLoading}
                     />
                   )}
@@ -240,6 +240,7 @@ function RouteComponent() {
                       {...field}
                       minRows={4}
                       autosize
+                      size="md"
                       disabled={isLoading}
                       label="More things you want to share with others"
                     />
@@ -248,7 +249,7 @@ function RouteComponent() {
               </Stack>
               <Box flex={2}>
                 <Flex align="center" direction="column" gap={16}>
-                  <Text className="!text-sm !font-semibold">
+                  <Text className="!text-md !font-semibold">
                     Update your avatar
                   </Text>
                   {watch('avatarUrl') ? (
@@ -280,7 +281,7 @@ function RouteComponent() {
                 </Flex>
               </Box>
             </Flex>
-            <Group justify="center">
+            <Group justify="center" mt={20}>
               <Button w="fit-content" variant="default" disabled={isLoading}>
                 Cancel
               </Button>
