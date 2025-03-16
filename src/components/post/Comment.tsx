@@ -14,6 +14,7 @@ import { IComment } from '../../hooks/interface'
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../common/GIcon'
 import { useDisclosure } from '@mantine/hooks'
+import { Link } from '@tanstack/react-router'
 
 interface Props {
   comment: IComment
@@ -26,9 +27,16 @@ export const Comment = ({ comment, children }: Props) => {
   return (
     <Stack gap={12}>
       <Flex align="center" gap={16}>
-        <Avatar src={comment.profileImageUrl} size="md" />
+        <Avatar
+          src={comment.profileImageUrl}
+          component={Link}
+          to={`/profile/${comment.profileId}`}
+          size="md"
+        />
         <Stack gap={1}>
-          <Text>{comment.profileName}</Text>
+          <Text component={Link} to={`/profile/${comment.profileId}`}>
+            {comment.profileName}
+          </Text>
           <Text c="dimmed" size="sm">
             Time is not available
           </Text>
