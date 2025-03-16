@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   createFileRoute,
   Link,
@@ -44,6 +44,7 @@ function RouteComponent() {
   const [opened, { toggle }] = useDisclosure(false)
   const token = useSelector((state: RootState) => state.auth.token)
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { getPost, createComment } = usePost()
 
@@ -69,13 +70,21 @@ function RouteComponent() {
 
   const {
     handleSubmit,
-    formState: { isDirty }
+    formState: { isDirty },
+    reset
   } = formMethods
 
   const { mutate: mutateCreateComment, isPending: isPosting } = useMutation({
     mutationKey: ['createComment'],
     mutationFn: ({ req }: { req: CreateCommentRequest }) => {
       return createComment(postId, req, token)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['get-comments', postId]
+      })
+      toggle()
+      reset()
     }
   })
 
@@ -120,11 +129,13 @@ function RouteComponent() {
             </ActionIcon>
             <Group justify="space-between" mt={16}>
               <Flex align="center" gap={8}>
-                <Link to={`/profile/${postData?.profileId}}`}>
-                  <Avatar src={postData?.avatarUrl} size="md" />
-                  <Text className="!text-lg">
-                    {postData?.profileName || 'Name Name'}
-                  </Text>
+                <Link to={`/profile/${postData?.profileId}`}>
+                  <Group>
+                    <Avatar src={postData?.avatarUrl} size="md" />
+                    <Text className="!text-lg">
+                      {postData?.profileName || 'Name Name'}
+                    </Text>
+                  </Group>
                 </Link>
                 <GIcon name="PointFilled" size={8} color="gray" />
                 <span>{privacyIcons[postData?.privacy || 'PUBLIC']}</span>
@@ -138,7 +149,7 @@ function RouteComponent() {
                 Edit post
               </Button>
             </Group>
-            <Text className="!text-2xl !font-bold" mt={16}>
+            <Text className="!text-2xl !font-bold" mt={24}>
               {postData?.title || 'Title'}
             </Text>
             <Box

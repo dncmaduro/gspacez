@@ -14,7 +14,7 @@ export const PostComments = () => {
   const { getComments } = usePost()
 
   const { data: commentsData } = useQuery({
-    queryKey: ['get-comments'],
+    queryKey: ['get-comments', postId],
     queryFn: () => getComments(postId, token)
   })
 
