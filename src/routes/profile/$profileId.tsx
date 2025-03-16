@@ -53,34 +53,25 @@ function RouteComponent() {
           <>
             <Flex h="100%" gap={8} mih={1000}>
               <Stack w="30%" gap={4}>
-                <Box
-                  className="rounded-lg border border-indigo-200 hover:bg-indigo-50"
-                  p={16}
-                >
+                <Box className="rounded-lg border border-indigo-200" p={16}>
                   <Stack gap={16}>
-                    <Group>
-                      <Avatar src={profileData?.avatarUrl} size="lg" />
-                      <Text size="xl" className="!font-bold">
+                    <Group gap={8}>
+                      <Avatar src={profileData?.avatarUrl} size="md" />
+                      <Text className="!text-[17px] !font-bold">
                         {profileData?.firstName} {profileData?.lastName}
                       </Text>
                     </Group>
-                    <Group>
-                      <GIcon name="Calendar" size={24} />
-                      <Text>{profileData?.dob}</Text>
+                    <Group gap={8}>
+                      <GIcon name="Calendar" size={16} />
+                      <Text size="sm">{profileData?.dob}</Text>
                     </Group>
                   </Stack>
                 </Box>
-                <Box
-                  className="rounded-lg border border-indigo-200 hover:bg-indigo-50"
-                  p={16}
-                >
-                  <Text size="lg">Involved Squads</Text>
+                <Box className="rounded-lg border border-indigo-200" p={16}>
+                  <Text size="md">Involved Squads</Text>
                 </Box>
-                <Box
-                  className="rounded-lg border border-indigo-200 hover:bg-indigo-50"
-                  p={16}
-                >
-                  <Text size="lg">View other social accounts</Text>
+                <Box className="rounded-lg border border-indigo-200" p={16}>
+                  <Text size="md">View other social accounts</Text>
                 </Box>
               </Stack>
               <Box className="grow rounded-lg border border-indigo-200">

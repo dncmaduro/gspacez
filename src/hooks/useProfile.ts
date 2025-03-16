@@ -1,5 +1,10 @@
 import { callApi } from '../utils/axios'
-import { GetMeResponse, GetProfileResponse } from './models'
+import {
+  GetMeResponse,
+  GetProfileResponse,
+  UpdateMeRequest,
+  UpdateMeResponse
+} from './models'
 
 export const useProfile = () => {
   const getMe = async (token: string) => {
@@ -10,6 +15,15 @@ export const useProfile = () => {
     })
   }
 
+  const updateMe = async (req: UpdateMeRequest, token: string) => {
+    return callApi<UpdateMeRequest, UpdateMeResponse>({
+      token,
+      method: 'PUT',
+      path: `/v1/profile-service/info`,
+      data: req
+    })
+  }
+
   const getProfile = async (id: string) => {
     return callApi<never, GetProfileResponse>({
       path: `/v1/profile-service/info/${id}`,
@@ -17,5 +31,5 @@ export const useProfile = () => {
     })
   }
 
-  return { getMe, getProfile }
+  return { getMe, getProfile, updateMe }
 }

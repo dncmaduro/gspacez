@@ -25,7 +25,7 @@ export async function callApi<D = unknown, T = unknown>({
   }
 
   const response = await axios<T>({
-    url: customUrl ?? import.meta.env.VITE_BACKEND_URL + path,
+    url: (customUrl ?? import.meta.env.VITE_BACKEND_URL) + path,
     headers,
     data,
     method
