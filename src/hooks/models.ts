@@ -196,3 +196,16 @@ export interface UpdateMeResponse {
     dob: string
   }
 }
+
+export interface ReactPostRequest {
+  reactType: string | undefined
+}
+
+export interface ReactPostResponse {
+  result: {
+    currentReact: {
+      createdAt: string
+      reactType: string
+    }
+  }
+}

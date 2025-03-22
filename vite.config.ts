@@ -6,5 +6,8 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), TanStackRouterVite(), tailwindcss()],
-  base: '/'
+  base: '/',
+  server: {
+    port: 5000
+  }
 })

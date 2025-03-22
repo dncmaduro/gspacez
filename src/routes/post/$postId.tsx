@@ -28,7 +28,7 @@ import { ReactNode, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CommentForm } from '../../components/post/CommentForm'
 import { useDisclosure } from '@mantine/hooks'
-import { CreateCommentRequest } from '../../hooks/models'
+import { CreateCommentRequest, ReactPostRequest } from '../../hooks/models'
 import { PostComments } from '../../components/post/PostComments'
 
 export const Route = createFileRoute('/post/$postId')({
@@ -46,16 +46,30 @@ function RouteComponent() {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { getPost, createComment } = usePost()
+  const { getPost, createComment, reactPost } = usePost()
 
-  const { data, isLoading } = useQuery({
+  const {
+    data: postData,
+    isLoading,
+    refetch
+  } = useQuery({
     queryKey: ['post', postId],
     queryFn: () => {
       return getPost({ id: postId }, token)
+    },
+    select: (data) => {
+      return data.data.result
     }
   })
 
-  const postData = data?.data.result
+  const { mutate: react } = useMutation({
+    mutationKey: ['react', postData?.id],
+    mutationFn: ({ req }: { req: ReactPostRequest }) =>
+      reactPost(postData?.id || '', req, token),
+    onSuccess: () => {
+      refetch()
+    }
+  })
 
   const privacyIcons: Record<string, ReactNode> = {
     PUBLIC: <GIcon name="World" size={16} color="gray" />,
@@ -105,7 +119,7 @@ function RouteComponent() {
     try {
       await navigator.clipboard.writeText(window.location.href)
       setTooltipText('Copied!')
-      setTimeout(() => setTooltipText('Copy link to post'), 2000) // Reset tooltip after 2 seconds
+      setTimeout(() => setTooltipText('Copy link to post'), 2000)
     } catch (err) {
       console.error('Failed to copy link:', err)
       setTooltipText('Failed to copy')
@@ -167,10 +181,32 @@ function RouteComponent() {
               p={6}
             >
               <Group gap={32}>
-                <ActionIcon variant="subtle" color="gray" size="lg">
+                <ActionIcon
+                  variant="subtle"
+                  color={postData?.liked ? 'blue' : 'gray'}
+                  size="lg"
+                  onClick={() => {
+                    react({
+                      req: {
+                        reactType: postData?.liked ? undefined : 'LIKE'
+                      }
+                    })
+                  }}
+                >
                   <GIcon name="ThumbUp" size={24} />
                 </ActionIcon>
-                <ActionIcon variant="subtle" color="gray" size="lg">
+                <ActionIcon
+                  variant="subtle"
+                  color={postData?.disliked ? 'red' : 'gray'}
+                  size="lg"
+                  onClick={() => {
+                    react({
+                      req: {
+                        reactType: postData?.disliked ? undefined : 'DISLIKE'
+                      }
+                    })
+                  }}
+                >
                   <GIcon name="ThumbDown" size={24} />
                 </ActionIcon>
                 <ActionIcon variant="subtle" color="gray" size="lg">
