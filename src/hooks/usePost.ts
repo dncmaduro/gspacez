@@ -8,6 +8,8 @@ import {
   GetNewsfeedResponse,
   GetPostRequest,
   GetPostResponse,
+  ReactPostRequest,
+  ReactPostResponse,
   UpdatePostRequest,
   UpdatePostResponse
 } from './models'
@@ -72,12 +74,26 @@ export const usePost = () => {
     })
   }
 
+  const reactPost = async (
+    id: string,
+    req: ReactPostRequest,
+    token: string
+  ) => {
+    return callApi<ReactPostRequest, ReactPostResponse>({
+      method: 'PATCH',
+      path: `/v1/post-service/posts/react/${id}`,
+      token,
+      data: req
+    })
+  }
+
   return {
     getNewsfeed,
     getPost,
     createPost,
     updatePost,
     createComment,
-    getComments
+    getComments,
+    reactPost
   }
 }

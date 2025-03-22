@@ -5,17 +5,20 @@ import {
   Box,
   CopyButton,
   Flex,
-  Image,
   Stack,
   Text,
   Tooltip
 } from '@mantine/core'
 import { IPost } from '../../hooks/interface'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { previewTags } from '../../utils/tags'
-import Logo from '../../public/Logo.png'
 import { GIcon } from './GIcon'
 import { Link } from '@tanstack/react-router'
+import { usePost } from '../../hooks/usePost'
+import { useMutation } from '@tanstack/react-query'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
+import { ReactPostRequest } from '../../hooks/models'
 
 interface Props {
   post: IPost
@@ -26,8 +29,26 @@ export const GPost = ({ post }: Props) => {
     () => previewTags(post.hashTags),
     [post]
   )
+  const token = useSelector((state: RootState) => state.auth.token)
+  const [liked, setLiked] = useState(post.liked)
+  const [disliked, setDisliked] = useState(post.disliked)
 
-  const previewImage = post.content.imageUrls ? post.content.imageUrls[0] : Logo
+  const { reactPost } = usePost()
+
+  const { mutate: react } = useMutation({
+    mutationKey: ['react', post.id],
+    mutationFn: ({ req }: { req: ReactPostRequest }) =>
+      reactPost(post.id, req, token),
+    onSuccess: (response) => {
+      if (!response.data.result.currentReact) {
+        setLiked(false)
+        setDisliked(false)
+      } else {
+        setLiked(response.data.result.currentReact.reactType === 'LIKE')
+        setDisliked(response.data.result.currentReact.reactType === 'DISLIKE')
+      }
+    }
+  })
 
   return (
     <Box
@@ -59,23 +80,35 @@ export const GPost = ({ post }: Props) => {
               )}
             </Flex>
           </Box>
-          <Image
-            mt={12}
-            mih={200}
-            mah={200}
-            src={previewImage}
-            radius="md"
-            className="border border-gray-100"
-            fit="cover"
-            style={{ objectPosition: 'center' }}
-          />
         </Stack>
       </Link>
       <Flex justify="space-between" mt={16}>
-        <ActionIcon variant="subtle" size="lg" color="gray.9">
+        <ActionIcon
+          variant="subtle"
+          size="lg"
+          color={liked ? 'blue' : 'gray.9'}
+          onClick={() => {
+            react({
+              req: {
+                reactType: liked ? undefined : 'LIKE'
+              }
+            })
+          }}
+        >
           <GIcon name="ThumbUp" size={24} />
         </ActionIcon>
-        <ActionIcon variant="subtle" size="lg" color="gray.9">
+        <ActionIcon
+          variant="subtle"
+          size="lg"
+          color={disliked ? 'red' : 'gray.9'}
+          onClick={() => {
+            react({
+              req: {
+                reactType: disliked ? undefined : 'DISLIKE'
+              }
+            })
+          }}
+        >
           <GIcon name="ThumbDown" size={24} />
         </ActionIcon>
         <ActionIcon variant="subtle" size="lg" color="gray.9">

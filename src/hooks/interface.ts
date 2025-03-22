@@ -3,26 +3,17 @@ export interface IPost {
   title: string
   content: {
     text: string
-    imageUrls: string[]
-    videoUrls: string[]
-    location: string
-    feeling: string
-    tag: string[]
   }
-  commentIds: string[]
-  reacts: string[]
-  shares: string[]
   privacy: string
-  location: string
-  type: string
   createdAt: Date
   updatedAt: Date
   profileId: string
   profileName: string
   avatarUrl: string
-  trendingPoint: number
-  hidden: boolean
   hashTags: string[]
+  comments: IComment[]
+  liked: boolean
+  disliked: boolean
 }
 
 export interface IComment {
