@@ -4,6 +4,7 @@ import {
   CreatePostReponse,
   CreatePostRequest,
   GetCommentsReponse,
+  GetHistoryRequest,
   GetNewsfeedRequest,
   GetNewsfeedResponse,
   GetPostRequest,
@@ -87,6 +88,14 @@ export const usePost = () => {
     })
   }
 
+  const getHistory = async (req: GetHistoryRequest, token: string) => {
+    return callApi<GetHistoryRequest, any>({
+      method: 'GET',
+      path: `/v1/post-service/posts/history?page=${req.page}&size=${req.size}`,
+      token
+    })
+  }
+
   return {
     getNewsfeed,
     getPost,
@@ -94,6 +103,7 @@ export const usePost = () => {
     updatePost,
     createComment,
     getComments,
-    reactPost
+    reactPost,
+    getHistory
   }
 }

@@ -233,3 +233,8 @@ export interface CreateSquadResponse {
     createdAt: string
   }
 }
+
+export interface GetHistoryRequest {
+  page: number
+  size: number
+}

@@ -43,7 +43,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
           <Stack gap={4}>
             <SidebarItem icon="News" label="My feed" href="/app" />
             <SidebarItem icon="Flame" label="Explore" />
-            <SidebarItem icon="History" label="History" />
+            <SidebarItem icon="History" label="History" href="/history" />
           </Stack>
         </SidebarPart>
 
