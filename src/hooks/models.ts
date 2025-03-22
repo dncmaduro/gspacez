@@ -209,3 +209,27 @@ export interface ReactPostResponse {
     }
   }
 }
+
+export interface CreateSquadRequest {
+  name: string
+  tagName: string
+  privacy: string
+  description: string
+  setting: {
+    allowPostModeration: boolean
+    allowChangeProfileAccessibility: boolean
+    allowPostInteraction: boolean
+  }
+}
+
+export interface CreateSquadResponse {
+  result: {
+    id: string
+    name: string
+    privacy: string
+    description: string
+    adminName: string
+    adminId: string
+    createdAt: string
+  }
+}

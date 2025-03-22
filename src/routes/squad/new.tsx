@@ -6,6 +6,7 @@ import {
   Collapse,
   Radio,
   Stack,
+  Switch,
   Text,
   Textarea,
   TextInput
@@ -13,6 +14,12 @@ import {
 import { GIcon } from '../../components/common/GIcon'
 import { Controller, useForm } from 'react-hook-form'
 import { useDisclosure } from '@mantine/hooks'
+import { useSquad } from '../../hooks/useSquad'
+import { useMutation } from '@tanstack/react-query'
+import { CreateSquadRequest } from '../../hooks/models'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
+import { GToast } from '../../components/common/GToast'
 
 export const Route = createFileRoute('/squad/new')({
   component: RouteComponent
@@ -22,7 +29,12 @@ export interface CreateSquadType {
   name: string
   tagName: string
   description: string
-  type: 'public' | 'private'
+  privacy: 'public' | 'private'
+  setting: {
+    allowPostModeration: boolean
+    allowChangeProfileAccessibility: boolean
+    allowPostInteraction: boolean
+  }
 }
 
 function RouteComponent() {
@@ -31,13 +43,37 @@ function RouteComponent() {
     handleSubmit,
     formState: { errors }
   } = useForm<CreateSquadType>({
-    defaultValues: {}
+    defaultValues: {
+      privacy: 'public'
+    },
+    mode: 'onSubmit' // Ensure validation runs on form submission
+  })
+
+  const { createSquad } = useSquad()
+  const token = useSelector((state: RootState) => state.auth.token)
+
+  const { mutate: create, isPending } = useMutation({
+    mutationKey: ['create-squad'],
+    mutationFn: ({ req }: { req: CreateSquadRequest }) =>
+      createSquad(req, token),
+    onSuccess: () => {
+      GToast.success({
+        title: 'Create squad successfully!'
+      })
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Create squad failed!'
+      })
+    }
   })
 
   const [opened, { toggle }] = useDisclosure(false)
 
   const onSubmit = (values: CreateSquadType) => {
-    console.log(values)
+    create({
+      req: values
+    })
   }
 
   const privacyOptions = [
@@ -69,7 +105,7 @@ function RouteComponent() {
             <Controller
               control={control}
               name="name"
-              rules={{ required: true }}
+              rules={{ required: 'Name is required' }}
               render={({ field }) => {
                 return (
                   <TextInput
@@ -80,14 +116,14 @@ function RouteComponent() {
                     leftSection={<GIcon name="Label" size={20} />}
                     withAsterisk
                     radius="md"
-                    error={errors.name?.message}
+                    error={errors.name?.message} // Display error message
                   />
                 )
               }}
             />
             <Controller
               control={control}
-              rules={{ required: true }}
+              rules={{ required: 'Tag name is required' }}
               name="tagName"
               render={({ field }) => {
                 return (
@@ -99,7 +135,7 @@ function RouteComponent() {
                     withAsterisk
                     leftSection={<GIcon name="At" size={20} />}
                     radius="md"
-                    error={errors.tagName?.message}
+                    error={errors.tagName?.message} // Display error message
                   />
                 )
               }}
@@ -107,7 +143,6 @@ function RouteComponent() {
             <Controller
               control={control}
               name="description"
-              rules={{ required: true }}
               render={({ field }) => {
                 return (
                   <Textarea
@@ -119,14 +154,13 @@ function RouteComponent() {
                     minRows={4}
                     autosize
                     radius="md"
-                    error={errors.description?.message}
                   />
                 )
               }}
             />
             <Controller
               control={control}
-              name="type"
+              name="privacy"
               render={({ field }) => {
                 return (
                   <>
@@ -150,18 +184,58 @@ function RouteComponent() {
               }}
             />
             <Button
-              size="md"
+              size="sm"
               color="gray"
               onClick={() => toggle()}
               variant="default"
+              leftSection={<GIcon name="Settings" size={16} />}
               rightSection={
                 <GIcon name={opened ? 'ChevronUp' : 'ChevronDown'} size={16} />
               }
             >
               Advanced settings (Coming soon)
             </Button>
-            <Collapse in={opened}>Advanced settings</Collapse>
-            <Button type="submit">Submit your new squad</Button>
+            <Collapse in={opened}>
+              <Stack gap={24} mt={16}>
+                <Controller
+                  control={control}
+                  name="setting.allowChangeProfileAccessibility"
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      label="Allow change profile accessibility"
+                      description="Allow user can change who can view his/her post. There are 2 modes: For Only Admins and For Everyone."
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="setting.allowPostInteraction"
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      label="Allow change post interaction"
+                      description="Allow user can manage whether user can interact with his/her post."
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="setting.allowPostModeration"
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      label="Allow post under moderation"
+                      description="Allow moderator can accept or deny any post that members want to create."
+                    />
+                  )}
+                />
+              </Stack>
+            </Collapse>
+
+            <Button type="submit" mt={32} loading={isPending}>
+              Submit your new squad
+            </Button>
           </Stack>
         </form>
       </Box>
