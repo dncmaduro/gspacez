@@ -19,6 +19,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 import { ReactPostRequest } from '../../hooks/models'
+import { GLikeButton } from './GLikeButton'
+import { GDislikeButton } from './GDislikeButton'
 
 interface Props {
   post: IPost
@@ -82,11 +84,8 @@ export const GPost = ({ post }: Props) => {
           </Box>
         </Stack>
       </Link>
-      <Flex justify="space-between" mt={16}>
-        <ActionIcon
-          variant="subtle"
-          size="lg"
-          color={liked ? 'blue' : 'gray.9'}
+      <Flex justify="space-between" mt={16} align="center">
+        <GLikeButton
           onClick={() => {
             react({
               req: {
@@ -94,13 +93,10 @@ export const GPost = ({ post }: Props) => {
               }
             })
           }}
-        >
-          <GIcon name="ThumbUp" size={24} />
-        </ActionIcon>
-        <ActionIcon
-          variant="subtle"
-          size="lg"
-          color={disliked ? 'red' : 'gray.9'}
+          quantity={post.totalLike + (liked ? 1 : 0)}
+          isLiked={liked}
+        />
+        <GDislikeButton
           onClick={() => {
             react({
               req: {
@@ -108,11 +104,11 @@ export const GPost = ({ post }: Props) => {
               }
             })
           }}
-        >
-          <GIcon name="ThumbDown" size={24} />
-        </ActionIcon>
+          quantity={post.totalDislike + (disliked ? 1 : 0)}
+          isDisliked={disliked}
+        />
         <ActionIcon variant="subtle" size="lg" color="gray.9">
-          <GIcon name="Message" size={24} />
+          <GIcon name="Message" size={20} />
         </ActionIcon>
 
         <CopyButton value={`${window.location.origin}/post/${post.id}`}>
@@ -124,7 +120,7 @@ export const GPost = ({ post }: Props) => {
                 color="gray.9"
                 onClick={copy}
               >
-                <GIcon name="Link" size={24} />
+                <GIcon name="Link" size={20} />
               </ActionIcon>
             </Tooltip>
           )}
