@@ -30,6 +30,8 @@ import { CommentForm } from '../../components/post/CommentForm'
 import { useDisclosure } from '@mantine/hooks'
 import { CreateCommentRequest, ReactPostRequest } from '../../hooks/models'
 import { PostComments } from '../../components/post/PostComments'
+import { GLikeButton } from '../../components/common/GLikeButton'
+import { GDislikeButton } from '../../components/common/GDislikeButton'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent
@@ -181,10 +183,7 @@ function RouteComponent() {
               p={6}
             >
               <Group gap={32}>
-                <ActionIcon
-                  variant="subtle"
-                  color={postData?.liked ? 'blue' : 'gray'}
-                  size="lg"
+                <GLikeButton
                   onClick={() => {
                     react({
                       req: {
@@ -192,13 +191,10 @@ function RouteComponent() {
                       }
                     })
                   }}
-                >
-                  <GIcon name="ThumbUp" size={24} />
-                </ActionIcon>
-                <ActionIcon
-                  variant="subtle"
-                  color={postData?.disliked ? 'red' : 'gray'}
-                  size="lg"
+                  quantity={postData?.totalLike || 0}
+                  isLiked={postData?.liked || false}
+                />
+                <GDislikeButton
                   onClick={() => {
                     react({
                       req: {
@@ -206,9 +202,9 @@ function RouteComponent() {
                       }
                     })
                   }}
-                >
-                  <GIcon name="ThumbDown" size={24} />
-                </ActionIcon>
+                  quantity={postData?.totalDislike || 0}
+                  isDisliked={postData?.disliked || false}
+                />
                 <ActionIcon variant="subtle" color="gray" size="lg">
                   <GIcon name="Message" size={24} />
                 </ActionIcon>

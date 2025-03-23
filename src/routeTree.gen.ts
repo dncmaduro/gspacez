@@ -31,85 +31,85 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const MeIndexRoute = MeIndexImport.update({
   id: '/me/',
   path: '/me/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const HistoryIndexRoute = HistoryIndexImport.update({
   id: '/history/',
   path: '/history/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const ProfileProfileIdRoute = ProfileProfileIdImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const MeEditRoute = MeEditImport.update({
   id: '/me/edit',
   path: '/me/edit',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRoute
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -354,7 +354,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
   MeIndexRoute: MeIndexRoute,
-  PostEditPostIdRoute: PostEditPostIdRoute,
+  PostEditPostIdRoute: PostEditPostIdRoute
 }
 
 export const routeTree = rootRoute

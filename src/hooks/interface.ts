@@ -14,6 +14,8 @@ export interface IPost {
   comments: IComment[]
   liked: boolean
   disliked: boolean
+  totalLike: number
+  totalDislike: number
 }
 
 export interface IComment {
