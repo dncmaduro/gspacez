@@ -238,3 +238,16 @@ export interface GetHistoryRequest {
   page: number
   size: number
 }
+
+export interface GetHistoryResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    content: IPost[]
+  }
+}
