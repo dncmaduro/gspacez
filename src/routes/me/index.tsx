@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import {
   Box,
@@ -75,6 +75,8 @@ function RouteComponent() {
                     <Button
                       variant="subtle"
                       size="compact-sm"
+                      component={Link}
+                      to="/me/edit"
                       leftSection={<GIcon name="Pencil" size={16} />}
                     >
                       Edit your profile
