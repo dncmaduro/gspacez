@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useProfile } from '../../hooks/useProfile'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import {
@@ -282,7 +282,13 @@ function RouteComponent() {
               </Box>
             </Flex>
             <Group justify="center" mt={20}>
-              <Button w="fit-content" variant="default" disabled={isLoading}>
+              <Button
+                w="fit-content"
+                variant="default"
+                disabled={isLoading}
+                component={Link}
+                to="/me"
+              >
                 Cancel
               </Button>
               <Button w="fit-content" type="submit" loading={isLoading}>
