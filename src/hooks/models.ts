@@ -48,8 +48,10 @@ export interface RefreshTokenResponse {
 
 export interface LoginByGoogleResponse {
   message?: string
-  token: string
-  refreshToken: string
+  result: {
+    token: string
+    refreshToken: string
+  }
 }
 
 export interface GetNewsfeedRequest {
