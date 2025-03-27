@@ -34,6 +34,8 @@ export const GPost = ({ post }: Props) => {
   const token = useSelector((state: RootState) => state.auth.token)
   const [liked, setLiked] = useState(post.liked)
   const [disliked, setDisliked] = useState(post.disliked)
+  const [totalLikes, setTotalLikes] = useState(post.totalLike)
+  const [totalDislikes, setTotalDislikes] = useState(post.totalDislike)
 
   const { reactPost } = usePost()
 
@@ -46,8 +48,10 @@ export const GPost = ({ post }: Props) => {
         setLiked(false)
         setDisliked(false)
       } else {
-        setLiked(response.data.result.currentReact.reactType === 'LIKE')
-        setDisliked(response.data.result.currentReact.reactType === 'DISLIKE')
+        setLiked(response.data.result.currentReact === 'LIKE')
+        setDisliked(response.data.result.currentReact === 'DISLIKE')
+        setTotalLikes(response.data.result.totalLikes)
+        setTotalDislikes(response.data.result.totalDislikes)
       }
     }
   })
@@ -93,7 +97,7 @@ export const GPost = ({ post }: Props) => {
               }
             })
           }}
-          quantity={post.totalLike + (liked ? 1 : 0)}
+          quantity={totalLikes}
           isLiked={liked}
         />
         <GDislikeButton
@@ -104,7 +108,7 @@ export const GPost = ({ post }: Props) => {
               }
             })
           }}
-          quantity={post.totalDislike + (disliked ? 1 : 0)}
+          quantity={totalDislikes}
           isDisliked={disliked}
         />
         <ActionIcon variant="subtle" size="lg" color="gray.9">
