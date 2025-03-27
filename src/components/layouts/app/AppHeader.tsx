@@ -14,11 +14,17 @@ import { GIcon } from '../../common/GIcon'
 import { useAppDispatch } from '../../../store/store'
 import { logout } from '../../../store/authSlice'
 import { GToast } from '../../common/GToast'
+import { useState } from 'react'
 
-export const AppHeader = () => {
+interface Props {
+  hideSearchInput?: boolean
+}
+
+export const AppHeader = ({ hideSearchInput }: Props) => {
   const { location } = useRouterState()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const [searchText, setSearchText] = useState<string>('')
 
   const signOut = () => {
     dispatch(logout())
@@ -36,12 +42,21 @@ export const AppHeader = () => {
             <Image src={Logo} h={56} />
           </Link>
         </Group>
-        <TextInput
-          leftSection={<GIcon name="ZoomCode" size={20} />}
-          w={400}
-          radius="xl"
-          placeholder="Search in GspaceZ"
-        />
+        {!hideSearchInput && (
+          <TextInput
+            leftSection={<GIcon name="ZoomCode" size={20} />}
+            w={400}
+            radius="xl"
+            placeholder="Search in GspaceZ"
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+            onKeyDownCapture={(e) => {
+              if (e.key === 'Enter') {
+                navigate({ to: `/search?searchText=${searchText}` })
+              }
+            }}
+          />
+        )}
         <Group gap={16}>
           {location.pathname !== '/post/new' && (
             <Button

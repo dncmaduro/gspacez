@@ -20,7 +20,7 @@ import { GIcon } from '../common/GIcon'
 import { useCloudinary } from '../../hooks/useCloudinary'
 import { useMutation } from '@tanstack/react-query'
 import { ReactNode, useState } from 'react'
-import { mediaText } from '../../utils/mediatText'
+import { mediaText } from '../../utils/mediaText'
 import ReactMarkdown from 'react-markdown'
 
 export const PostForm = () => {

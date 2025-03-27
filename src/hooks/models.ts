@@ -252,3 +252,33 @@ export interface GetHistoryResponse {
     content: IPost[]
   }
 }
+
+export interface BaseSearchRequest {
+  searchText: string
+  size: number
+  page: number
+}
+
+export interface SearchUsersResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    content: {
+      id: string
+      email: string
+      firstName: string
+      lastName: string
+      roles: {
+        name: string
+        description: string
+        permisssions: string[]
+      }
+    }[]
+  }
+}
