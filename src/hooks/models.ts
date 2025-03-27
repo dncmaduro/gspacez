@@ -203,10 +203,9 @@ export interface ReactPostRequest {
 
 export interface ReactPostResponse {
   result: {
-    currentReact: {
-      createdAt: string
-      reactType: string
-    }
+    currentReact: string
+    totalLikes: number
+    totalDislikes: number
   }
 }
 
