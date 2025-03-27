@@ -53,7 +53,6 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             <Divider my={2} w="100%" />
             <SidebarItem icon="Html" label="Web Development" />
             <SidebarItem icon="DeviceMobile" label="Mobile Development" />
-            <SidebarItem icon="Ai" label="AI" href="/ai" />
             <SidebarItem icon="Database" label="Database" />
             <SidebarItem icon="Cloud" label="Cloud" />
             {opened ? (
@@ -73,6 +72,10 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
               </ActionIcon>
             )}
           </Stack>
+        </SidebarPart>
+
+        <SidebarPart title="AI" icon="AI" opened={opened}>
+          <SidebarItem icon="Ai" label="AI" href="/ai" />
         </SidebarPart>
 
         <SidebarPart title="Discover" icon="Compass" opened={opened}>
