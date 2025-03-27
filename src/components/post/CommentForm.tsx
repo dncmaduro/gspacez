@@ -4,7 +4,7 @@ import { GIcon } from '../common/GIcon'
 import { CommentFormType } from '../../routes/post/$postId'
 import { useMutation } from '@tanstack/react-query'
 import { useCloudinary } from '../../hooks/useCloudinary'
-import { mediaText } from '../../utils/mediatText'
+import { mediaText } from '../../utils/mediaText'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 

@@ -5,7 +5,14 @@ import { AppSidebar } from './AppSidebar'
 import { useDisclosure } from '@mantine/hooks'
 import { GAuthGuard } from '../../common/GAuthGuard'
 
-export const AppLayout = ({ children }: ChildProps) => {
+interface Props {
+  hideSearchInput?: boolean
+}
+
+export const AppLayout = ({
+  children,
+  hideSearchInput
+}: ChildProps & Props) => {
   const [opended, { toggle }] = useDisclosure(true)
 
   return (
@@ -19,7 +26,7 @@ export const AppLayout = ({ children }: ChildProps) => {
         padding="md"
       >
         <AppShell.Header>
-          <AppHeader />
+          <AppHeader hideSearchInput={hideSearchInput} />
         </AppShell.Header>
         <AppShell.Navbar className="transition-all duration-300 ease-in-out">
           <AppSidebar toggle={toggle} opened={opended} />

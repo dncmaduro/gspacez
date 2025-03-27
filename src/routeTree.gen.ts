@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RecoveryImport } from './routes/recovery'
 import { Route as IndexImport } from './routes/index'
+import { Route as SearchIndexImport } from './routes/search/index'
 import { Route as MeIndexImport } from './routes/me/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as AppIndexImport } from './routes/app/index'
@@ -31,85 +32,91 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SearchIndexRoute = SearchIndexImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeIndexRoute = MeIndexImport.update({
   id: '/me/',
   path: '/me/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const HistoryIndexRoute = HistoryIndexImport.update({
   id: '/history/',
   path: '/history/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProfileProfileIdRoute = ProfileProfileIdImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeEditRoute = MeEditImport.update({
   id: '/me/edit',
   path: '/me/edit',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -207,6 +214,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MeIndexImport
       parentRoute: typeof rootRoute
     }
+    '/search/': {
+      id: '/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/post/edit/$postId': {
       id: '/post/edit/$postId'
       path: '/post/edit/$postId'
@@ -233,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppIndexRoute
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
+  '/search': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
 
@@ -250,6 +265,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
+  '/search': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
 
@@ -268,6 +284,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/history/': typeof HistoryIndexRoute
   '/me/': typeof MeIndexRoute
+  '/search/': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
 }
 
@@ -287,6 +304,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/history'
     | '/me'
+    | '/search'
     | '/post/edit/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -303,6 +321,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/history'
     | '/me'
+    | '/search'
     | '/post/edit/$postId'
   id:
     | '__root__'
@@ -319,6 +338,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/history/'
     | '/me/'
+    | '/search/'
     | '/post/edit/$postId'
   fileRoutesById: FileRoutesById
 }
@@ -337,6 +357,7 @@ export interface RootRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
   MeIndexRoute: typeof MeIndexRoute
+  SearchIndexRoute: typeof SearchIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
 }
 
@@ -354,7 +375,8 @@ const rootRouteChildren: RootRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
   MeIndexRoute: MeIndexRoute,
-  PostEditPostIdRoute: PostEditPostIdRoute
+  SearchIndexRoute: SearchIndexRoute,
+  PostEditPostIdRoute: PostEditPostIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -380,6 +402,7 @@ export const routeTree = rootRoute
         "/app/",
         "/history/",
         "/me/",
+        "/search/",
         "/post/edit/$postId"
       ]
     },
@@ -421,6 +444,9 @@ export const routeTree = rootRoute
     },
     "/me/": {
       "filePath": "me/index.tsx"
+    },
+    "/search/": {
+      "filePath": "search/index.tsx"
     },
     "/post/edit/$postId": {
       "filePath": "post/edit.$postId.tsx"
