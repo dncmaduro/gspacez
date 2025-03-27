@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_UPLOAD_PRESET: string
   readonly CLOUDINARY_API_KEY: string
   readonly CLOUDINARY_CLOUD_NAME: string
+  readonly NODE_ENV: 'development' | 'production'
 }
 
 interface ImportMeta {
