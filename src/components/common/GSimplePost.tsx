@@ -18,7 +18,7 @@ interface Props {
   post: IPost
 }
 
-export const GHistory = ({ post }: Props) => {
+export const GSimplePost = ({ post }: Props) => {
   return (
     <Box className="rounded-lg border border-gray-300" p={16}>
       <Group>

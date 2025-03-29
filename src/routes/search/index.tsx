@@ -5,6 +5,7 @@ import { GIcon } from '../../components/common/GIcon'
 import { useEffect, useState } from 'react'
 import { UsersSearch } from '../../components/search/UsersSearch'
 import { useQueryClient } from '@tanstack/react-query'
+import { PostsSearch } from '../../components/search/PostsSearch'
 
 export const Route = createFileRoute('/search/')({
   component: RouteComponent,
@@ -31,7 +32,7 @@ function RouteComponent() {
     {
       label: 'Posts',
       value: 'posts',
-      tab: <></>
+      tab: <PostsSearch searchText={searchText} triggerSearch={triggerSearch} />
     }
   ]
 
