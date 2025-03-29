@@ -1,5 +1,9 @@
 import { callApi } from '../utils/axios'
-import { CreateSquadRequest, CreateSquadResponse } from './models'
+import {
+  CreateSquadRequest,
+  CreateSquadResponse,
+  GetSquadResponse
+} from './models'
 
 export const useSquad = () => {
   const createSquad = async (req: CreateSquadRequest, token: string) => {
@@ -11,5 +15,13 @@ export const useSquad = () => {
     })
   }
 
-  return { createSquad }
+  const getSquad = async (tagName: string, token: string) => {
+    return callApi<never, GetSquadResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/squads/${tagName}/info`,
+      token
+    })
+  }
+
+  return { createSquad, getSquad }
 }
