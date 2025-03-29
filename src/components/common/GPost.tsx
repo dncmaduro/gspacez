@@ -21,6 +21,7 @@ import { RootState } from '../../store/store'
 import { ReactPostRequest } from '../../hooks/models'
 import { GLikeButton } from './GLikeButton'
 import { GDislikeButton } from './GDislikeButton'
+import { GCommentButton } from './GCommentButton'
 
 interface Props {
   post: IPost
@@ -111,9 +112,7 @@ export const GPost = ({ post }: Props) => {
           quantity={totalDislikes}
           isDisliked={disliked}
         />
-        <ActionIcon variant="subtle" size="lg" color="gray.9">
-          <GIcon name="Message" size={20} />
-        </ActionIcon>
+        <GCommentButton postId={post.id} />
 
         <CopyButton value={`${window.location.origin}/post/${post.id}`}>
           {({ copied, copy }) => (
