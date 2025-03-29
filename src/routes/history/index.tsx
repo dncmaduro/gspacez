@@ -5,7 +5,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Box, Button, Group, Skeleton, Stack, Text } from '@mantine/core'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
-import { GHistory } from '../../components/common/GHistory'
+import { GSimplePost } from '../../components/common/GSimplePost'
 import { useEffect, useRef, useState } from 'react'
 import { GIcon } from '../../components/common/GIcon'
 
@@ -68,7 +68,7 @@ function RouteComponent() {
         </Text>
         <Stack gap={24}>
           {history?.content.map((post, index) => (
-            <GHistory key={index} post={post} />
+            <GSimplePost key={index} post={post} />
           ))}
           {total && page < total ? (
             <Box

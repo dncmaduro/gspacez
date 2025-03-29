@@ -283,3 +283,18 @@ export interface SearchUsersResponse {
     }[]
   }
 }
+
+export interface SearchPostsResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IPost[]
+  }
+}
