@@ -269,6 +269,7 @@ export interface SearchUsersResponse {
       offset: number
     }
     size: number
+    number: number
     content: {
       id: string
       email: string
