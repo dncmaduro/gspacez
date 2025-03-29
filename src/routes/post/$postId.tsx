@@ -3,7 +3,8 @@ import {
   createFileRoute,
   Link,
   useParams,
-  useRouter
+  useRouter,
+  useSearch
 } from '@tanstack/react-router'
 import { usePost } from '../../hooks/usePost'
 import { useSelector } from 'react-redux'
@@ -24,7 +25,7 @@ import {
 } from '@mantine/core'
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../../components/common/GIcon'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CommentForm } from '../../components/post/CommentForm'
 import { useDisclosure } from '@mantine/hooks'
@@ -34,7 +35,11 @@ import { GLikeButton } from '../../components/common/GLikeButton'
 import { GDislikeButton } from '../../components/common/GDislikeButton'
 
 export const Route = createFileRoute('/post/$postId')({
-  component: RouteComponent
+  component: RouteComponent,
+  validateSearch: (search) =>
+    search as {
+      comment?: boolean
+    }
 })
 
 export type CommentFormType = {
@@ -42,8 +47,9 @@ export type CommentFormType = {
 }
 
 function RouteComponent() {
+  const params = useSearch({ strict: false })
   const { postId } = useParams({ from: `/post/$postId` })
-  const [opened, { toggle }] = useDisclosure(false)
+  const [opened, { toggle }] = useDisclosure(params.comment ? true : false)
   const token = useSelector((state: RootState) => state.auth.token)
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -72,6 +78,13 @@ function RouteComponent() {
       refetch()
     }
   })
+
+  useEffect(() => {
+    if (opened) {
+      const textarea = document.getElementById('comment-textarea')
+      textarea?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [opened])
 
   const privacyIcons: Record<string, ReactNode> = {
     PUBLIC: <GIcon name="World" size={16} color="gray" />,
@@ -205,9 +218,6 @@ function RouteComponent() {
                   quantity={postData?.totalDislike || 0}
                   isDisliked={postData?.disliked || false}
                 />
-                <ActionIcon variant="subtle" color="gray" size="lg">
-                  <GIcon name="Message" size={24} />
-                </ActionIcon>
                 <Tooltip label={tooltipText} position="bottom" withArrow>
                   <ActionIcon
                     variant="subtle"

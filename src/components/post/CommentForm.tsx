@@ -63,6 +63,7 @@ export const CommentForm = () => {
 
         <Tabs.Panel value="write">
           <Textarea
+            id="comment-textarea"
             w="100%"
             {...register('text', {
               required: { value: true, message: 'Content is required' }
