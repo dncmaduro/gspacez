@@ -22,9 +22,11 @@ function RouteComponent() {
   const { mutate } = useMutation({
     mutationFn: loginWithGoogle,
     onSuccess: (response) => {
-      dispatch(setAuth({ 
-        token: response.data.result.token,
-      }))
+      dispatch(
+        setAuth({
+          token: response.data.result.token
+        })
+      )
       navigate({ to: '/app' })
     },
     onError: () => {

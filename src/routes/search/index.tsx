@@ -18,6 +18,7 @@ export const Route = createFileRoute('/search/')({
 function RouteComponent() {
   const params = useSearch({ strict: false })
   const [searchText, setSearchText] = useState<string>(params.searchText)
+  const [triggerSearch, setTriggerSearch] = useState<boolean>(false)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -25,7 +26,7 @@ function RouteComponent() {
     {
       label: 'Users',
       value: 'users',
-      tab: <UsersSearch searchText={searchText} />
+      tab: <UsersSearch searchText={searchText} triggerSearch={triggerSearch} />
     },
     {
       label: 'Posts',
@@ -58,6 +59,7 @@ function RouteComponent() {
                 navigate({
                   to: `/search?searchText=${searchText}&tab=${params.tab}`
                 })
+                setTriggerSearch((prev) => !prev)
                 queryClient.invalidateQueries({ queryKey: ['search-users'] })
               }
             }}
@@ -74,6 +76,8 @@ function RouteComponent() {
         onChange={(e) =>
           navigate({ to: `/search?searchText=${searchText}&tab=${e}` })
         }
+        maw={1000}
+        mx={'auto'}
       >
         <Tabs.List>
           {tabs.map((tab) => (
