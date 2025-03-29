@@ -19,6 +19,7 @@ import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as AiIndexImport } from './routes/ai/index'
 import { Route as SquadNewImport } from './routes/squad/new'
+import { Route as SquadTagNameImport } from './routes/squad/$tagName'
 import { Route as ProfileProfileIdImport } from './routes/profile/$profileId'
 import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
@@ -74,6 +75,12 @@ const AiIndexRoute = AiIndexImport.update({
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
+  getParentRoute: () => rootRoute
+} as any)
+
+const SquadTagNameRoute = SquadTagNameImport.update({
+  id: '/squad/$tagName',
+  path: '/squad/$tagName',
   getParentRoute: () => rootRoute
 } as any)
 
@@ -179,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdImport
       parentRoute: typeof rootRoute
     }
+    '/squad/$tagName': {
+      id: '/squad/$tagName'
+      path: '/squad/$tagName'
+      fullPath: '/squad/$tagName'
+      preLoaderRoute: typeof SquadTagNameImport
+      parentRoute: typeof rootRoute
+    }
     '/squad/new': {
       id: '/squad/new'
       path: '/squad/new'
@@ -242,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/$tagName': typeof SquadTagNameRoute
   '/squad/new': typeof SquadNewRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
@@ -260,6 +275,7 @@ export interface FileRoutesByTo {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/$tagName': typeof SquadTagNameRoute
   '/squad/new': typeof SquadNewRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
@@ -279,6 +295,7 @@ export interface FileRoutesById {
   '/post/$postId': typeof PostPostIdRoute
   '/post/new': typeof PostNewRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/squad/$tagName': typeof SquadTagNameRoute
   '/squad/new': typeof SquadNewRoute
   '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
@@ -299,6 +316,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/$tagName'
     | '/squad/new'
     | '/ai'
     | '/app'
@@ -316,6 +334,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/$tagName'
     | '/squad/new'
     | '/ai'
     | '/app'
@@ -333,6 +352,7 @@ export interface FileRouteTypes {
     | '/post/$postId'
     | '/post/new'
     | '/profile/$profileId'
+    | '/squad/$tagName'
     | '/squad/new'
     | '/ai/'
     | '/app/'
@@ -352,6 +372,7 @@ export interface RootRouteChildren {
   PostPostIdRoute: typeof PostPostIdRoute
   PostNewRoute: typeof PostNewRoute
   ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  SquadTagNameRoute: typeof SquadTagNameRoute
   SquadNewRoute: typeof SquadNewRoute
   AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -370,6 +391,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostPostIdRoute: PostPostIdRoute,
   PostNewRoute: PostNewRoute,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
+  SquadTagNameRoute: SquadTagNameRoute,
   SquadNewRoute: SquadNewRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
@@ -397,6 +419,7 @@ export const routeTree = rootRoute
         "/post/$postId",
         "/post/new",
         "/profile/$profileId",
+        "/squad/$tagName",
         "/squad/new",
         "/ai/",
         "/app/",
@@ -429,6 +452,9 @@ export const routeTree = rootRoute
     },
     "/profile/$profileId": {
       "filePath": "profile/$profileId.tsx"
+    },
+    "/squad/$tagName": {
+      "filePath": "squad/$tagName.tsx"
     },
     "/squad/new": {
       "filePath": "squad/new.tsx"

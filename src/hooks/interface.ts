@@ -31,3 +31,22 @@ export interface IComment {
   createdAt: string
   updatedAt: string | null
 }
+
+export interface ISquad {
+  id: string
+  name: string
+  tagName: string
+  avatarUrl: string
+  privacy: string
+  description: string
+  adminName: string
+  adminId: string
+  createdAt: string
+  totalPosts: number
+  totalMembers: number
+  settings: {
+    allowPostModeration: boolean
+    allowChangeProfileAccessibility: boolean
+    allowPostInteraction: boolean
+  }
+}

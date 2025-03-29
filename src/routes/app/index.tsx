@@ -65,7 +65,7 @@ function RouteComponent() {
   return (
     <>
       <Helmet>
-        <title>GspaceZ Home</title>
+        <title>My Feed - GspaceZ</title>
       </Helmet>
       <AppLayout>
         <Box px={32} py={24}>
