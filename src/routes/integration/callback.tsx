@@ -14,10 +14,9 @@ function RouteComponent() {
   const { code } = useSearch({ from: '/integration/callback' })
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const processedCode = useRef<string | null>(null)
 
   const { loginWithGoogle } = useAuth()
-
-  const hasMounted = useRef(false)
 
   const { mutate } = useMutation({
     mutationFn: loginWithGoogle,
@@ -38,14 +37,12 @@ function RouteComponent() {
   })
 
   useEffect(() => {
-    if (hasMounted.current) {
+    // Check if code exists and hasn't been processed yet ???
+    if (code && code !== processedCode.current) {
+      processedCode.current = code
       mutate(code)
-    }
-  }, [code])
-
-  useEffect(() => {
-    hasMounted.current = true
-  }, [])
+    } 
+  }, [code, mutate])
 
   return <></>
 }
