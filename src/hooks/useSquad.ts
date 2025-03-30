@@ -2,7 +2,9 @@ import { callApi } from '../utils/axios'
 import {
   CreateSquadRequest,
   CreateSquadResponse,
-  GetSquadResponse
+  GetSquadResponse,
+  UpdateSquadRequest,
+  UpdateSquadResponse
 } from './models'
 
 export const useSquad = () => {
@@ -23,5 +25,18 @@ export const useSquad = () => {
     })
   }
 
-  return { createSquad, getSquad }
+  const updateSquad = async (
+    tagName: string,
+    req: UpdateSquadRequest,
+    token: string
+  ) => {
+    return callApi<UpdateSquadRequest, UpdateSquadResponse>({
+      method: 'PUT',
+      path: `/v1/profile-service/squads/${tagName}/update`,
+      token,
+      data: req
+    })
+  }
+
+  return { createSquad, getSquad, updateSquad }
 }
