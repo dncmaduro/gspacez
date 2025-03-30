@@ -28,10 +28,18 @@ export const Route = createFileRoute('/squad/$tagName')({
 
 function RouteComponent() {
   const { getSquad } = useSquad()
-  const { getProfile } = useProfile()
+  const { getProfile, getJoinedSquads } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
   const { data: meData } = useMe()
+
+  const { data: joinedSquads } = useQuery({
+    queryKey: ['get-joined-squads'],
+    queryFn: () => getJoinedSquads(token),
+    select: (data) => {
+      return data.data.result.map((squad) => squad.tagName)
+    }
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-squad'],
@@ -96,16 +104,33 @@ function RouteComponent() {
                     </Text>
                   </Stack>
                 </Group>
-                {meData?.id === data?.adminId && (
+                {meData?.id === data?.adminId ? (
                   <Button
                     variant="default"
-                    leftSection={<GIcon name="Pencil" />}
+                    leftSection={<GIcon name="Pencil" size={16} />}
                     radius={'md'}
-                    size="sm"
                     component={Link}
                     to={`/squad/edit/${data?.tagName}`}
                   >
                     Edit your squad
+                  </Button>
+                ) : data && joinedSquads?.includes(data?.tagName) ? (
+                  <Button
+                    color="indigo"
+                    radius={'md'}
+                    variant="light"
+                    leftSection={<GIcon name="Check" size={16} />}
+                  >
+                    Joined
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    radius={'md'}
+                    color="green"
+                    leftSection={<GIcon name="Login2" size={16} />}
+                  >
+                    Join squad
                   </Button>
                 )}
               </Flex>
