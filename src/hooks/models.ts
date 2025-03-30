@@ -312,3 +312,10 @@ export interface UpdateSquadRequest {
 export interface UpdateSquadResponse {
   result: ISquad
 }
+
+export interface JoinedSquadsResponse {
+  result: {
+    squadName: string
+    tagName: string
+  }[]
+}

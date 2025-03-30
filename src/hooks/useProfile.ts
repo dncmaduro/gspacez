@@ -2,6 +2,7 @@ import { callApi } from '../utils/axios'
 import {
   GetMeResponse,
   GetProfileResponse,
+  JoinedSquadsResponse,
   UpdateMeRequest,
   UpdateMeResponse
 } from './models'
@@ -31,5 +32,13 @@ export const useProfile = () => {
     })
   }
 
-  return { getMe, getProfile, updateMe }
+  const getJoinedSquads = async (token: string) => {
+    return callApi<never, JoinedSquadsResponse>({
+      path: `/v1/profile-service/squads/joined`,
+      method: 'GET',
+      token
+    })
+  }
+
+  return { getMe, getProfile, updateMe, getJoinedSquads }
 }
