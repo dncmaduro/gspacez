@@ -8,7 +8,9 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Divider,
+  Flex,
   Group,
   Loader,
   Stack,
@@ -18,6 +20,7 @@ import { GIcon } from '../../components/common/GIcon'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useProfile } from '../../hooks/useProfile'
+import { useMe } from '../../hooks/useMe'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent
@@ -28,6 +31,7 @@ function RouteComponent() {
   const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
+  const { data: meData } = useMe()
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-squad'],
@@ -64,29 +68,47 @@ function RouteComponent() {
               <title>{data?.name} - Squad</title>
             </Helmet>
             <Stack gap={0}>
-              <Group gap={16}>
-                <Avatar src={data?.avatarUrl} size={'lg'} />
-                <Stack gap={0}>
-                  <Group>
-                    <Text className="!text-lg">{data?.name}</Text>
-                    <Badge
-                      color={isPrivate ? 'red' : 'indigo'}
-                      variant="light"
-                      leftSection={
-                        <GIcon
-                          name={isPrivate ? 'LockFilled' : 'World'}
-                          size={16}
-                        />
-                      }
-                    >
-                      {data?.privacy}
-                    </Badge>
-                  </Group>
-                  <Text size="sm" c={'dimmed'}>
-                    {data?.tagName}
-                  </Text>
-                </Stack>
-              </Group>
+              <Flex align={'flex-start'} justify={'space-between'}>
+                <Group gap={16}>
+                  <Avatar
+                    src={data?.avatarUrl}
+                    size={'lg'}
+                    className="border border-gray-300"
+                  />
+                  <Stack gap={0}>
+                    <Group>
+                      <Text className="!text-lg">{data?.name}</Text>
+                      <Badge
+                        color={isPrivate ? 'red' : 'indigo'}
+                        variant="light"
+                        leftSection={
+                          <GIcon
+                            name={isPrivate ? 'LockFilled' : 'World'}
+                            size={16}
+                          />
+                        }
+                      >
+                        {data?.privacy}
+                      </Badge>
+                    </Group>
+                    <Text size="sm" c={'dimmed'}>
+                      {data?.tagName}
+                    </Text>
+                  </Stack>
+                </Group>
+                {meData?.id === data?.adminId && (
+                  <Button
+                    variant="default"
+                    leftSection={<GIcon name="Pencil" />}
+                    radius={'md'}
+                    size="sm"
+                    component={Link}
+                    to={`/squad/edit/${data?.tagName}`}
+                  >
+                    Edit your squad
+                  </Button>
+                )}
+              </Flex>
 
               <Group mt={24} gap={12}>
                 <Avatar src={admin?.avatarUrl} size={'sm'} />

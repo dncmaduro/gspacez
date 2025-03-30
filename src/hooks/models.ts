@@ -216,6 +216,7 @@ export interface CreateSquadRequest {
   tagName: string
   privacy: string
   description: string
+  avatarUrl: string
   setting: {
     allowPostModeration: boolean
     allowChangeProfileAccessibility: boolean
@@ -292,5 +293,22 @@ export interface SearchPostsResponse {
 }
 
 export interface GetSquadResponse {
+  result: ISquad
+}
+
+export interface UpdateSquadRequest {
+  name: string
+  tagName: string
+  avatarUrl: string
+  privacy: string
+  description: string
+  setting: {
+    allowPostModeration: boolean
+    allowChangeProfileAccessibility: boolean
+    allowPostInteraction: boolean
+  }
+}
+
+export interface UpdateSquadResponse {
   result: ISquad
 }
