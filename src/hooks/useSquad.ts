@@ -3,6 +3,8 @@ import {
   CreateSquadRequest,
   CreateSquadResponse,
   GetSquadResponse,
+  JoinSquadRequest,
+  LeaveSquadRequest,
   UpdateSquadRequest,
   UpdateSquadResponse
 } from './models'
@@ -38,5 +40,21 @@ export const useSquad = () => {
     })
   }
 
-  return { createSquad, getSquad, updateSquad }
+  const sendRequest = async (req: JoinSquadRequest, token: string) => {
+    return callApi<never, never>({
+      method: 'POST',
+      path: `/v1/profile-service/squads/${req.tagName}/send-request`,
+      token
+    })
+  }
+
+  const leaveSquad = async (req: LeaveSquadRequest, token: string) => {
+    return callApi<never, never>({
+      method: 'POST',
+      path: `/v1/profile-service/squads/${req.tagName}/leave-squad`,
+      token
+    })
+  }
+
+  return { createSquad, getSquad, updateSquad, sendRequest, leaveSquad }
 }
