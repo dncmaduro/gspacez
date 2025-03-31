@@ -39,8 +39,13 @@ export interface ISquad {
   avatarUrl: string
   privacy: string
   description: string
-  adminName: string
-  adminId: string
+  adminList: {
+    id: string
+    profileName: string
+    profileId: string
+    role: string
+    joinedAt: string
+  }[]
   createdAt: string
   totalPosts: number
   totalMembers: number

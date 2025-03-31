@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useSquad } from '../../hooks/useSquad'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 import {
@@ -21,19 +21,27 @@ import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useProfile } from '../../hooks/useProfile'
 import { useMe } from '../../hooks/useMe'
+import { AxiosResponse } from 'axios'
+import {
+  GetProfileResponse,
+  JoinSquadRequest,
+  LeaveSquadRequest
+} from '../../hooks/models'
+import { GToast } from '../../components/common/GToast'
+import { modals } from '@mantine/modals'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent
 })
 
 function RouteComponent() {
-  const { getSquad } = useSquad()
+  const { getSquad, sendRequest, leaveSquad } = useSquad()
   const { getProfile, getJoinedSquads } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
   const { data: meData } = useMe()
 
-  const { data: joinedSquads } = useQuery({
+  const { data: joinedSquads, refetch: refetchJoined } = useQuery({
     queryKey: ['get-joined-squads'],
     queryFn: () => getJoinedSquads(token),
     select: (data) => {
@@ -41,7 +49,11 @@ function RouteComponent() {
     }
   })
 
-  const { data, isLoading } = useQuery({
+  const {
+    data,
+    isLoading,
+    refetch: refetchSquad
+  } = useQuery({
     queryKey: ['get-squad'],
     queryFn: () => {
       return getSquad(tagName, token)
@@ -51,19 +63,95 @@ function RouteComponent() {
     }
   })
 
-  const { data: admin } = useQuery({
-    queryKey: ['get-admin', data?.adminId],
-    queryFn: () => {
-      return getProfile(data?.adminId || '')
+  const queries = useMemo(() => {
+    if (!data?.adminList) return []
+
+    return data.adminList.map((admin) => ({
+      queryKey: ['get-admin', admin.profileId],
+      queryFn: () => getProfile(admin.profileId),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      select: (data: AxiosResponse<GetProfileResponse, any>) => {
+        return data?.data.result
+      }
+    }))
+  }, [data, getProfile])
+
+  const adminResults = useQueries({ queries })
+
+  const adminIds = useMemo(() => {
+    return data?.adminList.map((admin) => admin.profileId)
+  }, [data])
+
+  const isPrivate = useMemo(() => {
+    return data?.privacy === 'private'
+  }, [data])
+
+  const { mutate: send, isPending: isSendingRequest } = useMutation({
+    mutationKey: ['join-squad'],
+    mutationFn: ({ tagName }: JoinSquadRequest) => {
+      return sendRequest({ tagName }, token)
     },
-    select: (data) => {
-      return data?.data.result
+    onSuccess: () => {
+      GToast.success({
+        title: 'Send request successfully!'
+      })
+      refetchSquad()
+      refetchJoined()
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Send request failed'
+      })
     }
   })
 
-  const isPrivate = useMemo(() => {
-    return data?.privacy === 'PRIVATE'
-  }, [data])
+  const handleJoinSquad = () => {
+    if (data?.tagName) {
+      send({ tagName: data.tagName })
+    }
+  }
+
+  const { mutate: leave, isPending: isSendingLeave } = useMutation({
+    mutationKey: ['leave-squad'],
+    mutationFn: ({ tagName }: LeaveSquadRequest) => {
+      return leaveSquad({ tagName }, token)
+    },
+    onSuccess: () => {
+      GToast.success({
+        title: 'Leave squad successfully!'
+      })
+      refetchSquad()
+      refetchJoined()
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Leave squad failed'
+      })
+    }
+  })
+
+  const handleLeaveSquad = () => {
+    if (data?.tagName) {
+      modals.openConfirmModal({
+        title: (
+          <Text>
+            Are you sure to leave squad{' '}
+            <span className="font-bold">{data.name}</span>?
+          </Text>
+        ),
+        onConfirm: () => {
+          leave({ tagName: data.tagName })
+          modals.closeAll()
+        },
+        onCancel: () => modals.closeAll(),
+        labels: {
+          confirm: 'Leave',
+          cancel: 'Cancel'
+        },
+        confirmProps: { color: 'red' }
+      })
+    }
+  }
 
   return (
     <AppLayout>
@@ -104,7 +192,7 @@ function RouteComponent() {
                     </Text>
                   </Stack>
                 </Group>
-                {meData?.id === data?.adminId ? (
+                {adminIds?.includes(meData?.id || '') ? (
                   <Button
                     variant="default"
                     leftSection={<GIcon name="Pencil" size={16} />}
@@ -119,6 +207,8 @@ function RouteComponent() {
                     color="indigo"
                     radius={'md'}
                     variant="light"
+                    onClick={() => handleLeaveSquad()}
+                    loading={isSendingLeave}
                     leftSection={<GIcon name="Check" size={16} />}
                   >
                     Joined
@@ -128,6 +218,8 @@ function RouteComponent() {
                     variant="outline"
                     radius={'md'}
                     color="green"
+                    onClick={() => handleJoinSquad()}
+                    loading={isSendingRequest}
                     leftSection={<GIcon name="Login2" size={16} />}
                   >
                     Join squad
@@ -136,26 +228,39 @@ function RouteComponent() {
               </Flex>
 
               <Group mt={24} gap={12}>
-                <Avatar src={admin?.avatarUrl} size={'sm'} />
-                <Text component={Link} to={`/profile/${data?.adminId}`}>
-                  {data?.adminName} (Admin)
-                </Text>
+                {adminResults.map(
+                  (adminResult, index) =>
+                    adminResult.data && (
+                      <Group key={data?.adminList[index].profileId} gap={12}>
+                        <Avatar src={adminResult.data.avatarUrl} size={'sm'} />
+                        <Text
+                          component={Link}
+                          to={`/profile/${adminResult.data.id}`}
+                        >
+                          {adminResult.data.firstName}{' '}
+                          {adminResult.data.lastName}
+                        </Text>
+                      </Group>
+                    )
+                )}
               </Group>
 
-              <Box
-                p={8}
-                mt={16}
-                bg={'gray.1'}
-                className="rounded-lg border border-gray-200"
-                maw={400}
-              >
-                <Text className="!font-bold" pl={8}>
-                  About this squad
-                </Text>
-                <Text pl={8} pt={16}>
-                  {data?.description}
-                </Text>
-              </Box>
+              {data?.description && (
+                <Box
+                  p={8}
+                  mt={16}
+                  bg={'gray.1'}
+                  className="rounded-lg border border-gray-200"
+                  maw={400}
+                >
+                  <Text className="!font-bold" pl={8}>
+                    About this squad
+                  </Text>
+                  <Text pl={8} pt={16}>
+                    {data?.description}
+                  </Text>
+                </Box>
+              )}
 
               <Divider mt={16} />
 

@@ -319,3 +319,11 @@ export interface JoinedSquadsResponse {
     tagName: string
   }[]
 }
+
+export interface JoinSquadRequest {
+  tagName: string
+}
+
+export interface LeaveSquadRequest {
+  tagName: string
+}
