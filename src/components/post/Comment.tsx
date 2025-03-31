@@ -15,6 +15,7 @@ import ReactMarkdown from 'react-markdown'
 import { GIcon } from '../common/GIcon'
 import { useDisclosure } from '@mantine/hooks'
 import { Link } from '@tanstack/react-router'
+import { convertTime } from '../../utils/convertTime'
 
 interface Props {
   comment: IComment
@@ -38,7 +39,7 @@ export const Comment = ({ comment, children }: Props) => {
             {comment.profileName}
           </Text>
           <Text c="dimmed" size="sm">
-            Time is not available
+            {convertTime(new Date(comment.createdAt), comment.updatedAt ? new Date(comment.updatedAt) : null)}
           </Text>
         </Stack>
       </Flex>
@@ -83,7 +84,7 @@ export const Comment = ({ comment, children }: Props) => {
               <Stack gap={1}>
                 <Text>{comment.profileName}</Text>
                 <Text c="dimmed" size="sm">
-                  Time is not available
+                  {convertTime(new Date(comment.createdAt), comment.updatedAt ? new Date(comment.updatedAt) : null)}
                 </Text>
               </Stack>
             </Flex>
