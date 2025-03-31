@@ -1,51 +1,54 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePost } from '../../hooks/usePost'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 import { Box, Button, Grid, Loader } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { GPost } from '../../components/common/GPost'
 import { GPostSkeleton } from '../../components/common/GPostSkeleton'
-import { IPost } from '../../hooks/interface'
 import { Helmet } from 'react-helmet-async'
+import { GetNewsfeedResponse } from '../../hooks/models'
 
 export const Route = createFileRoute('/app/')({
   component: RouteComponent
 })
 
 function RouteComponent() {
-  const [pageNumber, setPageNumber] = useState(1)
-  const pageSize = 20
   const token = useSelector((state: RootState) => state.auth.token)
-  const [posts, setPosts] = useState<IPost[]>([])
   const loaderRef = useRef<HTMLDivElement | null>(null)
+  const pageSize = 20
 
   const { getNewsfeed } = usePost()
 
-  const { data: newsfeedData, isLoading } = useQuery({
-    queryKey: ['newsfeed', pageNumber],
-    queryFn: () => {
-      return getNewsfeed({ pageNum: pageNumber, pageSize }, token)
-    }
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ["newsfeed"],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getNewsfeed({ pageNum: pageParam, pageSize }, token)
+      return response.data
+    },
+    getNextPageParam: (lastPage: GetNewsfeedResponse, allPages: GetNewsfeedResponse[]) => {
+      return lastPage.result.length === pageSize ? allPages.length + 1 : undefined;
+    },
+    initialPageParam: 1
   })
-
-  useEffect(() => {
-    setPosts([...posts, ...(newsfeedData?.data.result || [])])
-  }, [newsfeedData])
-
-  const loadMorePosts = useCallback(() => {
-    setPageNumber((prevPageNumber) => prevPageNumber + 1)
-  }, [])
+  
+  const posts = data?.pages.flatMap((page) => page.result) || []
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0]
-        if (firstEntry.isIntersecting && !isLoading) {
-          loadMorePosts()
+        if (firstEntry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
         }
       },
       { threshold: 1.0 }
@@ -60,7 +63,7 @@ function RouteComponent() {
         observer.unobserve(loaderRef.current)
       }
     }
-  }, [isLoading, loadMorePosts])
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
     <>
@@ -91,7 +94,7 @@ function RouteComponent() {
                   <GPost post={post} />
                 </Grid.Col>
               ))}
-              {['a', 'b', 'c', 'd'].map((index) => (
+              {hasNextPage && ['a', 'b', 'c', 'd'].map((index) => (
                 <Grid.Col
                   ref={loaderRef}
                   span={{ base: 12, md: 6, lg: 4, xl: 3 }}

@@ -66,7 +66,12 @@ export const GPost = ({ post }: Props) => {
       <Link to={`/post/${post.id}`} className="w-full">
         <Stack gap={4}>
           <Avatar src={post.avatarUrl} className="border border-indigo-200" />
-          <Text className="!text-xl !font-bold">{post.title}</Text>
+          <Text
+            className="!text-xl !font-bold min-h-[48px] truncate"
+            title={post.title}
+          >
+            {post.title}
+          </Text>
           <Box h={40} mt={12}>
             <Flex wrap="wrap" gap={8}>
               {visibleTags.map((tag, index) => (
