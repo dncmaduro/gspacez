@@ -5,13 +5,14 @@ import { Link, useLocation } from '@tanstack/react-router'
 interface Props extends NavLinkProps {
   icon: string
   href?: string
+  onClick?: () => void
 }
 
-export const SidebarItem = ({ icon, label, href }: Props) => {
+export const SidebarItem = ({ icon, label, href, onClick }: Props) => {
   const location = useLocation()
 
   return (
-    <Link to={href} className="w-full">
+    <Link to={onClick ? '.' : href} className="w-full" onClick={onClick}>
       <NavLink
         leftSection={<GIcon name={icon} size={16} />}
         label={label}

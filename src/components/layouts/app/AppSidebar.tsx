@@ -2,15 +2,18 @@ import {
   ActionIcon,
   Box,
   Button,
+  Collapse,
   Divider,
   Group,
   Stack,
-  Text
+  Text,
+  TextInput
 } from '@mantine/core'
 import { SidebarPart } from './SidebarPart'
 import { GIcon } from '../../common/GIcon'
 import { SidebarItem } from './SidebarItem'
 import { Link } from '@tanstack/react-router'
+import { useDisclosure } from '@mantine/hooks'
 
 interface Props {
   opened: boolean
@@ -18,6 +21,8 @@ interface Props {
 }
 
 export const AppSidebar = ({ opened, toggle }: Props) => {
+  const [openedSearch, { toggle: toggleSearch }] = useDisclosure(false)
+
   return (
     <Box pt={12} px={opened ? 12 : 4}>
       <Group justify={opened ? 'space-between' : 'center'}>
@@ -49,7 +54,18 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
 
         <SidebarPart title="Network" icon="World" opened={opened}>
           <Stack gap={4} w="100%" align="center">
-            <SidebarItem icon="ChartCohort" label="Search squads" />
+            <SidebarItem
+              icon="ChartCohort"
+              label="Search squads"
+              onClick={toggleSearch}
+            />
+            <Collapse in={openedSearch} w={'100%'}>
+              <TextInput
+                leftSection={<GIcon name="Search" size={16} />}
+                radius={'md'}
+                size="xs"
+              />
+            </Collapse>
             <Divider my={2} w="100%" />
             <SidebarItem icon="Html" label="Web Development" />
             <SidebarItem icon="DeviceMobile" label="Mobile Development" />
