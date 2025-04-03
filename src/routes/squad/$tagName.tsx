@@ -22,32 +22,21 @@ import { Helmet } from 'react-helmet-async'
 import { useProfile } from '../../hooks/useProfile'
 import { useMe } from '../../hooks/useMe'
 import { AxiosResponse } from 'axios'
-import {
-  GetProfileResponse,
-  JoinSquadRequest,
-  LeaveSquadRequest
-} from '../../hooks/models'
+import { GetProfileResponse } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
 import { modals } from '@mantine/modals'
+import { GJoinButton } from '../../components/common/GJoinButton'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent
 })
 
 function RouteComponent() {
-  const { getSquad, sendRequest, leaveSquad } = useSquad()
-  const { getProfile, getJoinedSquads } = useProfile()
+  const { getSquad, sendRequest, leaveSquad, cancelRequest } = useSquad()
+  const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
   const { data: meData } = useMe()
-
-  const { data: joinedSquads, refetch: refetchJoined } = useQuery({
-    queryKey: ['get-joined-squads'],
-    queryFn: () => getJoinedSquads(token),
-    select: (data) => {
-      return data.data.result.map((squad) => squad.tagName)
-    }
-  })
 
   const {
     data,
@@ -83,12 +72,12 @@ function RouteComponent() {
   }, [data])
 
   const isPrivate = useMemo(() => {
-    return data?.privacy === 'private'
+    return data?.privacy === 'PRIVATE'
   }, [data])
 
   const { mutate: send, isPending: isSendingRequest } = useMutation({
     mutationKey: ['join-squad'],
-    mutationFn: ({ tagName }: JoinSquadRequest) => {
+    mutationFn: () => {
       return sendRequest({ tagName }, token)
     },
     onSuccess: () => {
@@ -96,7 +85,6 @@ function RouteComponent() {
         title: 'Send request successfully!'
       })
       refetchSquad()
-      refetchJoined()
     },
     onError: () => {
       GToast.error({
@@ -107,13 +95,13 @@ function RouteComponent() {
 
   const handleJoinSquad = () => {
     if (data?.tagName) {
-      send({ tagName: data.tagName })
+      send()
     }
   }
 
   const { mutate: leave, isPending: isSendingLeave } = useMutation({
     mutationKey: ['leave-squad'],
-    mutationFn: ({ tagName }: LeaveSquadRequest) => {
+    mutationFn: () => {
       return leaveSquad({ tagName }, token)
     },
     onSuccess: () => {
@@ -121,11 +109,28 @@ function RouteComponent() {
         title: 'Leave squad successfully!'
       })
       refetchSquad()
-      refetchJoined()
     },
     onError: () => {
       GToast.error({
         title: 'Leave squad failed'
+      })
+    }
+  })
+
+  const { mutate: cancel, isPending: isSendingCancel } = useMutation({
+    mutationKey: ['cancel-request'],
+    mutationFn: () => {
+      return cancelRequest({ tagName }, token)
+    },
+    onSuccess: () => {
+      GToast.success({
+        title: 'Cancel request successfully!'
+      })
+      refetchSquad()
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Cancel request failed'
       })
     }
   })
@@ -140,12 +145,35 @@ function RouteComponent() {
           </Text>
         ),
         onConfirm: () => {
-          leave({ tagName: data.tagName })
+          leave()
           modals.closeAll()
         },
         onCancel: () => modals.closeAll(),
         labels: {
           confirm: 'Leave',
+          cancel: 'Cancel'
+        },
+        confirmProps: { color: 'red' }
+      })
+    }
+  }
+
+  const handleCancelRequest = () => {
+    if (data?.tagName) {
+      modals.openConfirmModal({
+        title: (
+          <Text>
+            Are you sure to cancel request{' '}
+            <span className="font-bold">{data.name}</span>?
+          </Text>
+        ),
+        onConfirm: () => {
+          cancel()
+          modals.closeAll()
+        },
+        onCancel: () => modals.closeAll(),
+        labels: {
+          confirm: 'Confirm',
           cancel: 'Cancel'
         },
         confirmProps: { color: 'red' }
@@ -202,28 +230,16 @@ function RouteComponent() {
                   >
                     Edit your squad
                   </Button>
-                ) : data && joinedSquads?.includes(data?.tagName) ? (
-                  <Button
-                    color="indigo"
-                    radius={'md'}
-                    variant="light"
-                    onClick={() => handleLeaveSquad()}
-                    loading={isSendingLeave}
-                    leftSection={<GIcon name="Check" size={16} />}
-                  >
-                    Joined
-                  </Button>
                 ) : (
-                  <Button
-                    variant="outline"
-                    radius={'md'}
-                    color="green"
-                    onClick={() => handleJoinSquad()}
-                    loading={isSendingRequest}
-                    leftSection={<GIcon name="Login2" size={16} />}
-                  >
-                    Join squad
-                  </Button>
+                  <GJoinButton
+                    status={data?.joinStatus || ''}
+                    loading={
+                      isSendingLeave || isSendingRequest || isSendingCancel
+                    }
+                    onLeave={() => handleLeaveSquad()}
+                    onCancel={() => handleCancelRequest()}
+                    onJoin={() => handleJoinSquad()}
+                  />
                 )}
               </Flex>
 

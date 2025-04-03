@@ -29,7 +29,7 @@ export interface SquadType {
   name: string
   tagName: string
   description: string
-  privacy: 'public' | 'private'
+  privacy: 'PUBLIC' | 'PRIVATE'
   avatarUrl: string
   setting: {
     allowPostModeration: boolean
@@ -54,9 +54,9 @@ export const SquadForm = ({ squad }: Props) => {
     defaultValues: squad
       ? {
           ...squad,
-          privacy: squad.privacy as 'public' | 'private'
+          privacy: squad.privacy as 'PUBLIC' | 'PRIVATE'
         }
-      : { privacy: 'public' }
+      : { privacy: 'PUBLIC' }
   })
 
   const { createSquad, updateSquad } = useSquad()
@@ -120,13 +120,13 @@ export const SquadForm = ({ squad }: Props) => {
 
   const privacyOptions = [
     {
-      value: 'public',
+      value: 'PUBLIC',
       label: 'Public',
       description:
         'Everyone can see all posts in your squad. They also can interact based on each post settings.'
     },
     {
-      value: 'private',
+      value: 'PRIVATE',
       label: 'Private',
       description:
         'Only members in the squads can interact with posts. Members can also send invitation link to join the squad.'
@@ -285,7 +285,7 @@ export const SquadForm = ({ squad }: Props) => {
         >
           Advanced settings (Coming soon)
         </Button>
-        <Collapse in={opened}>
+        <Collapse in={opened} mb={32}>
           <Stack gap={24} mt={16}>
             <Controller
               control={control}
@@ -323,7 +323,7 @@ export const SquadForm = ({ squad }: Props) => {
           </Stack>
         </Collapse>
 
-        <Button type="submit" mt={32} loading={isCreating || isUpdating}>
+        <Button type="submit" loading={isCreating || isUpdating}>
           Submit your new squad
         </Button>
       </Stack>

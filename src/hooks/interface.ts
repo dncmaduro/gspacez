@@ -54,4 +54,9 @@ export interface ISquad {
     allowChangeProfileAccessibility: boolean
     allowPostInteraction: boolean
   }
+
+  // side map props
+  canBeEdited: boolean
+  joinStatus: string
+  updatedAt: string
 }
