@@ -42,8 +42,10 @@ export interface RefreshTokenRequest {
 
 export interface RefreshTokenResponse {
   message?: string
-  token: string
-  refreshToken: string
+  result: {
+    token: string
+    refreshToken: string
+  }
 }
 
 export interface LoginByGoogleResponse {

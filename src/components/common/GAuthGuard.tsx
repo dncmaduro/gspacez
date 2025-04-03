@@ -30,7 +30,11 @@ export const GAuthGuard = ({ children }: ChildProps) => {
   const { mutate: mutateRefresh } = useMutation({
     mutationFn: refresh,
     onSuccess: (response) => {
-      dispatch(setAuth({ token: response.data.token }))
+      dispatch(
+        setAuth({ 
+          token: response.data.result.token,
+          refreshToken: response.data.result.refreshToken  
+        }))
     },
     onError: () => {
       dispatch(logout())
