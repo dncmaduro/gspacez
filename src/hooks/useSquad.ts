@@ -1,5 +1,6 @@
 import { callApi } from '../utils/axios'
 import {
+  CancelJoinRequest,
   CreateSquadRequest,
   CreateSquadResponse,
   GetSquadResponse,
@@ -56,5 +57,20 @@ export const useSquad = () => {
     })
   }
 
-  return { createSquad, getSquad, updateSquad, sendRequest, leaveSquad }
+  const cancelRequest = async (req: CancelJoinRequest, token: string) => {
+    return callApi<never, never>({
+      method: 'POST',
+      path: `/v1/profile-service/squads/${req.tagName}/cancel-request`,
+      token
+    })
+  }
+
+  return {
+    createSquad,
+    getSquad,
+    updateSquad,
+    sendRequest,
+    leaveSquad,
+    cancelRequest
+  }
 }

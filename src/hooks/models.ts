@@ -329,3 +329,7 @@ export interface JoinSquadRequest {
 export interface LeaveSquadRequest {
   tagName: string
 }
+
+export interface CancelJoinRequest {
+  tagName: string
+}
