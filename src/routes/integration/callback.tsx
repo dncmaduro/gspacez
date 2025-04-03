@@ -23,7 +23,8 @@ function RouteComponent() {
     onSuccess: (response) => {
       dispatch(
         setAuth({
-          token: response.data.result.token
+          token: response.data.result.token,
+          refreshToken: response.data.result.refreshToken
         })
       )
       navigate({ to: '/app' })
