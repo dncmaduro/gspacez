@@ -5,6 +5,7 @@ import {
   CreateSquadResponse,
   GetSquadResponse,
   JoinSquadRequest,
+  LastAccessResponse,
   LeaveSquadRequest,
   UpdateSquadRequest,
   UpdateSquadResponse
@@ -65,12 +66,21 @@ export const useSquad = () => {
     })
   }
 
+  const getLastAccessSquads = async (token: string) => {
+    return callApi<never, LastAccessResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/squads/squad-access`,
+      token
+    })
+  }
+
   return {
     createSquad,
     getSquad,
     updateSquad,
     sendRequest,
     leaveSquad,
-    cancelRequest
+    cancelRequest,
+    getLastAccessSquads
   }
 }

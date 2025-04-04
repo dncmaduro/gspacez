@@ -14,6 +14,11 @@ import { GIcon } from '../../common/GIcon'
 import { SidebarItem } from './SidebarItem'
 import { Link } from '@tanstack/react-router'
 import { useDisclosure } from '@mantine/hooks'
+import { useSquad } from '../../../hooks/useSquad'
+import { useQuery } from '@tanstack/react-query'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../store/store'
+import { SidebarSquad } from './SidebarSquad'
 
 interface Props {
   opened: boolean
@@ -22,6 +27,17 @@ interface Props {
 
 export const AppSidebar = ({ opened, toggle }: Props) => {
   const [openedSearch, { toggle: toggleSearch }] = useDisclosure(false)
+  const token = useSelector((state: RootState) => state.auth.token)
+
+  const { getLastAccessSquads } = useSquad()
+
+  const { data: lastAccessSquads } = useQuery({
+    queryKey: ['getLastAccessSquads'],
+    queryFn: () => getLastAccessSquads(token),
+    select: (data) => {
+      return data.data.result
+    }
+  })
 
   return (
     <Box pt={12} px={opened ? 12 : 4}>
@@ -67,10 +83,9 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
               />
             </Collapse>
             <Divider my={2} w="100%" />
-            <SidebarItem icon="Html" label="Web Development" />
-            <SidebarItem icon="DeviceMobile" label="Mobile Development" />
-            <SidebarItem icon="Database" label="Database" />
-            <SidebarItem icon="Cloud" label="Cloud" />
+            {lastAccessSquads?.map((squad) => (
+              <SidebarSquad squad={squad} key={squad.squadId} />
+            ))}
             {opened ? (
               <Button
                 size="xs"

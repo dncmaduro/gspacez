@@ -23,24 +23,27 @@ function RouteComponent() {
 
   const { getNewsfeed } = usePost()
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useInfiniteQuery({
-    queryKey: ["newsfeed"],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await getNewsfeed({ pageNum: pageParam, pageSize }, token)
-      return response.data
-    },
-    getNextPageParam: (lastPage: GetNewsfeedResponse, allPages: GetNewsfeedResponse[]) => {
-      return lastPage.result.length === pageSize ? allPages.length + 1 : undefined;
-    },
-    initialPageParam: 1
-  })
-  
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ['newsfeed'],
+      queryFn: async ({ pageParam = 1 }) => {
+        const response = await getNewsfeed(
+          { pageNum: pageParam, pageSize },
+          token
+        )
+        return response.data
+      },
+      getNextPageParam: (
+        lastPage: GetNewsfeedResponse,
+        allPages: GetNewsfeedResponse[]
+      ) => {
+        return lastPage.result.length === pageSize
+          ? allPages.length + 1
+          : undefined
+      },
+      initialPageParam: 1
+    })
+
   const posts = data?.pages.flatMap((page) => page.result) || []
 
   useEffect(() => {
@@ -94,15 +97,16 @@ function RouteComponent() {
                   <GPost post={post} />
                 </Grid.Col>
               ))}
-              {hasNextPage && ['a', 'b', 'c', 'd'].map((index) => (
-                <Grid.Col
-                  ref={loaderRef}
-                  span={{ base: 12, md: 6, lg: 4, xl: 3 }}
-                  key={index}
-                >
-                  <GPostSkeleton />
-                </Grid.Col>
-              ))}
+              {hasNextPage &&
+                ['a', 'b', 'c', 'd'].map((index) => (
+                  <Grid.Col
+                    ref={loaderRef}
+                    span={{ base: 12, md: 6, lg: 4, xl: 3 }}
+                    key={index}
+                  >
+                    <GPostSkeleton />
+                  </Grid.Col>
+                ))}
             </Grid>
           )}
         </Box>

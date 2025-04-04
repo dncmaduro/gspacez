@@ -333,3 +333,13 @@ export interface LeaveSquadRequest {
 export interface CancelJoinRequest {
   tagName: string
 }
+
+export interface LastAccessResponse {
+  result: {
+    squadId: string
+    name: string
+    tagName: string
+    avatarUrl: string
+    accessedAt: string
+  }[]
+}
