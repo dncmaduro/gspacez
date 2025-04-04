@@ -7,7 +7,7 @@ interface Props {
     name: string
     tagName: string
     avatarUrl: string
-    accessedAt: string
+    accessedAt?: string
   }
 }
 

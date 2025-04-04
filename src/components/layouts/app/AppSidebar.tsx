@@ -13,12 +13,14 @@ import { SidebarPart } from './SidebarPart'
 import { GIcon } from '../../common/GIcon'
 import { SidebarItem } from './SidebarItem'
 import { Link } from '@tanstack/react-router'
-import { useDisclosure } from '@mantine/hooks'
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
 import { useSquad } from '../../../hooks/useSquad'
 import { useQuery } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { SidebarSquad } from './SidebarSquad'
+import { useGSearch } from '../../../hooks/useGSearch'
+import { useEffect, useState } from 'react'
 
 interface Props {
   opened: boolean
@@ -28,8 +30,11 @@ interface Props {
 export const AppSidebar = ({ opened, toggle }: Props) => {
   const [openedSearch, { toggle: toggleSearch }] = useDisclosure(false)
   const token = useSelector((state: RootState) => state.auth.token)
+  const [searchText, setSearchText] = useState('')
+  const debouncedSearchText = useDebouncedValue(searchText, 300)[0]
 
   const { getLastAccessSquads } = useSquad()
+  const { searchSquads } = useGSearch()
 
   const { data: lastAccessSquads } = useQuery({
     queryKey: ['getLastAccessSquads'],
@@ -38,6 +43,31 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
       return data.data.result
     }
   })
+
+  const { data: searchSquadsData } = useQuery({
+    queryKey: ['searchSquads', debouncedSearchText],
+    queryFn: () => {
+      return searchSquads(
+        { searchText: debouncedSearchText, page: 0, size: 5 },
+        token
+      )
+    },
+    select: (data) => {
+      return data.data.result.content.map((squad) => ({
+        squadId: squad.id,
+        name: squad.name,
+        tagName: squad.tagName,
+        avatarUrl: squad.avatarUrl
+      }))
+    },
+    enabled: !!debouncedSearchText
+  })
+
+  useEffect(() => {
+    if (!openedSearch) {
+      setSearchText('')
+    }
+  }, [openedSearch])
 
   return (
     <Box pt={12} px={opened ? 12 : 4}>
@@ -80,12 +110,18 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
                 leftSection={<GIcon name="Search" size={16} />}
                 radius={'md'}
                 size="xs"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
               />
             </Collapse>
             <Divider my={2} w="100%" />
-            {lastAccessSquads?.map((squad) => (
-              <SidebarSquad squad={squad} key={squad.squadId} />
-            ))}
+            {debouncedSearchText && openedSearch
+              ? searchSquadsData?.map((squad) => (
+                  <SidebarSquad key={squad.squadId} squad={squad} />
+                ))
+              : lastAccessSquads?.map((squad) => (
+                  <SidebarSquad squad={squad} key={squad.squadId} />
+                ))}
             {opened ? (
               <Button
                 size="xs"

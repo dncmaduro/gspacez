@@ -343,3 +343,18 @@ export interface LastAccessResponse {
     accessedAt: string
   }[]
 }
+
+export interface SearchSquadsResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: ISquad[]
+  }
+}
