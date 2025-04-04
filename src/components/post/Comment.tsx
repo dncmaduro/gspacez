@@ -39,7 +39,10 @@ export const Comment = ({ comment, children }: Props) => {
             {comment.profileName}
           </Text>
           <Text c="dimmed" size="sm">
-            {convertTime(new Date(comment.createdAt), comment.updatedAt ? new Date(comment.updatedAt) : null)}
+            {convertTime(
+              new Date(comment.createdAt),
+              comment.updatedAt ? new Date(comment.updatedAt) : null
+            )}
           </Text>
         </Stack>
       </Flex>
@@ -84,7 +87,10 @@ export const Comment = ({ comment, children }: Props) => {
               <Stack gap={1}>
                 <Text>{comment.profileName}</Text>
                 <Text c="dimmed" size="sm">
-                  {convertTime(new Date(comment.createdAt), comment.updatedAt ? new Date(comment.updatedAt) : null)}
+                  {convertTime(
+                    new Date(comment.createdAt),
+                    comment.updatedAt ? new Date(comment.updatedAt) : null
+                  )}
                 </Text>
               </Stack>
             </Flex>

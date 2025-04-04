@@ -42,7 +42,7 @@ function RouteComponent() {
     if (code && code !== processedCode.current) {
       processedCode.current = code
       mutate(code)
-    } 
+    }
   }, [code, mutate])
 
   return <></>

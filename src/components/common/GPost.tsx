@@ -67,7 +67,7 @@ export const GPost = ({ post }: Props) => {
         <Stack gap={4}>
           <Avatar src={post.avatarUrl} className="border border-indigo-200" />
           <Text
-            className="!text-xl !font-bold min-h-[48px] truncate"
+            className="min-h-[48px] truncate !text-xl !font-bold"
             title={post.title}
           >
             {post.title}
