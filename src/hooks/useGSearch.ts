@@ -2,6 +2,7 @@ import { callApi } from '../utils/axios'
 import {
   BaseSearchRequest,
   SearchPostsResponse,
+  SearchSquadsResponse,
   SearchUsersResponse
 } from './models'
 
@@ -22,5 +23,13 @@ export const useGSearch = () => {
     })
   }
 
-  return { searchUsers, searchPosts }
+  const searchSquads = async (req: BaseSearchRequest, token: string) => {
+    return callApi<never, SearchSquadsResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/squads/search?searchText=${req.searchText}&size=${req.size}&page=${req.page}`,
+      token
+    })
+  }
+
+  return { searchUsers, searchPosts, searchSquads }
 }
