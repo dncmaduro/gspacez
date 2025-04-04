@@ -37,7 +37,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
   const { searchSquads } = useGSearch()
 
   const { data: lastAccessSquads } = useQuery({
-    queryKey: ['getLastAccessSquads'],
+    queryKey: ['get-last-access-squads'],
     queryFn: () => getLastAccessSquads(token),
     select: (data) => {
       return data.data.result
