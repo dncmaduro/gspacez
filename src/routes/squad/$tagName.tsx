@@ -26,6 +26,7 @@ import { GetProfileResponse } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
 import { modals } from '@mantine/modals'
 import { GJoinButton } from '../../components/common/GJoinButton'
+import { useMe } from '../../hooks/useMe'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent
@@ -36,6 +37,7 @@ function RouteComponent() {
   const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
+  const { data: profileData } = useMe()
 
   const {
     data,
@@ -221,7 +223,9 @@ function RouteComponent() {
                 </Group>
                 {isAdmin ? (
                   <Group>
-                    <CopyButton value={`/squad/invite/${data?.tagName}`}>
+                    <CopyButton
+                      value={`/squad/invite/${data?.tagName}?id=${profileData?.id}`}
+                    >
                       {({ copied, copy }) => (
                         <Button
                           radius={'md'}
