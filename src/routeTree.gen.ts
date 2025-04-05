@@ -26,6 +26,7 @@ import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as MeEditImport } from './routes/me/edit'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
 import { Route as DevCropImport } from './routes/dev/crop'
+import { Route as SquadInviteTagNameImport } from './routes/squad/invite.$tagName'
 import { Route as SquadEditTagNameImport } from './routes/squad/edit.$tagName'
 import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 
@@ -118,6 +119,12 @@ const IntegrationCallbackRoute = IntegrationCallbackImport.update({
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
+  getParentRoute: () => rootRoute
+} as any)
+
+const SquadInviteTagNameRoute = SquadInviteTagNameImport.update({
+  id: '/squad/invite/$tagName',
+  path: '/squad/invite/$tagName',
   getParentRoute: () => rootRoute
 } as any)
 
@@ -256,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SquadEditTagNameImport
       parentRoute: typeof rootRoute
     }
+    '/squad/invite/$tagName': {
+      id: '/squad/invite/$tagName'
+      path: '/squad/invite/$tagName'
+      fullPath: '/squad/invite/$tagName'
+      preLoaderRoute: typeof SquadInviteTagNameImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -279,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
+  '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
 }
 
 export interface FileRoutesByTo {
@@ -299,6 +314,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
+  '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
 }
 
 export interface FileRoutesById {
@@ -320,6 +336,7 @@ export interface FileRoutesById {
   '/search/': typeof SearchIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
+  '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
 }
 
 export interface FileRouteTypes {
@@ -342,6 +359,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
+    | '/squad/invite/$tagName'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -361,6 +379,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
+    | '/squad/invite/$tagName'
   id:
     | '__root__'
     | '/'
@@ -380,6 +399,7 @@ export interface FileRouteTypes {
     | '/search/'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
+    | '/squad/invite/$tagName'
   fileRoutesById: FileRoutesById
 }
 
@@ -401,6 +421,7 @@ export interface RootRouteChildren {
   SearchIndexRoute: typeof SearchIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
   SquadEditTagNameRoute: typeof SquadEditTagNameRoute
+  SquadInviteTagNameRoute: typeof SquadInviteTagNameRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -420,7 +441,8 @@ const rootRouteChildren: RootRouteChildren = {
   MeIndexRoute: MeIndexRoute,
   SearchIndexRoute: SearchIndexRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
-  SquadEditTagNameRoute: SquadEditTagNameRoute
+  SquadEditTagNameRoute: SquadEditTagNameRoute,
+  SquadInviteTagNameRoute: SquadInviteTagNameRoute
 }
 
 export const routeTree = rootRoute
@@ -449,7 +471,8 @@ export const routeTree = rootRoute
         "/me/",
         "/search/",
         "/post/edit/$postId",
-        "/squad/edit/$tagName"
+        "/squad/edit/$tagName",
+        "/squad/invite/$tagName"
       ]
     },
     "/": {
@@ -502,6 +525,9 @@ export const routeTree = rootRoute
     },
     "/squad/edit/$tagName": {
       "filePath": "squad/edit.$tagName.tsx"
+    },
+    "/squad/invite/$tagName": {
+      "filePath": "squad/invite.$tagName.tsx"
     }
   }
 }
