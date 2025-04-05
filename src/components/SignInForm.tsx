@@ -52,7 +52,6 @@ export const SignInForm = () => {
         accessToken: response.data.result.token,
         refreshToken: response.data.result.refreshToken
       })
-      navigate({ to: '/app' })
     },
     onError: () => {
       GToast.error({

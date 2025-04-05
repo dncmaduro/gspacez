@@ -7,11 +7,13 @@ import {
   Stack,
   Text
 } from '@mantine/core'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Logo from '../public/Logo.png'
 import { SignInForm } from '../components/SignInForm'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SignUpForm } from '../components/SignUpForm'
+import { useAuthStore } from '../store/authStore'
+import { useCallbackStore } from '../store/callbackStore'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent
@@ -19,6 +21,16 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   const [isSignIn, setIsSignIn] = useState(true)
+  const navigate = useNavigate()
+  const { callbackUrl } = useCallbackStore()
+
+  const { accessToken } = useAuthStore()
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate({ to: callbackUrl || '/app' })
+    }
+  }, [accessToken])
 
   return (
     <AppShell>
