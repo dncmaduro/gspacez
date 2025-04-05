@@ -14,6 +14,7 @@ import { GIcon } from '../../common/GIcon'
 import { GToast } from '../../common/GToast'
 import { useState } from 'react'
 import { useAuthStore } from '../../../store/authStore'
+import { useCallbackStore } from '../../../store/callbackStore'
 
 interface Props {
   hideSearchInput?: boolean
@@ -23,13 +24,15 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { location } = useRouterState()
   const navigate = useNavigate()
   const { clearAuth } = useAuthStore()
+  const { clearCallbackUrl } = useCallbackStore()
   const [searchText, setSearchText] = useState<string>('')
 
   const signOut = () => {
     clearAuth()
+    clearCallbackUrl()
     navigate({ to: '/' })
     GToast.success({
-      title: 'Sign ou successfully!'
+      title: 'Sign out successfully!'
     })
   }
 
