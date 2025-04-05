@@ -31,6 +31,7 @@ export const InvitationModal = ({ squad, handleToSquad }: Props) => {
       })
       queryClient.invalidateQueries({ queryKey: ['get-squad'] })
       handleToSquad()
+      closeModal()
     },
     onError: () => {
       GToast.error({

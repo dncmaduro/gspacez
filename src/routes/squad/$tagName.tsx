@@ -9,6 +9,7 @@ import {
   Badge,
   Box,
   Button,
+  CopyButton,
   Divider,
   Flex,
   Group,
@@ -20,7 +21,6 @@ import { GIcon } from '../../components/common/GIcon'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useProfile } from '../../hooks/useProfile'
-import { useMe } from '../../hooks/useMe'
 import { AxiosResponse } from 'axios'
 import { GetProfileResponse } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
@@ -36,7 +36,6 @@ function RouteComponent() {
   const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
   const token = useSelector((state: RootState) => state.auth.token)
-  const { data: meData } = useMe()
 
   const {
     data,
@@ -52,6 +51,10 @@ function RouteComponent() {
     }
   })
 
+  const isAdmin = useMemo(() => {
+    return data?.canBeEdited
+  }, [data])
+
   const queries = useMemo(() => {
     if (!data?.adminList) return []
 
@@ -66,10 +69,6 @@ function RouteComponent() {
   }, [data, getProfile])
 
   const adminResults = useQueries({ queries })
-
-  const adminIds = useMemo(() => {
-    return data?.adminList.map((admin) => admin.profileId)
-  }, [data])
 
   const isPrivate = useMemo(() => {
     return data?.privacy === 'PRIVATE'
@@ -220,16 +219,31 @@ function RouteComponent() {
                     </Text>
                   </Stack>
                 </Group>
-                {adminIds?.includes(meData?.id || '') ? (
-                  <Button
-                    variant="default"
-                    leftSection={<GIcon name="Pencil" size={16} />}
-                    radius={'md'}
-                    component={Link}
-                    to={`/squad/edit/${data?.tagName}`}
-                  >
-                    Edit your squad
-                  </Button>
+                {isAdmin ? (
+                  <Group>
+                    <CopyButton value={`/squad/invite/${data?.tagName}`}>
+                      {({ copied, copy }) => (
+                        <Button
+                          radius={'md'}
+                          variant="subtle"
+                          leftSection={<GIcon name="DoorEnter" size={16} />}
+                          onClick={copy}
+                          color={copied ? 'green' : 'indigo'}
+                        >
+                          {copied ? 'Copied' : 'Copy invite link'}
+                        </Button>
+                      )}
+                    </CopyButton>
+                    <Button
+                      variant="default"
+                      leftSection={<GIcon name="Pencil" size={16} />}
+                      radius={'md'}
+                      component={Link}
+                      to={`/squad/edit/${data?.tagName}`}
+                    >
+                      Edit your squad
+                    </Button>
+                  </Group>
                 ) : (
                   <GJoinButton
                     status={data?.joinStatus || ''}
