@@ -4,8 +4,6 @@ import {
   useParams,
   useSearch
 } from '@tanstack/react-router'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { useSquad } from '../../hooks/useSquad'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
@@ -25,14 +23,13 @@ export const Route = createFileRoute('/squad/invite/$tagName')({
 function RouteComponent() {
   const { tagName } = useParams({ from: '/squad/invite/$tagName' })
   const { id } = useSearch({ strict: false })
-  const token = useSelector((state: RootState) => state.auth.token)
   const { getSquad } = useSquad()
   const navigate = useNavigate()
 
   const { data: squadData } = useQuery({
     queryKey: ['get-squad'],
     queryFn: () => {
-      return getSquad(tagName, token)
+      return getSquad(tagName)
     },
     select: (data) => {
       return data.data.result

@@ -1,7 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { useGSearch } from '../../hooks/useGSearch'
 import { Box, ScrollArea, Stack } from '@mantine/core'
 import { GSimplePost } from '../common/GSimplePost'
@@ -13,7 +11,6 @@ interface Props {
 
 export const PostsSearch = ({ searchText, triggerSearch }: Props) => {
   const { searchPosts } = useGSearch()
-  const token = useSelector((state: RootState) => state.auth.token)
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const {
@@ -24,7 +21,7 @@ export const PostsSearch = ({ searchText, triggerSearch }: Props) => {
   } = useInfiniteQuery({
     queryKey: ['search-posts', triggerSearch],
     queryFn: ({ pageParam }) =>
-      searchPosts({ searchText, page: pageParam, size: 20 }, token),
+      searchPosts({ searchText, page: pageParam, size: 20 }),
     select: (data) => {
       return data.pages.map((page) => page.data.result.content).flat()
     },

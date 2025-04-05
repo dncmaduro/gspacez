@@ -1,3 +1,4 @@
+import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
   GetMeResponse,
@@ -8,17 +9,19 @@ import {
 } from './models'
 
 export const useProfile = () => {
-  const getMe = async (token: string) => {
+  const { accessToken } = useAuthStore()
+
+  const getMe = async () => {
     return callApi<never, GetMeResponse>({
-      token,
+      accessToken,
       method: 'GET',
       path: `/v1/profile-service/info`
     })
   }
 
-  const updateMe = async (req: UpdateMeRequest, token: string) => {
+  const updateMe = async (req: UpdateMeRequest) => {
     return callApi<UpdateMeRequest, UpdateMeResponse>({
-      token,
+      accessToken,
       method: 'PUT',
       path: `/v1/profile-service/info`,
       data: req
@@ -32,11 +35,11 @@ export const useProfile = () => {
     })
   }
 
-  const getJoinedSquads = async (token: string) => {
+  const getJoinedSquads = async () => {
     return callApi<never, JoinedSquadsResponse>({
       path: `/v1/profile-service/squads/joined`,
       method: 'GET',
-      token
+      accessToken
     })
   }
 

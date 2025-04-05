@@ -1,3 +1,4 @@
+import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
   CreateCommentRequest,
@@ -17,83 +18,73 @@ import {
 } from './models'
 
 export const usePost = () => {
-  const getNewsfeed = async (req: GetNewsfeedRequest, token: string) => {
+  const { accessToken } = useAuthStore()
+
+  const getNewsfeed = async (req: GetNewsfeedRequest) => {
     return callApi<GetNewsfeedRequest, GetNewsfeedResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/newsfeed?pageNum=${req.pageNum}&pageSize=${req.pageSize}`,
-      token
+      accessToken
     })
   }
 
-  const getPost = async (req: GetPostRequest, token: string) => {
+  const getPost = async (req: GetPostRequest) => {
     return callApi<GetPostRequest, GetPostResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/${req.id}`,
-      token
+      accessToken
     })
   }
 
-  const createPost = async (req: CreatePostRequest, token: string) => {
+  const createPost = async (req: CreatePostRequest) => {
     return callApi<CreatePostRequest, CreatePostReponse>({
       method: 'POST',
       path: `/v1/post-service/posts/create`,
       data: req,
-      token
+      accessToken
     })
   }
 
-  const updatePost = async (
-    id: string,
-    req: UpdatePostRequest,
-    token: string
-  ) => {
+  const updatePost = async (id: string, req: UpdatePostRequest) => {
     return callApi<UpdatePostRequest, UpdatePostResponse>({
       method: 'PUT',
       path: `/v1/post-service/posts/update/${id}`,
       data: req,
-      token
+      accessToken
     })
   }
 
-  const createComment = async (
-    id: string,
-    req: CreateCommentRequest,
-    token: string
-  ) => {
+  const createComment = async (id: string, req: CreateCommentRequest) => {
     return callApi<CreateCommentRequest, CreatePostReponse>({
       method: 'POST',
       path: `/v1/post-service/posts/comment/${id}`,
       data: req,
-      token
+      accessToken
     })
   }
 
-  const getComments = async (id: string, token: string) => {
+  const getComments = async (id: string) => {
     return callApi<never, GetCommentsReponse>({
       method: 'GET',
       path: `/v1/post-service/posts/${id}/comment`,
-      token
+      accessToken
     })
   }
 
-  const reactPost = async (
-    id: string,
-    req: ReactPostRequest,
-    token: string
-  ) => {
+  const reactPost = async (id: string, req: ReactPostRequest) => {
     return callApi<ReactPostRequest, ReactPostResponse>({
       method: 'PATCH',
       path: `/v1/post-service/posts/react/${id}`,
-      token,
+      accessToken,
       data: req
     })
   }
 
-  const getHistory = async (req: GetHistoryRequest, token: string) => {
+  const getHistory = async (req: GetHistoryRequest) => {
     return callApi<GetHistoryRequest, GetHistoryResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/history?page=${req.page}&size=${req.size}`,
-      token
+      accessToken
     })
   }
 

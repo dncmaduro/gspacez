@@ -14,9 +14,7 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { GIcon } from '../common/GIcon'
 import { useMutation } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
 import { useSquad } from '../../hooks/useSquad'
-import { RootState } from '../../store/store'
 import { CreateSquadRequest, UpdateSquadRequest } from '../../hooks/models'
 import { GToast } from '../common/GToast'
 import { useDisclosure } from '@mantine/hooks'
@@ -60,12 +58,10 @@ export const SquadForm = ({ squad }: Props) => {
   })
 
   const { createSquad, updateSquad } = useSquad()
-  const token = useSelector((state: RootState) => state.auth.token)
 
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationKey: ['create-squad'],
-    mutationFn: ({ req }: { req: CreateSquadRequest }) =>
-      createSquad(req, token),
+    mutationFn: ({ req }: { req: CreateSquadRequest }) => createSquad(req),
     onSuccess: (response) => {
       GToast.success({
         title: 'Create squad successfully!'
@@ -87,7 +83,7 @@ export const SquadForm = ({ squad }: Props) => {
     }: {
       req: UpdateSquadRequest
       tagName: string
-    }) => updateSquad(tagName, req, token),
+    }) => updateSquad(tagName, req),
     onSuccess: (response) => {
       GToast.success({
         title: 'Update squad successfully!'

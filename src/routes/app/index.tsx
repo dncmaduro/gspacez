@@ -3,8 +3,6 @@ import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useEffect, useRef } from 'react'
 import { usePost } from '../../hooks/usePost'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { Box, Button, Grid, Loader } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { GPost } from '../../components/common/GPost'
@@ -17,7 +15,6 @@ export const Route = createFileRoute('/app/')({
 })
 
 function RouteComponent() {
-  const token = useSelector((state: RootState) => state.auth.token)
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const pageSize = 20
 
@@ -27,10 +24,7 @@ function RouteComponent() {
     useInfiniteQuery({
       queryKey: ['newsfeed'],
       queryFn: async ({ pageParam = 1 }) => {
-        const response = await getNewsfeed(
-          { pageNum: pageParam, pageSize },
-          token
-        )
+        const response = await getNewsfeed({ pageNum: pageParam, pageSize })
         return response.data
       },
       getNextPageParam: (

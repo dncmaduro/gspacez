@@ -13,10 +13,9 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
 import { GToast } from './common/GToast'
-import { useAppDispatch } from '../store/store'
-import { setAuth } from '../store/authSlice'
 import { GoogleSignIn } from './GoogleSignIn'
 import { useNavigate } from '@tanstack/react-router'
+import { useAuthStore } from '../store/authStore'
 
 type SignInType = {
   email: string
@@ -26,7 +25,7 @@ type SignInType = {
 export const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { signIn } = useAuth()
-  const dispatch = useAppDispatch()
+  const { setAuth } = useAuthStore()
   const navigate = useNavigate()
 
   const formMethods = useForm({
@@ -49,12 +48,10 @@ export const SignInForm = () => {
       GToast.success({
         title: 'Sign in successfully'
       })
-      dispatch(
-        setAuth({
-          token: response.data.result.token,
-          refreshToken: response.data.result.refreshToken
-        })
-      )
+      setAuth({
+        accessToken: response.data.result.token,
+        refreshToken: response.data.result.refreshToken
+      })
       navigate({ to: '/app' })
     },
     onError: () => {

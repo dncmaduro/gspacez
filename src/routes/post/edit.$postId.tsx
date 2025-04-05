@@ -2,8 +2,6 @@ import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { usePost } from '../../hooks/usePost'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { ActionIcon, Box, Button, Group, Loader, Text } from '@mantine/core'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { FormProvider, useForm } from 'react-hook-form'
 import { PostFormType } from './new'
@@ -21,12 +19,11 @@ function RouteComponent() {
   const { updatePost, getPost } = usePost()
   const { postId } = useParams({ from: `/post/edit/$postId` })
   const navigate = useNavigate()
-  const token = useSelector((state: RootState) => state.auth.token)
 
   const { data, isLoading } = useQuery({
     queryKey: ['edit-post', postId],
     queryFn: () => {
-      return getPost({ id: postId }, token)
+      return getPost({ id: postId })
     }
   })
 
@@ -53,15 +50,8 @@ function RouteComponent() {
   }, [existedPost, formMethods])
 
   const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
-    mutationFn: ({
-      id,
-      req,
-      token
-    }: {
-      id: string
-      req: UpdatePostRequest
-      token: string
-    }) => updatePost(id, req, token),
+    mutationFn: ({ id, req }: { id: string; req: UpdatePostRequest }) =>
+      updatePost(id, req),
     onSuccess: (response) => {
       navigate({ to: `/post/${response.data.result.id}` })
       GToast.success({
@@ -78,8 +68,7 @@ function RouteComponent() {
   const submit = (values: PostFormType) => {
     mutateUpdate({
       id: postId,
-      req: { ...values, privacy: values.privacy || 'PUBLIC' },
-      token
+      req: { ...values, privacy: values.privacy || 'PUBLIC' }
     })
   }
 

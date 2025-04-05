@@ -2,8 +2,6 @@ import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useSquad } from '../../hooks/useSquad'
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import {
   Avatar,
   Badge,
@@ -36,7 +34,6 @@ function RouteComponent() {
   const { getSquad, sendRequest, leaveSquad, cancelRequest } = useSquad()
   const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
-  const token = useSelector((state: RootState) => state.auth.token)
   const { data: profileData } = useMe()
 
   const {
@@ -46,7 +43,7 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ['get-squad'],
     queryFn: () => {
-      return getSquad(tagName, token)
+      return getSquad(tagName)
     },
     select: (data) => {
       return data.data.result
@@ -79,7 +76,7 @@ function RouteComponent() {
   const { mutate: send, isPending: isSendingRequest } = useMutation({
     mutationKey: ['join-squad'],
     mutationFn: () => {
-      return sendRequest({ tagName }, token)
+      return sendRequest({ tagName })
     },
     onSuccess: () => {
       GToast.success({
@@ -103,7 +100,7 @@ function RouteComponent() {
   const { mutate: leave, isPending: isSendingLeave } = useMutation({
     mutationKey: ['leave-squad'],
     mutationFn: () => {
-      return leaveSquad({ tagName }, token)
+      return leaveSquad({ tagName })
     },
     onSuccess: () => {
       GToast.success({
@@ -121,7 +118,7 @@ function RouteComponent() {
   const { mutate: cancel, isPending: isSendingCancel } = useMutation({
     mutationKey: ['cancel-request'],
     mutationFn: () => {
-      return cancelRequest({ tagName }, token)
+      return cancelRequest({ tagName })
     },
     onSuccess: () => {
       GToast.success({

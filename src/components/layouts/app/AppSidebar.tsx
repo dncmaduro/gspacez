@@ -16,8 +16,6 @@ import { Link } from '@tanstack/react-router'
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
 import { useSquad } from '../../../hooks/useSquad'
 import { useQuery } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../store/store'
 import { SidebarSquad } from './SidebarSquad'
 import { useGSearch } from '../../../hooks/useGSearch'
 import { useEffect, useState } from 'react'
@@ -29,7 +27,6 @@ interface Props {
 
 export const AppSidebar = ({ opened, toggle }: Props) => {
   const [openedSearch, { toggle: toggleSearch }] = useDisclosure(false)
-  const token = useSelector((state: RootState) => state.auth.token)
   const [searchText, setSearchText] = useState('')
   const debouncedSearchText = useDebouncedValue(searchText, 300)[0]
 
@@ -38,7 +35,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
 
   const { data: lastAccessSquads } = useQuery({
     queryKey: ['get-last-access-squads'],
-    queryFn: () => getLastAccessSquads(token),
+    queryFn: () => getLastAccessSquads(),
     select: (data) => {
       return data.data.result
     }
@@ -47,10 +44,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
   const { data: searchSquadsData } = useQuery({
     queryKey: ['searchSquads', debouncedSearchText],
     queryFn: () => {
-      return searchSquads(
-        { searchText: debouncedSearchText, page: 0, size: 5 },
-        token
-      )
+      return searchSquads({ searchText: debouncedSearchText, page: 0, size: 5 })
     },
     select: (data) => {
       return data.data.result.content.map((squad) => ({

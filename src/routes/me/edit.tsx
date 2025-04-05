@@ -24,8 +24,6 @@ import { DatePickerInput } from '@mantine/dates'
 import { UploadAvatarModal } from '../../components/profile/UploadAvatarModal'
 import { format, parse } from 'date-fns'
 import { useMe } from '../../hooks/useMe'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { UpdateMeRequest } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
 
@@ -51,13 +49,12 @@ interface ProfileType {
 function RouteComponent() {
   const { updateMe } = useProfile()
   const { getCountries } = useCountries()
-  const token = useSelector((state: RootState) => state.auth.token)
 
   const { data: profileData } = useMe()
 
   const { mutate: updateProfile, isPending: isLoading } = useMutation({
     mutationKey: ['upload-profile'],
-    mutationFn: ({ req }: { req: UpdateMeRequest }) => updateMe(req, token),
+    mutationFn: ({ req }: { req: UpdateMeRequest }) => updateMe(req),
     onSuccess: () => {
       GToast.success({
         title: 'Update profile successfully!'

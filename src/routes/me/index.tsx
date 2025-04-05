@@ -14,8 +14,6 @@ import {
 import { GIcon } from '../../components/common/GIcon'
 import { useProfile } from '../../hooks/useProfile'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 
 export const Route = createFileRoute('/me/')({
   component: RouteComponent
@@ -23,12 +21,11 @@ export const Route = createFileRoute('/me/')({
 
 function RouteComponent() {
   const { getMe } = useProfile()
-  const token = useSelector((state: RootState) => state.auth.token)
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-profile'],
     queryFn: () => {
-      return getMe(token)
+      return getMe()
     }
   })
 
