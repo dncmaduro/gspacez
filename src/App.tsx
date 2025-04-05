@@ -36,7 +36,7 @@ function App() {
           <MantineProvider theme={theme}>
             <ModalsProvider>
               <Notifications />
-              <RouterProvider router={router} />
+              <RouterProvider router={router}></RouterProvider>
             </ModalsProvider>
           </MantineProvider>
         </QueryClientProvider>
