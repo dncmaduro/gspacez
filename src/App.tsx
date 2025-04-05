@@ -16,8 +16,6 @@ import '@mantine/dates/styles.css'
 
 import { createTheme, MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Provider } from 'react-redux'
-import { store } from './store/store'
 
 const router = createRouter({ routeTree, history: createBrowserHistory() })
 
@@ -31,16 +29,14 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <HelmetProvider>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <MantineProvider theme={theme}>
-            <ModalsProvider>
-              <Notifications />
-              <RouterProvider router={router}></RouterProvider>
-            </ModalsProvider>
-          </MantineProvider>
-        </QueryClientProvider>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider theme={theme}>
+          <ModalsProvider>
+            <Notifications />
+            <RouterProvider router={router}></RouterProvider>
+          </ModalsProvider>
+        </MantineProvider>
+      </QueryClientProvider>
     </HelmetProvider>
   )
 }

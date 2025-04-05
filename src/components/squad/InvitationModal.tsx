@@ -3,8 +3,6 @@ import { ISquad } from '../../hooks/interface'
 import { modals } from '@mantine/modals'
 import { useSquad } from '../../hooks/useSquad'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { GToast } from '../common/GToast'
 
 interface Props {
@@ -14,7 +12,6 @@ interface Props {
 
 export const InvitationModal = ({ squad, handleToSquad }: Props) => {
   const { sendRequest } = useSquad()
-  const token = useSelector((state: RootState) => state.auth.token)
   const queryClient = useQueryClient()
   const closeModal = () => {
     modals.closeAll()
@@ -23,7 +20,7 @@ export const InvitationModal = ({ squad, handleToSquad }: Props) => {
   const { mutate: send, isPending: isSendingRequest } = useMutation({
     mutationKey: ['join-squad'],
     mutationFn: () => {
-      return sendRequest({ tagName: squad.tagName }, token)
+      return sendRequest({ tagName: squad.tagName })
     },
     onSuccess: () => {
       GToast.success({

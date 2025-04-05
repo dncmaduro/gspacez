@@ -11,10 +11,9 @@ import {
 import Logo from '../../../public/Logo.png'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { GIcon } from '../../common/GIcon'
-import { useAppDispatch } from '../../../store/store'
-import { logout } from '../../../store/authSlice'
 import { GToast } from '../../common/GToast'
 import { useState } from 'react'
+import { useAuthStore } from '../../../store/authStore'
 
 interface Props {
   hideSearchInput?: boolean
@@ -23,11 +22,11 @@ interface Props {
 export const AppHeader = ({ hideSearchInput }: Props) => {
   const { location } = useRouterState()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const { clearAuth } = useAuthStore()
   const [searchText, setSearchText] = useState<string>('')
 
   const signOut = () => {
-    dispatch(logout())
+    clearAuth()
     navigate({ to: '/' })
     GToast.success({
       title: 'Sign ou successfully!'

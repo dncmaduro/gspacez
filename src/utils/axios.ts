@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 type AxiosCallApi<D> = {
   path: string
   data?: D
-  token?: string
+  accessToken?: string
   customUrl?: string
   method: AxiosRequestConfig['method']
 }
@@ -11,7 +11,7 @@ type AxiosCallApi<D> = {
 export async function callApi<D = unknown, T = unknown>({
   path,
   data,
-  token,
+  accessToken,
   customUrl,
   method
 }: AxiosCallApi<D>): Promise<AxiosResponse<T>> {
@@ -20,8 +20,8 @@ export async function callApi<D = unknown, T = unknown>({
     Accept: 'application/json'
   }
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`
   }
 
   const response = await axios<T>({

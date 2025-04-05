@@ -16,8 +16,6 @@ import { GIcon } from './GIcon'
 import { Link } from '@tanstack/react-router'
 import { usePost } from '../../hooks/usePost'
 import { useMutation } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { ReactPostRequest } from '../../hooks/models'
 import { GLikeButton } from './GLikeButton'
 import { GDislikeButton } from './GDislikeButton'
@@ -32,7 +30,6 @@ export const GPost = ({ post }: Props) => {
     () => previewTags(post.hashTags),
     [post]
   )
-  const token = useSelector((state: RootState) => state.auth.token)
   const [liked, setLiked] = useState(post.liked)
   const [disliked, setDisliked] = useState(post.disliked)
   const [totalLikes, setTotalLikes] = useState(post.totalLike)
@@ -42,8 +39,7 @@ export const GPost = ({ post }: Props) => {
 
   const { mutate: react } = useMutation({
     mutationKey: ['react', post.id],
-    mutationFn: ({ req }: { req: ReactPostRequest }) =>
-      reactPost(post.id, req, token),
+    mutationFn: ({ req }: { req: ReactPostRequest }) => reactPost(post.id, req),
     onSuccess: (response) => {
       if (!response.data.result.currentReact) {
         setLiked(false)

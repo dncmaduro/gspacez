@@ -7,8 +7,6 @@ import { usePost } from '../../hooks/usePost'
 import { GToast } from '../../components/common/GToast'
 import { CreatePostRequest } from '../../hooks/models'
 import { PostForm } from '../../components/post/PostForm'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { GIcon } from '../../components/common/GIcon'
 
 export const Route = createFileRoute('/post/new')({
@@ -26,7 +24,6 @@ function RouteComponent() {
   const { createPost } = usePost()
   const navigate = useNavigate()
   const router = useRouter()
-  const token = useSelector((state: RootState) => state.auth.token)
 
   const formMethods = useForm<PostFormType>({
     defaultValues: {
@@ -37,8 +34,7 @@ function RouteComponent() {
   })
 
   const { mutate: mutatePost, isPending: isPosting } = useMutation({
-    mutationFn: ({ req, token }: { req: CreatePostRequest; token: string }) =>
-      createPost(req, token),
+    mutationFn: ({ req }: { req: CreatePostRequest }) => createPost(req),
     onSuccess: (response) => {
       navigate({ to: `/post/${response.data.result.id}` })
       GToast.success({
@@ -59,8 +55,7 @@ function RouteComponent() {
 
   const submit = (values: PostFormType) => {
     mutatePost({
-      req: { ...values, privacy: values.privacy || 'PUBLIC' },
-      token
+      req: { ...values, privacy: values.privacy || 'PUBLIC' }
     })
   }
 

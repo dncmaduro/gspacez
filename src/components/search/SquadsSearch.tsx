@@ -1,6 +1,4 @@
-import { useSelector } from 'react-redux'
 import { useGSearch } from '../../hooks/useGSearch'
-import { RootState } from '../../store/store'
 import { useEffect, useRef } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import {
@@ -21,7 +19,6 @@ interface Props {
 
 export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
   const { searchSquads } = useGSearch()
-  const token = useSelector((state: RootState) => state.auth.token)
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const {
@@ -32,7 +29,7 @@ export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
   } = useInfiniteQuery({
     queryKey: ['search-squads', triggerSearch],
     queryFn: ({ pageParam }) =>
-      searchSquads({ searchText, page: pageParam, size: 20 }, token),
+      searchSquads({ searchText, page: pageParam, size: 20 }),
     select: (data) => {
       return data.pages.map((page) => page.data.result.content).flat()
     },

@@ -7,8 +7,6 @@ import {
   useSearch
 } from '@tanstack/react-router'
 import { usePost } from '../../hooks/usePost'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import {
   ActionIcon,
@@ -50,7 +48,6 @@ function RouteComponent() {
   const params = useSearch({ strict: false })
   const { postId } = useParams({ from: `/post/$postId` })
   const [opened, { toggle }] = useDisclosure(params.comment ? true : false)
-  const token = useSelector((state: RootState) => state.auth.token)
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -63,7 +60,7 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ['post', postId],
     queryFn: () => {
-      return getPost({ id: postId }, token)
+      return getPost({ id: postId })
     },
     select: (data) => {
       return data.data.result
@@ -73,7 +70,7 @@ function RouteComponent() {
   const { mutate: react } = useMutation({
     mutationKey: ['react', postData?.id],
     mutationFn: ({ req }: { req: ReactPostRequest }) =>
-      reactPost(postData?.id || '', req, token),
+      reactPost(postData?.id || '', req),
     onSuccess: () => {
       refetch()
     }
@@ -106,7 +103,7 @@ function RouteComponent() {
   const { mutate: mutateCreateComment, isPending: isPosting } = useMutation({
     mutationKey: ['createComment'],
     mutationFn: ({ req }: { req: CreateCommentRequest }) => {
-      return createComment(postId, req, token)
+      return createComment(postId, req)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

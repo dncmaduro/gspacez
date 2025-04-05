@@ -3,8 +3,6 @@ import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { Box, Loader, Stack, Text } from '@mantine/core'
 import { SquadForm } from '../../components/squad/SquadForm'
 import { useQuery } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { useSquad } from '../../hooks/useSquad'
 
 export const Route = createFileRoute('/squad/edit/$tagName')({
@@ -13,13 +11,12 @@ export const Route = createFileRoute('/squad/edit/$tagName')({
 
 function RouteComponent() {
   const { tagName } = useParams({ from: '/squad/edit/$tagName' })
-  const token = useSelector((state: RootState) => state.auth.token)
   const { getSquad } = useSquad()
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-squad'],
     queryFn: () => {
-      return getSquad(tagName, token)
+      return getSquad(tagName)
     },
     select: (data) => {
       return data.data.result

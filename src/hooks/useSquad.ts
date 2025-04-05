@@ -1,3 +1,4 @@
+import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
   CancelJoinRequest,
@@ -12,65 +13,63 @@ import {
 } from './models'
 
 export const useSquad = () => {
-  const createSquad = async (req: CreateSquadRequest, token: string) => {
+  const { accessToken } = useAuthStore()
+
+  const createSquad = async (req: CreateSquadRequest) => {
     return callApi<CreateSquadRequest, CreateSquadResponse>({
       method: 'POST',
       path: `/v1/profile-service/squads/create`,
-      token,
+      accessToken,
       data: req
     })
   }
 
-  const getSquad = async (tagName: string, token: string) => {
+  const getSquad = async (tagName: string) => {
     return callApi<never, GetSquadResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/${tagName}/info`,
-      token
+      accessToken
     })
   }
 
-  const updateSquad = async (
-    tagName: string,
-    req: UpdateSquadRequest,
-    token: string
-  ) => {
+  const updateSquad = async (tagName: string, req: UpdateSquadRequest) => {
     return callApi<UpdateSquadRequest, UpdateSquadResponse>({
       method: 'PUT',
       path: `/v1/profile-service/squads/${tagName}/update`,
-      token,
+      accessToken,
       data: req
     })
   }
 
-  const sendRequest = async (req: JoinSquadRequest, token: string) => {
+  const sendRequest = async (req: JoinSquadRequest) => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/send-request`,
-      token
+      accessToken
     })
   }
 
-  const leaveSquad = async (req: LeaveSquadRequest, token: string) => {
+  const leaveSquad = async (req: LeaveSquadRequest) => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/leave-squad`,
-      token
+      accessToken
     })
   }
 
-  const cancelRequest = async (req: CancelJoinRequest, token: string) => {
+  const cancelRequest = async (req: CancelJoinRequest) => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/cancel-request`,
-      token
+      accessToken
     })
   }
 
-  const getLastAccessSquads = async (token: string) => {
+  const getLastAccessSquads = async () => {
     return callApi<never, LastAccessResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/squad-access`,
-      token
+      accessToken
     })
   }
 

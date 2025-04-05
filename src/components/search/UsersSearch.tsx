@@ -9,8 +9,6 @@ import {
 } from '@mantine/core'
 import { useGSearch } from '../../hooks/useGSearch'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 
@@ -21,7 +19,6 @@ interface Props {
 
 export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
   const { searchUsers } = useGSearch()
-  const token = useSelector((state: RootState) => state.auth.token)
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const {
@@ -32,7 +29,7 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
   } = useInfiniteQuery({
     queryKey: ['search-users', triggerSearch],
     queryFn: ({ pageParam }) =>
-      searchUsers({ searchText, page: pageParam, size: 20 }, token),
+      searchUsers({ searchText, page: pageParam, size: 20 }),
     select: (data) => {
       return data.pages.map((page) => page.data.result.content).flat()
     },

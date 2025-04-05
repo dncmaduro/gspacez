@@ -3,8 +3,6 @@ import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { usePost } from '../../hooks/usePost'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Box, Button, Group, Skeleton, Stack, Text } from '@mantine/core'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import { GSimplePost } from '../../components/common/GSimplePost'
 import { useEffect, useRef, useState } from 'react'
 import { GIcon } from '../../components/common/GIcon'
@@ -15,7 +13,6 @@ export const Route = createFileRoute('/history/')({
 
 function RouteComponent() {
   const { getHistory } = usePost()
-  const token = useSelector((state: RootState) => state.auth.token)
   const [page, setPage] = useState(0)
   const [total, setTotal] = useState<number>()
   const loaderRef = useRef<HTMLDivElement | null>(null)
@@ -26,7 +23,7 @@ function RouteComponent() {
     refetch: loadMorePosts
   } = useQuery({
     queryKey: ['get-history'],
-    queryFn: () => getHistory({ page, size: 20 }, token),
+    queryFn: () => getHistory({ page, size: 20 }),
     select: (data) => {
       return data.data.result
     },

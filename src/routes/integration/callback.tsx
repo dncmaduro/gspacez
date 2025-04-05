@@ -2,9 +2,8 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useAuth } from '../../hooks/useAuth'
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { useAppDispatch } from '../../store/store'
-import { setAuth } from '../../store/authSlice'
 import { GToast } from '../../components/common/GToast'
+import { useAuthStore } from '../../store/authStore'
 
 export const Route = createFileRoute('/integration/callback')({
   component: RouteComponent
@@ -13,7 +12,7 @@ export const Route = createFileRoute('/integration/callback')({
 function RouteComponent() {
   const { code } = useSearch({ from: '/integration/callback' })
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const { setAuth } = useAuthStore()
   const processedCode = useRef<string | null>(null)
 
   const { loginWithGoogle } = useAuth()
@@ -21,12 +20,10 @@ function RouteComponent() {
   const { mutate } = useMutation({
     mutationFn: loginWithGoogle,
     onSuccess: (response) => {
-      dispatch(
-        setAuth({
-          token: response.data.result.token,
-          refreshToken: response.data.result.refreshToken
-        })
-      )
+      setAuth({
+        accessToken: response.data.result.token,
+        refreshToken: response.data.result.refreshToken
+      })
       navigate({ to: '/app' })
     },
     onError: () => {
