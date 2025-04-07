@@ -61,9 +61,12 @@ export interface ISquad {
   updatedAt: string
 }
 
-export interface IPendingRequest {
+export interface IMember {
   id: string
   profileId: string
   profileName: string
+  squadId: string
+  joinStatus: string
+  role: string
   joinedAt: string
 }

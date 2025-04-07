@@ -1,4 +1,4 @@
-import { IComment, IPendingRequest, IPost, ISquad } from './interface'
+import { IComment, IMember, IPost, ISquad } from './interface'
 
 export interface SignInRequest {
   email: string
@@ -364,7 +364,7 @@ export interface GetPendingRequestsRequest {
 }
 
 export interface GetPendingRequestsResponse {
-  result: IPendingRequest[]
+  result: IMember[]
 }
 
 export interface RejectRequestsRequest {
@@ -373,4 +373,12 @@ export interface RejectRequestsRequest {
 
 export interface ApproveRequestsRequest {
   profileIds: string[]
+}
+
+export interface GetMembersRequest {
+  tagName: string
+}
+
+export interface GetMembersResponse {
+  result: IMember[]
 }

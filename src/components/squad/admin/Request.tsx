@@ -1,5 +1,5 @@
 import { Avatar, Button, Flex, Group, Loader, Text } from '@mantine/core'
-import { IPendingRequest } from '../../../hooks/interface'
+import { IMember } from '../../../hooks/interface'
 import { useProfile } from '../../../hooks/useProfile'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { GIcon } from '../../common/GIcon'
@@ -8,7 +8,7 @@ import { GToast } from '../../common/GToast'
 import { useMemo } from 'react'
 
 interface Props {
-  request: IPendingRequest
+  request: IMember
   refetch: () => void
   tagName: string
 }

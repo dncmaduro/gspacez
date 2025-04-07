@@ -4,6 +4,8 @@ import {
   CancelJoinRequest,
   CreateSquadRequest,
   CreateSquadResponse,
+  GetMembersRequest,
+  GetMembersResponse,
   GetPendingRequestsRequest,
   GetPendingRequestsResponse,
   GetSquadResponse,
@@ -105,6 +107,14 @@ export const useSquad = () => {
     })
   }
 
+  const getMembers = async (req: GetMembersRequest) => {
+    return callApi<never, GetMembersResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/squads/${req.tagName}/official-members`,
+      accessToken
+    })
+  }
+
   return {
     createSquad,
     getSquad,
@@ -115,6 +125,7 @@ export const useSquad = () => {
     getLastAccessSquads,
     getPendingRequests,
     rejectRequest,
-    approveRequest
+    approveRequest,
+    getMembers
   }
 }
