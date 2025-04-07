@@ -1,50 +1,94 @@
-# React + TypeScript + Vite
+# GspaceZ - Tech Community Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GspaceZ is a modern web application built for tech enthusiasts to connect, share knowledge, and collaborate. This platform allows users to create posts, join squads (communities), and interact with AI-powered features.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### User Management
 
-## Expanding the ESLint configuration
+- **Authentication**: Sign up, sign in, and Google OAuth integration
+- **Profile Management**: Edit personal information, view activity history
+- **Password Recovery**: Forgot password flow with OTP verification
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Content Creation
 
-- Configure the top-level `parserOptions` property like this:
+- **Posts**: Create, edit, and view posts with markdown support
+- **Privacy Controls**: Set visibility options for your content
+- **Reactions**: Like/dislike posts and comments
+- **Hashtags**: Categorize content with relevant tags
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname
-    }
-  }
-})
+### Community Features
+
+- **Squads**: Create and join topic-based communities
+- **Newsfeed**: Personalized content feed
+- **Search**: Find users, posts, and squads
+
+### AI Integration
+
+- **Chat with AI**: Integrated Gemini AI for conversations
+- **Content Generation**: AI assistance for creating posts
+
+## Tech Stack
+
+### Frontend
+
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Routing**: TanStack Router
+- **State Management**: React Query, Zustand
+- **UI Components**: Mantine UI
+- **Styling**: Tailwind CSS
+- **Form Handling**: React Hook Form
+
+### Features
+
+- **Markdown**: React Markdown for content rendering
+- **Date Handling**: date-fns
+- **Image Manipulation**: react-easy-crop
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (latest LTS version recommended)
+- Yarn package manager
+
+### Installation
+
+```bash
+# Clone the repository
+git clone [repository-url]
+
+# Install dependencies
+yarn install
+
+# Start development server
+yarn start
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Environment Variables
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Create a `.env` file in the root directory with the following variables:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules
-  }
-})
 ```
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_GEMINI_KEY=your_gemini_api_key
+```
+
+### Build for Production
+
+```bash
+yarn build
+```
+
+## Project Structure
+
+- `/src`: Source code
+  - `/components`: Reusable UI components
+  - `/hooks`: Custom React hooks for API calls and state management
+  - `/routes`: Page components and routing configuration
+  - `/utils`: Utility functions and constants
+
+## Deployment
+
+The application is configured for deployment on Vercel with client-side routing support.
