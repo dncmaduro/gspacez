@@ -217,7 +217,7 @@ function RouteComponent() {
           </Tabs.Panel>
 
           <Tabs.Panel value="members-manage">
-            <Members tagName={tagName} />
+            <Members tagName={tagName} name={data?.name || ''} />
           </Tabs.Panel>
         </Tabs>
       )

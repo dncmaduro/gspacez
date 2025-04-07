@@ -5,17 +5,20 @@ import { useDisclosure } from '@mantine/hooks'
 import { IMember } from '../../../hooks/interface'
 import { GIcon } from '../../common/GIcon'
 import { GSquadMember } from '../../common/GSquadMember'
+import { modals } from '@mantine/modals'
+import { UpdateAdminsModal } from './UpdateAdminsModal'
 
 interface Props {
   tagName: string
+  name: string
 }
 
-export const Members = ({ tagName }: Props) => {
+export const Members = ({ tagName, name }: Props) => {
   const { getMembers } = useSquad()
   const [adminOpened, { toggle: toggleAdmin }] = useDisclosure(true)
   const [memberOpened, { toggle: toggleMember }] = useDisclosure(true)
 
-  const { data: membersData } = useQuery({
+  const { data: membersData, refetch } = useQuery({
     queryKey: ['get-members'],
     queryFn: () => getMembers({ tagName }),
     select: (data) => {
@@ -57,13 +60,29 @@ export const Members = ({ tagName }: Props) => {
             Admins ({membersData.admins.length})
           </Button>
           <Collapse in={adminOpened} w={'100%'} px={32}>
-            <ScrollArea.Autosize mah={300}>
-              <Stack>
-                {membersData.admins.map((admin) => (
-                  <GSquadMember member={admin} />
-                ))}
-              </Stack>
-            </ScrollArea.Autosize>
+            <Stack gap={32}>
+              <ScrollArea.Autosize mah={300}>
+                <Stack>
+                  {membersData.admins.map((admin) => (
+                    <GSquadMember member={admin} />
+                  ))}
+                </Stack>
+              </ScrollArea.Autosize>
+              <Button
+                mx={'auto'}
+                variant="light"
+                onClick={() => {
+                  modals.open({
+                    title: `Update ${name} members roles`,
+                    children: <UpdateAdminsModal tagName={tagName} />,
+                    size: 'lg',
+                    onClose: () => refetch()
+                  })
+                }}
+              >
+                Update your squad admins
+              </Button>
+            </Stack>
           </Collapse>
 
           <Button
@@ -83,6 +102,7 @@ export const Members = ({ tagName }: Props) => {
                 size={16}
               />
             }
+            mt={16}
             onClick={toggleMember}
           >
             Members ({membersData.members.length})

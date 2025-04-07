@@ -382,3 +382,8 @@ export interface GetMembersRequest {
 export interface GetMembersResponse {
   result: IMember[]
 }
+
+export interface UpdateRoleRequest {
+  profileId: string
+  role: string
+}

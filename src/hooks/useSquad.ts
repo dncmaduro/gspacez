@@ -13,6 +13,7 @@ import {
   LastAccessResponse,
   LeaveSquadRequest,
   RejectRequestsRequest,
+  UpdateRoleRequest,
   UpdateSquadRequest,
   UpdateSquadResponse
 } from './models'
@@ -115,6 +116,15 @@ export const useSquad = () => {
     })
   }
 
+  const updateRole = async (tagName: string, req: UpdateRoleRequest) => {
+    return callApi<UpdateRoleRequest, never>({
+      method: 'PUT',
+      data: req,
+      path: `/v1/profile-service/squads/${tagName}/update-member-role`,
+      accessToken
+    })
+  }
+
   return {
     createSquad,
     getSquad,
@@ -126,6 +136,7 @@ export const useSquad = () => {
     getPendingRequests,
     rejectRequest,
     approveRequest,
-    getMembers
+    getMembers,
+    updateRole
   }
 }
