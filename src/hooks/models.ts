@@ -1,4 +1,4 @@
-import { IComment, IPost, ISquad } from './interface'
+import { IComment, IPendingRequest, IPost, ISquad } from './interface'
 
 export interface SignInRequest {
   email: string
@@ -357,4 +357,20 @@ export interface SearchSquadsResponse {
     number: number
     content: ISquad[]
   }
+}
+
+export interface GetPendingRequestsRequest {
+  tagName: string
+}
+
+export interface GetPendingRequestsResponse {
+  result: IPendingRequest[]
+}
+
+export interface RejectRequestsRequest {
+  profileIds: string[]
+}
+
+export interface ApproveRequestsRequest {
+  profileIds: string[]
 }

@@ -1,4 +1,10 @@
-import { createFileRoute, Link, useParams } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useParams,
+  useSearch
+} from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useSquad } from '../../hooks/useSquad'
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query'
@@ -13,6 +19,7 @@ import {
   Group,
   Loader,
   Stack,
+  Tabs,
   Text
 } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
@@ -25,15 +32,22 @@ import { GToast } from '../../components/common/GToast'
 import { modals } from '@mantine/modals'
 import { GJoinButton } from '../../components/common/GJoinButton'
 import { useMe } from '../../hooks/useMe'
+import { PendingRequests } from '../../components/squad/admin/PendingRequests'
 
 export const Route = createFileRoute('/squad/$tagName')({
-  component: RouteComponent
+  component: RouteComponent,
+  validateSearch: (search) =>
+    search as {
+      tab: string
+    }
 })
 
 function RouteComponent() {
   const { getSquad, sendRequest, leaveSquad, cancelRequest } = useSquad()
+  const { tab } = useSearch({ strict: false })
   const { getProfile } = useProfile()
   const { tagName } = useParams({ from: '/squad/$tagName' })
+  const navigate = useNavigate()
   const { data: profileData } = useMe()
 
   const {
@@ -41,7 +55,7 @@ function RouteComponent() {
     isLoading,
     refetch: refetchSquad
   } = useQuery({
-    queryKey: ['get-squad'],
+    queryKey: ['get-squad', tagName],
     queryFn: () => {
       return getSquad(tagName)
     },
@@ -179,9 +193,35 @@ function RouteComponent() {
     }
   }
 
+  const squadTabs = [
+    {
+      label: 'Posts',
+      value: 'posts',
+      onlyAdmin: false,
+      panel: <></>
+    },
+    {
+      label: 'Manage squad',
+      value: 'manage-squad',
+      onlyAdmin: true,
+      panel: (
+        <Tabs orientation="vertical" mt={32} defaultValue={'pending-requests'}>
+          <Tabs.List>
+            <Tabs.Tab value="pending-requests">Pending requests</Tabs.Tab>
+            <Tabs.Tab value="admin-manage">Manage squad admins</Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="pending-requests">
+            <PendingRequests tagName={tagName} />
+          </Tabs.Panel>
+        </Tabs>
+      )
+    }
+  ]
+
   return (
     <AppLayout>
-      <Box maw={1000} m="auto" pt={12}>
+      <Box maw={1200} m="auto" pt={12}>
         {isLoading ? (
           <Loader mx={'auto'} />
         ) : (
@@ -311,6 +351,32 @@ function RouteComponent() {
                     : `${data?.totalPosts} posts`}
                 </Text>
               </Group>
+              <Tabs
+                variant="outline"
+                mt={32}
+                defaultValue={tab || 'posts'}
+                onChange={(value) =>
+                  navigate({ to: `/squad/${tagName}?tab=${value}` })
+                }
+              >
+                <Tabs.List>
+                  {squadTabs
+                    .filter((tab) => !tab.onlyAdmin || isAdmin)
+                    .map((tab) => (
+                      <Tabs.Tab key={tab.value} value={tab.value}>
+                        {tab.label}
+                      </Tabs.Tab>
+                    ))}
+                </Tabs.List>
+
+                {squadTabs
+                  .filter((tab) => !tab.onlyAdmin || isAdmin)
+                  .map((tab) => (
+                    <Tabs.Panel key={tab.value} value={tab.value}>
+                      {tab.panel}
+                    </Tabs.Panel>
+                  ))}
+              </Tabs>
             </Stack>
           </>
         )}

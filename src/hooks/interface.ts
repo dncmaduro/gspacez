@@ -60,3 +60,10 @@ export interface ISquad {
   joinStatus: string
   updatedAt: string
 }
+
+export interface IPendingRequest {
+  id: string
+  profileId: string
+  profileName: string
+  joinedAt: string
+}

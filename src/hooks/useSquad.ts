@@ -4,10 +4,13 @@ import {
   CancelJoinRequest,
   CreateSquadRequest,
   CreateSquadResponse,
+  GetPendingRequestsRequest,
+  GetPendingRequestsResponse,
   GetSquadResponse,
   JoinSquadRequest,
   LastAccessResponse,
   LeaveSquadRequest,
+  RejectRequestsRequest,
   UpdateSquadRequest,
   UpdateSquadResponse
 } from './models'
@@ -73,6 +76,35 @@ export const useSquad = () => {
     })
   }
 
+  const getPendingRequests = async (req: GetPendingRequestsRequest) => {
+    return callApi<never, GetPendingRequestsResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/squads/${req.tagName}/pending-members`,
+      accessToken
+    })
+  }
+
+  const rejectRequest = async (tagName: string, req: RejectRequestsRequest) => {
+    return callApi<RejectRequestsRequest, never>({
+      method: 'POST',
+      path: `/v1/profile-service/squads/${tagName}/reject-request`,
+      accessToken,
+      data: req
+    })
+  }
+
+  const approveRequest = async (
+    tagName: string,
+    req: RejectRequestsRequest
+  ) => {
+    return callApi<RejectRequestsRequest, never>({
+      method: 'POST',
+      path: `/v1/profile-service/squads/${tagName}/approve-request`,
+      accessToken,
+      data: req
+    })
+  }
+
   return {
     createSquad,
     getSquad,
@@ -80,6 +112,9 @@ export const useSquad = () => {
     sendRequest,
     leaveSquad,
     cancelRequest,
-    getLastAccessSquads
+    getLastAccessSquads,
+    getPendingRequests,
+    rejectRequest,
+    approveRequest
   }
 }
