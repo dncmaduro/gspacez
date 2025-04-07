@@ -33,6 +33,7 @@ import { modals } from '@mantine/modals'
 import { GJoinButton } from '../../components/common/GJoinButton'
 import { useMe } from '../../hooks/useMe'
 import { PendingRequests } from '../../components/squad/admin/PendingRequests'
+import { Members } from '../../components/squad/admin/Members'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent,
@@ -208,11 +209,15 @@ function RouteComponent() {
         <Tabs orientation="vertical" mt={32} defaultValue={'pending-requests'}>
           <Tabs.List>
             <Tabs.Tab value="pending-requests">Pending requests</Tabs.Tab>
-            <Tabs.Tab value="admin-manage">Manage squad admins</Tabs.Tab>
+            <Tabs.Tab value="members-manage">Manage members/admins</Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="pending-requests">
             <PendingRequests tagName={tagName} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="members-manage">
+            <Members tagName={tagName} />
           </Tabs.Panel>
         </Tabs>
       )
