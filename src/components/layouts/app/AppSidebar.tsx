@@ -17,8 +17,7 @@ import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
 import { useSquad } from '../../../hooks/useSquad'
 import { useQuery } from '@tanstack/react-query'
 import { SidebarSquad } from './SidebarSquad'
-import { useGSearch } from '../../../hooks/useGSearch'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   opened: boolean
@@ -31,7 +30,6 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
   const debouncedSearchText = useDebouncedValue(searchText, 300)[0]
 
   const { getLastAccessSquads } = useSquad()
-  const { searchSquads } = useGSearch()
 
   const { data: lastAccessSquads } = useQuery({
     queryKey: ['get-last-access-squads'],
@@ -41,27 +39,22 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
     }
   })
 
-  const { data: searchSquadsData } = useQuery({
-    queryKey: ['searchSquads', debouncedSearchText],
-    queryFn: () => {
-      return searchSquads({ searchText: debouncedSearchText, page: 0, size: 5 })
-    },
-    select: (data) => {
-      return data.data.result.content.map((squad) => ({
-        squadId: squad.id,
-        name: squad.name,
-        tagName: squad.tagName,
-        avatarUrl: squad.avatarUrl
-      }))
-    },
-    enabled: !!debouncedSearchText
-  })
-
   useEffect(() => {
     if (!openedSearch) {
       setSearchText('')
     }
   }, [openedSearch])
+
+  const convertSquads = useMemo(() => {
+    return lastAccessSquads?.filter((squad) =>
+      squad.name.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    )
+  }, [debouncedSearchText])
+
+  const handleOpenSearch = () => {
+    toggleSearch()
+    toggle()
+  }
 
   return (
     <Box pt={12} px={opened ? 12 : 4}>
@@ -97,7 +90,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             <SidebarItem
               icon="ChartCohort"
               label="Search squads"
-              onClick={toggleSearch}
+              onClick={() => handleOpenSearch()}
             />
             <Collapse in={openedSearch} w={'100%'}>
               <TextInput
@@ -109,13 +102,9 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
               />
             </Collapse>
             <Divider my={2} w="100%" />
-            {debouncedSearchText && openedSearch
-              ? searchSquadsData?.map((squad) => (
-                  <SidebarSquad key={squad.squadId} squad={squad} />
-                ))
-              : lastAccessSquads?.map((squad) => (
-                  <SidebarSquad squad={squad} key={squad.squadId} />
-                ))}
+            {convertSquads?.map((squad) => (
+              <SidebarSquad key={squad.squadId} squad={squad} />
+            ))}
             {opened ? (
               <Button
                 size="xs"
