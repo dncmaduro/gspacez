@@ -14,6 +14,7 @@ import { GIcon } from '../../common/GIcon'
 import { GToast } from '../../common/GToast'
 import { useState } from 'react'
 import { useAuthStore } from '../../../store/authStore'
+import { useMe } from '../../../hooks/useMe'
 import { useCallbackStore } from '../../../store/callbackStore'
 
 interface Props {
@@ -26,6 +27,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { clearAuth } = useAuthStore()
   const { clearCallbackUrl } = useCallbackStore()
   const [searchText, setSearchText] = useState<string>('')
+  const { data: profileData } = useMe()
 
   const signOut = () => {
     clearAuth()
@@ -73,7 +75,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           )}
           <Menu>
             <Menu.Target>
-              <Avatar className="cursor-pointer" size="md" />
+              <Avatar src={profileData?.avatarUrl} className="cursor-pointer" size="md" />
             </Menu.Target>
             <Menu.Dropdown w={180}>
               <Menu.Item
