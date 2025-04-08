@@ -92,7 +92,7 @@ function RouteComponent() {
                 <Box className="rounded-lg border border-indigo-200" p={16}>
                   <Text size="md">Involved Squads</Text>
                   {!joinedSquads || joinedSquads.length === 0 ? (
-                    <Text c="dimmed" size="md">
+                    <Text c="dimmed" size="sm">
                       You haven't joined any squads yet. Join one to start your journey!
                     </Text>
                   ) : (
