@@ -270,6 +270,7 @@ export interface SearchUsersResponse {
       email: string
       firstName: string
       lastName: string
+      avatarUrl: string
       roles: {
         name: string
         description: string
