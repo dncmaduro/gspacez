@@ -93,7 +93,8 @@ function RouteComponent() {
                   <Text size="md">Involved Squads</Text>
                   {!joinedSquads || joinedSquads.length === 0 ? (
                     <Text c="dimmed" size="sm">
-                      You haven't joined any squads yet. Join one to start your journey!
+                      You haven't joined any squads yet. Join one to start your
+                      journey!
                     </Text>
                   ) : (
                     <Group pt={10}>
@@ -102,7 +103,7 @@ function RouteComponent() {
                           style={{
                             display: 'flex',
                             flexWrap: 'wrap',
-                            gap: 16,
+                            gap: 16
                           }}
                         >
                           {joinedSquads.map((squad) => (
