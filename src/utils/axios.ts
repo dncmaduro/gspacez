@@ -6,6 +6,11 @@ type AxiosCallApi<D> = {
   accessToken?: string
   customUrl?: string
   method: AxiosRequestConfig['method']
+  onClearAuth?: () => void
+}
+
+interface BaseResponse {
+  code: number
 }
 
 export async function callApi<D = unknown, T = unknown>({
@@ -13,8 +18,9 @@ export async function callApi<D = unknown, T = unknown>({
   data,
   accessToken,
   customUrl,
-  method
-}: AxiosCallApi<D>): Promise<AxiosResponse<T>> {
+  method,
+  onClearAuth
+}: AxiosCallApi<D>): Promise<AxiosResponse<T & BaseResponse>> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json'
@@ -24,12 +30,23 @@ export async function callApi<D = unknown, T = unknown>({
     headers['Authorization'] = `Bearer ${accessToken}`
   }
 
-  const response = await axios<T>({
-    url: (customUrl ?? import.meta.env.VITE_BACKEND_URL) + path,
-    headers,
-    data,
-    method
-  })
+  try {
+    const response = await axios<T & BaseResponse>({
+      url: (customUrl ?? import.meta.env.VITE_BACKEND_URL) + path,
+      headers,
+      data,
+      method
+    })
 
-  return response
+    if (response.data.code === 1401) {
+      onClearAuth?.()
+    }
+
+    return response
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      onClearAuth?.()
+    }
+    throw error
+  }
 }

@@ -1,3 +1,4 @@
+import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
   ForgotPasswordRequest,
@@ -5,6 +6,7 @@ import {
   IntrospectRequest,
   IntrospectResponse,
   LoginByGoogleResponse,
+  SignOutRequest,
   RefreshTokenRequest,
   RefreshTokenResponse,
   ResetPasswordRequest,
@@ -16,6 +18,8 @@ import {
 } from './models'
 
 export const useAuth = () => {
+  const { accessToken } = useAuthStore()
+
   const signIn = async (req: SignInRequest) => {
     return callApi<SignInRequest, SignInResponse>({
       data: req,
@@ -79,6 +83,14 @@ export const useAuth = () => {
     })
   }
 
+  const signOut = async () => {
+    return callApi<SignOutRequest, never>({
+      path: `/v1/identity/auth/logout`,
+      method: 'POST',
+      data: { token: accessToken }
+    })
+  }
+
   return {
     signIn,
     signUp,
@@ -87,6 +99,7 @@ export const useAuth = () => {
     loginWithGoogle,
     forgotPassword,
     verifyOtp,
-    resetPassword
+    resetPassword,
+    signOut
   }
 }

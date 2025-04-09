@@ -388,3 +388,7 @@ export interface UpdateRoleRequest {
   profileId: string
   role: string
 }
+
+export interface SignOutRequest {
+  token: string
+}

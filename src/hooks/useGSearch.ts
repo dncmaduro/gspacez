@@ -8,13 +8,14 @@ import {
 } from './models'
 
 export const useGSearch = () => {
-  const { accessToken } = useAuthStore()
+  const { accessToken, clearAuth } = useAuthStore()
 
   const searchUsers = async (req: BaseSearchRequest) => {
     return callApi<never, SearchUsersResponse>({
       method: 'GET',
       path: `/v1/identity/users/search?searchText=${req.searchText}&size=${req.size}&page=${req.page}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -22,7 +23,8 @@ export const useGSearch = () => {
     return callApi<never, SearchPostsResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/search?searchText=${req.searchText}&size=${req.size}&page=${req.page}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -30,7 +32,8 @@ export const useGSearch = () => {
     return callApi<never, SearchSquadsResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/search?searchText=${req.searchText}&size=${req.size}&page=${req.page}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 

@@ -53,9 +53,10 @@ export const SignInForm = () => {
         refreshToken: response.data.result.refreshToken
       })
     },
-    onError: () => {
+    onError: (response) => {
       GToast.error({
-        title: 'Failed to sign in'
+        title: 'Failed to sign in',
+        subtitle: response.message
       })
     }
   })

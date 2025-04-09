@@ -19,13 +19,14 @@ import {
 } from './models'
 
 export const useSquad = () => {
-  const { accessToken } = useAuthStore()
+  const { accessToken, clearAuth } = useAuthStore()
 
   const createSquad = async (req: CreateSquadRequest) => {
     return callApi<CreateSquadRequest, CreateSquadResponse>({
       method: 'POST',
       path: `/v1/profile-service/squads/create`,
       accessToken,
+      onClearAuth: clearAuth,
       data: req
     })
   }
@@ -34,7 +35,8 @@ export const useSquad = () => {
     return callApi<never, GetSquadResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/${tagName}/info`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -43,6 +45,7 @@ export const useSquad = () => {
       method: 'PUT',
       path: `/v1/profile-service/squads/${tagName}/update`,
       accessToken,
+      onClearAuth: clearAuth,
       data: req
     })
   }
@@ -51,7 +54,8 @@ export const useSquad = () => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/send-request`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -59,7 +63,8 @@ export const useSquad = () => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/leave-squad`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -67,7 +72,8 @@ export const useSquad = () => {
     return callApi<never, never>({
       method: 'POST',
       path: `/v1/profile-service/squads/${req.tagName}/cancel-request`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -75,7 +81,8 @@ export const useSquad = () => {
     return callApi<never, LastAccessResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/squad-access`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -83,7 +90,8 @@ export const useSquad = () => {
     return callApi<never, GetPendingRequestsResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/${req.tagName}/pending-members`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -92,6 +100,7 @@ export const useSquad = () => {
       method: 'POST',
       path: `/v1/profile-service/squads/${tagName}/reject-request`,
       accessToken,
+      onClearAuth: clearAuth,
       data: req
     })
   }
@@ -104,6 +113,7 @@ export const useSquad = () => {
       method: 'POST',
       path: `/v1/profile-service/squads/${tagName}/approve-request`,
       accessToken,
+      onClearAuth: clearAuth,
       data: req
     })
   }
@@ -112,7 +122,8 @@ export const useSquad = () => {
     return callApi<never, GetMembersResponse>({
       method: 'GET',
       path: `/v1/profile-service/squads/${req.tagName}/official-members`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -121,7 +132,8 @@ export const useSquad = () => {
       method: 'PUT',
       data: req,
       path: `/v1/profile-service/squads/${tagName}/update-member-role`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
