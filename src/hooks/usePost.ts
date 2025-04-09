@@ -24,7 +24,8 @@ export const usePost = () => {
     return callApi<GetNewsfeedRequest, GetNewsfeedResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/newsfeed?pageNum=${req.pageNum}&pageSize=${req.pageSize}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -32,7 +33,8 @@ export const usePost = () => {
     return callApi<GetPostRequest, GetPostResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/${req.id}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -41,7 +43,8 @@ export const usePost = () => {
       method: 'POST',
       path: `/v1/post-service/posts/create`,
       data: req,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -50,7 +53,8 @@ export const usePost = () => {
       method: 'PUT',
       path: `/v1/post-service/posts/update/${id}`,
       data: req,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -59,7 +63,8 @@ export const usePost = () => {
       method: 'POST',
       path: `/v1/post-service/posts/comment/${id}`,
       data: req,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -67,7 +72,8 @@ export const usePost = () => {
     return callApi<never, GetCommentsReponse>({
       method: 'GET',
       path: `/v1/post-service/posts/${id}/comment`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -76,6 +82,7 @@ export const usePost = () => {
       method: 'PATCH',
       path: `/v1/post-service/posts/react/${id}`,
       accessToken,
+      onClearAuth: clearAuth,
       data: req
     })
   }
@@ -84,7 +91,8 @@ export const usePost = () => {
     return callApi<GetHistoryRequest, GetHistoryResponse>({
       method: 'GET',
       path: `/v1/post-service/posts/history?page=${req.page}&size=${req.size}`,
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
@@ -98,4 +106,7 @@ export const usePost = () => {
     reactPost,
     getHistory
   }
+}
+function clearAuth(): void {
+  throw new Error('Function not implemented.')
 }

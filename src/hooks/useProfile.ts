@@ -9,11 +9,12 @@ import {
 } from './models'
 
 export const useProfile = () => {
-  const { accessToken } = useAuthStore()
+  const { accessToken, clearAuth } = useAuthStore()
 
   const getMe = async () => {
     return callApi<never, GetMeResponse>({
       accessToken,
+      onClearAuth: clearAuth,
       method: 'GET',
       path: `/v1/profile-service/info`
     })
@@ -22,6 +23,7 @@ export const useProfile = () => {
   const updateMe = async (req: UpdateMeRequest) => {
     return callApi<UpdateMeRequest, UpdateMeResponse>({
       accessToken,
+      onClearAuth: clearAuth,
       method: 'PUT',
       path: `/v1/profile-service/info`,
       data: req
@@ -39,7 +41,8 @@ export const useProfile = () => {
     return callApi<never, JoinedSquadsResponse>({
       path: `/v1/profile-service/squads/joined`,
       method: 'GET',
-      accessToken
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 

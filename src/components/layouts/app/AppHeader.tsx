@@ -16,6 +16,8 @@ import { useState } from 'react'
 import { useAuthStore } from '../../../store/authStore'
 import { useMe } from '../../../hooks/useMe'
 import { useCallbackStore } from '../../../store/callbackStore'
+import { useMutation } from '@tanstack/react-query'
+import { useAuth } from '../../../hooks/useAuth'
 
 interface Props {
   hideSearchInput?: boolean
@@ -28,15 +30,30 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { clearCallbackUrl } = useCallbackStore()
   const [searchText, setSearchText] = useState<string>('')
   const { data: profileData } = useMe()
+  const { signOut } = useAuth()
 
-  const signOut = () => {
-    clearAuth()
-    clearCallbackUrl()
-    navigate({ to: '/' })
-    GToast.success({
-      title: 'Sign out successfully!'
-    })
-  }
+  const { mutate: onSignOut } = useMutation({
+    mutationKey: ['sign-out'],
+    mutationFn: () => signOut(),
+    onSuccess: () => {
+      clearAuth()
+      clearCallbackUrl()
+      navigate({ to: '/' })
+      GToast.success({
+        title: 'Sign out successfully!'
+      })
+    },
+    onError: () => {
+      clearAuth()
+      clearCallbackUrl()
+      navigate({ to: '/' })
+      GToast.error({
+        title: 'Sign out failed!',
+        subtitle:
+          'Something happen! You should check other devices that you logged in'
+      })
+    }
+  })
 
   return (
     <Box w="100%" h="100%" className="shadow-sm">
@@ -75,7 +92,11 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           )}
           <Menu>
             <Menu.Target>
-              <Avatar src={profileData?.avatarUrl} className="cursor-pointer" size="md" />
+              <Avatar
+                src={profileData?.avatarUrl}
+                className="cursor-pointer"
+                size="md"
+              />
             </Menu.Target>
             <Menu.Dropdown w={180}>
               <Menu.Item
@@ -94,7 +115,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               <Menu.Item
                 leftSection={<GIcon name="Power" size={14} />}
                 color="red"
-                onClick={() => signOut()}
+                onClick={() => onSignOut()}
               >
                 Sign out
               </Menu.Item>
