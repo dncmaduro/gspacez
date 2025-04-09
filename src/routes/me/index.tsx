@@ -9,7 +9,8 @@ import {
   Avatar,
   Loader,
   Tabs,
-  Button
+  Button,
+  Tooltip
 } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useProfile } from '../../hooks/useProfile'
@@ -20,7 +21,7 @@ export const Route = createFileRoute('/me/')({
 })
 
 function RouteComponent() {
-  const { getMe } = useProfile()
+  const { getMe, getJoinedSquads } = useProfile()
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-profile'],
@@ -29,6 +30,14 @@ function RouteComponent() {
     }
   })
 
+  const { data: squadsData } = useQuery({
+    queryKey: ['get-joined-squads'],
+    queryFn: () => {
+      return getJoinedSquads()
+    }
+  })
+
+  const joinedSquads = squadsData?.data.result || []
   const profileData = data?.data.result
 
   const tabs = [
@@ -82,6 +91,36 @@ function RouteComponent() {
                 </Box>
                 <Box className="rounded-lg border border-indigo-200" p={16}>
                   <Text size="md">Involved Squads</Text>
+                  {!joinedSquads || joinedSquads.length === 0 ? (
+                    <Text c="dimmed" size="sm">
+                      You haven't joined any squads yet. Join one to start your journey!
+                    </Text>
+                  ) : (
+                    <Group pt={10}>
+                      <Tooltip.Group openDelay={300} closeDelay={100}>
+                        <Box
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 16,
+                          }}
+                        >
+                          {joinedSquads.map((squad) => (
+                            <Tooltip label={squad.name} withArrow>
+                              <Link to={`/squad/${squad.tagName}`}>
+                                <Avatar
+                                  src={squad.avatarUrl}
+                                  radius="xl"
+                                  size="md"
+                                  style={{ cursor: 'pointer' }}
+                                />
+                              </Link>
+                            </Tooltip>
+                          ))}
+                        </Box>
+                      </Tooltip.Group>
+                    </Group>
+                  )}
                 </Box>
                 <Box className="rounded-lg border border-indigo-200" p={16}>
                   <Text size="md">View other social accounts</Text>

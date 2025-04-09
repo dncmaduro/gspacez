@@ -31,6 +31,7 @@ import { CreateCommentRequest, ReactPostRequest } from '../../hooks/models'
 import { PostComments } from '../../components/post/PostComments'
 import { GLikeButton } from '../../components/common/GLikeButton'
 import { GDislikeButton } from '../../components/common/GDislikeButton'
+import { useMe } from '../../hooks/useMe'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -52,6 +53,7 @@ function RouteComponent() {
   const queryClient = useQueryClient()
 
   const { getPost, createComment, reactPost } = usePost()
+  const { data: profileData } = useMe()
 
   const {
     data: postData,
@@ -166,14 +168,16 @@ function RouteComponent() {
                 <GIcon name="PointFilled" size={8} color="gray" />
                 <span>{privacyIcons[postData?.privacy || 'PUBLIC']}</span>
               </Flex>
-              <Button
-                component={Link}
-                to={`/post/edit/${postId}`}
-                variant="outline"
-                leftSection={<GIcon name="Pencil" size={18} />}
-              >
-                Edit post
-              </Button>
+              {profileData?.id === postData?.profileId && (
+                <Button
+                  component={Link}
+                  to={`/post/edit/${postId}`}
+                  variant="outline"
+                  leftSection={<GIcon name="Pencil" size={18} />}
+                >
+                  Edit post
+                </Button>
+              )}
             </Group>
             <Text className="!text-2xl !font-bold" mt={24}>
               {postData?.title || 'Title'}

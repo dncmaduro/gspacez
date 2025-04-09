@@ -317,8 +317,9 @@ export interface UpdateSquadResponse {
 
 export interface JoinedSquadsResponse {
   result: {
-    squadName: string
+    name: string
     tagName: string
+    avatarUrl: string
   }[]
 }
 
