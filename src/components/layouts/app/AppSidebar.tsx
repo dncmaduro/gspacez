@@ -53,7 +53,9 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
 
   const handleOpenSearch = () => {
     toggleSearch()
-    toggle()
+    if (!opened) {
+      toggle()
+    }
   }
 
   return (
@@ -64,7 +66,16 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             MENU
           </Text>
         )}
-        <ActionIcon variant="subtle" onClick={toggle}>
+        <ActionIcon
+          variant="subtle"
+          onClick={() => {
+            if (openedSearch) {
+              setSearchText('')
+              toggleSearch()
+            }
+            toggle()
+          }}
+        >
           <GIcon
             name={
               opened
@@ -79,9 +90,19 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
       <Stack gap={32} pt={24}>
         <SidebarPart opened={opened}>
           <Stack gap={4}>
-            <SidebarItem icon="News" label="My feed" href="/app" />
-            <SidebarItem icon="Flame" label="Explore" />
-            <SidebarItem icon="History" label="History" href="/history" />
+            <SidebarItem
+              icon="News"
+              label="My feed"
+              href="/app"
+              opened={opened}
+            />
+            <SidebarItem icon="Flame" label="Explore" opened={opened} />
+            <SidebarItem
+              icon="History"
+              label="History"
+              href="/history"
+              opened={opened}
+            />
           </Stack>
         </SidebarPart>
 
@@ -91,6 +112,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
               icon="ChartCohort"
               label="Search squads"
               onClick={() => handleOpenSearch()}
+              opened={opened}
             />
             <Collapse in={openedSearch} w={'100%'}>
               <TextInput
@@ -103,7 +125,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             </Collapse>
             <Divider my={2} w="100%" />
             {convertSquads?.map((squad) => (
-              <SidebarSquad key={squad.squadId} squad={squad} />
+              <SidebarSquad key={squad.squadId} squad={squad} opened={opened} />
             ))}
             {opened ? (
               <Button
@@ -124,19 +146,19 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
           </Stack>
         </SidebarPart>
 
-        <SidebarPart title="AI" icon="AI" opened={opened}>
-          <SidebarItem icon="Ai" label="AI" href="/ai" />
+        <SidebarPart title="AI" icon="Ai" opened={opened}>
+          <SidebarItem icon="Ai" label="AI" href="/ai" opened={opened} />
         </SidebarPart>
 
         <SidebarPart title="Discover" icon="Compass" opened={opened}>
           <Stack gap={4}>
-            <SidebarItem icon="Hash" label="Tags" />
-            <SidebarItem icon="Message" label="Discussions" />
+            <SidebarItem icon="Hash" label="Tags" opened={opened} />
+            <SidebarItem icon="Message" label="Discussions" opened={opened} />
           </Stack>
         </SidebarPart>
 
         <SidebarPart opened={opened}>
-          <SidebarItem icon="DevicesStar" label="Feedback" />
+          <SidebarItem icon="DevicesStar" label="Feedback" opened={opened} />
         </SidebarPart>
       </Stack>
     </Box>
