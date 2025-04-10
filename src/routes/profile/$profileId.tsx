@@ -61,7 +61,11 @@ function RouteComponent() {
           <>
             <Flex h="100%" gap={8} mih={1000}>
               <Stack w="30%" gap={4}>
-                <Box className="rounded-lg border border-indigo-200" p={16}>
+                <Box
+                  className="rounded-lg border border-indigo-200"
+                  bg={'white'}
+                  p={16}
+                >
                   <Stack gap={16}>
                     <Group gap={8}>
                       <Avatar src={profileData?.avatarUrl} size="md" />
@@ -75,7 +79,11 @@ function RouteComponent() {
                     </Group>
                   </Stack>
                 </Box>
-                <Box className="rounded-lg border border-indigo-200" p={16}>
+                <Box
+                  className="rounded-lg border border-indigo-200"
+                  bg={'white'}
+                  p={16}
+                >
                   <Text size="md">Involved Squads</Text>
                   {!joinedSquads || joinedSquads.length === 0 ? (
                     <Text c="dimmed" size="sm">
@@ -112,11 +120,18 @@ function RouteComponent() {
                     </Group>
                   )}
                 </Box>
-                <Box className="rounded-lg border border-indigo-200" p={16}>
+                <Box
+                  className="rounded-lg border border-indigo-200"
+                  bg={'white'}
+                  p={16}
+                >
                   <Text size="md">View other social accounts</Text>
                 </Box>
               </Stack>
-              <Box className="grow rounded-lg border border-indigo-200">
+              <Box
+                className="grow rounded-lg border border-indigo-200"
+                bg={'white'}
+              >
                 <Tabs defaultValue={tabs[0].value}>
                   <Tabs.List h={44}>
                     {tabs.map((tab) => (

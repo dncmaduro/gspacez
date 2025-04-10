@@ -103,7 +103,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" maw={1000}>
+      <Box mx="auto" maw={1000} px={20} pt={10} bg={'white'} mah={'90vh'}>
         <Stack align="center" mt={12}>
           <Group gap={8}>
             <Text className="!text-2xl !font-bold">Chat with AI</Text>

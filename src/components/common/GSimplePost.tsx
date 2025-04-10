@@ -20,7 +20,7 @@ interface Props {
 
 export const GSimplePost = ({ post }: Props) => {
   return (
-    <Box className="rounded-lg border border-gray-300" p={16}>
+    <Box className="rounded-lg border border-gray-300 bg-white" p={16}>
       <Group>
         <Avatar src={post.avatarUrl} />
         <Stack gap={1} align="flex-start">
