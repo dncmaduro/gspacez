@@ -66,6 +66,16 @@ export interface GetNewsfeedResponse {
   result: IPost[]
 }
 
+export interface GetPostsByProfileRequest {
+  pageNum: number
+  pageSize: number
+}
+
+export interface GetPostsByProfileResponse {
+  message?: string
+  result: IPost[]
+}
+
 export interface GetPostRequest {
   id: string
 }

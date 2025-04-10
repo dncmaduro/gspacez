@@ -11,9 +11,13 @@ import {
   Text,
   Tooltip
 } from '@mantine/core'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useProfile } from '../../hooks/useProfile'
 import { GIcon } from '../../components/common/GIcon'
+import GProfilePosts from '../../components/common/GProfilePosts'
+import { usePost } from '../../hooks/usePost'
+import { useEffect, useRef } from 'react'
+import { GetPostsByProfileResponse } from '../../hooks/models'
 
 export const Route = createFileRoute('/profile/$profileId')({
   component: RouteComponent
@@ -21,7 +25,10 @@ export const Route = createFileRoute('/profile/$profileId')({
 
 function RouteComponent() {
   const { getProfile, getJoinedSquads } = useProfile()
+  const { getPostsByProfile } = usePost()
   const { profileId } = useParams({ from: `/profile/$profileId` })
+  const loaderRef = useRef<HTMLDivElement | null>(null)
+  const pageSize = 5
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-profile'],
@@ -39,11 +46,62 @@ function RouteComponent() {
 
   const joinedSquads = squadsData?.data.result || []
 
+  const { 
+    data: postData, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading: isPostLoading, 
+  } = useInfiniteQuery({
+      queryKey: ['get-posts-by-profile', profileId],
+      queryFn: async ({ pageParam = 0 }) => {
+        const response = await getPostsByProfile(profileId, {pageNum: pageParam, pageSize })
+        return response.data
+      },
+      getNextPageParam: (
+        lastPage: GetPostsByProfileResponse,
+        allPages: GetPostsByProfileResponse[]
+      ) => {
+        return lastPage.result.length === pageSize
+          ? allPages.length
+          : undefined
+      },
+      initialPageParam: 0
+    })
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0]
+        if (firstEntry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 1.0 }
+    )
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current)
+    }
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current)
+      }
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+  const posts = postData?.pages.flatMap((page) => page.result) || []
+
   const tabs = [
     {
       label: 'Posts',
       value: 'posts',
-      item: <></>
+      item: (
+        <GProfilePosts
+          posts={posts}
+          isLoading={isPostLoading}
+          hasNextPage={hasNextPage}
+          loaderRef={loaderRef}
+        />
+      )
     },
     {
       label: 'Upvoted',
@@ -140,6 +198,11 @@ function RouteComponent() {
                       </Tabs.Tab>
                     ))}
                   </Tabs.List>
+                  {tabs.map((tab) => (
+                    <Tabs.Panel key={tab.value} value={tab.value}>
+                      {tab.item}
+                    </Tabs.Panel>
+                  ))}
                 </Tabs>
               </Box>
             </Flex>
