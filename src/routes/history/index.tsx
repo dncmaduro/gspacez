@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { usePost } from '../../hooks/usePost'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { Box, Button, Group, Skeleton, Stack, Text } from '@mantine/core'
 import { GSimplePost } from '../../components/common/GSimplePost'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { GIcon } from '../../components/common/GIcon'
 
 export const Route = createFileRoute('/history/')({
@@ -13,37 +13,38 @@ export const Route = createFileRoute('/history/')({
 
 function RouteComponent() {
   const { getHistory } = usePost()
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState<number>()
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const {
     data: history,
     isLoading,
-    refetch: loadMorePosts
-  } = useQuery({
+    hasNextPage,
+    fetchNextPage
+  } = useInfiniteQuery({
     queryKey: ['get-history'],
-    queryFn: () => getHistory({ page, size: 20 }),
-    select: (data) => {
-      return data.data.result
+    queryFn: async ({ pageParam }) => {
+      const response = await getHistory({ page: pageParam, size: 20 })
+      return response.data.result
     },
-    placeholderData: keepPreviousData
+    select: (data) => {
+      return data.pages.map((page) => page.content).flat()
+    },
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.pageable.pageNumber + 1
+      return nextPage < lastPage.totalPages ? nextPage : undefined
+    },
+    initialPageParam: 0
   })
-
-  useEffect(() => {
-    setTotal(history?.totalPages || 0)
-    setPage((prev) => prev + 1)
-  }, [history])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0]
-        if (total && firstEntry.isIntersecting && !isLoading && page < total) {
-          loadMorePosts()
+        if (firstEntry.isIntersecting && hasNextPage && !isLoading) {
+          fetchNextPage()
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.1 }
     )
 
     if (loaderRef.current) {
@@ -55,7 +56,7 @@ function RouteComponent() {
         observer.unobserve(loaderRef.current)
       }
     }
-  }, [isLoading, loadMorePosts])
+  }, [isLoading, hasNextPage, fetchNextPage])
 
   return (
     <AppLayout>
@@ -64,10 +65,10 @@ function RouteComponent() {
           Your recent posts
         </Text>
         <Stack gap={24}>
-          {history?.content.map((post, index) => (
+          {history?.map((post, index) => (
             <GSimplePost key={index} post={post} />
           ))}
-          {total && page < total ? (
+          {hasNextPage ? (
             <Box
               className="rounded-lg border border-gray-300"
               p={16}

@@ -26,15 +26,15 @@ function RouteComponent() {
 
   const { data: profileData, isLoading } = useMe()
   const profileId = profileData?.id
-  
+
   const { data: squadsData } = useQuery({
     queryKey: ['get-joined-squads', profileId],
     queryFn: () => getJoinedSquads(profileId!),
     enabled: !!profileId
-  });
+  })
 
   const joinedSquads = squadsData?.data.result || []
-  
+
   const tabs = [
     {
       label: 'Posts',
@@ -110,7 +110,7 @@ function RouteComponent() {
                                   size="md"
                                   style={{
                                     cursor: 'pointer',
-                                    border: '2px solid #ccc',
+                                    border: '2px solid #ccc'
                                   }}
                                 />
                               </Link>
