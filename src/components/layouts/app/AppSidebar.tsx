@@ -49,7 +49,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
     return lastAccessSquads?.filter((squad) =>
       squad.name.toLowerCase().includes(debouncedSearchText.toLowerCase())
     )
-  }, [debouncedSearchText])
+  }, [debouncedSearchText, lastAccessSquads])
 
   const handleOpenSearch = () => {
     toggleSearch()
