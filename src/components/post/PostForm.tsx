@@ -1,9 +1,12 @@
 import {
+  Avatar,
   Box,
   Divider,
   FileInput,
   Flex,
   Group,
+  Image,
+  Loader,
   Pill,
   PillGroup,
   Select,
@@ -11,17 +14,20 @@ import {
   Stack,
   Tabs,
   TagsInput,
+  Text,
   Textarea,
   TextInput
 } from '@mantine/core'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { PostFormType } from '../../routes/post/new'
 import { GIcon } from '../common/GIcon'
 import { useCloudinary } from '../../hooks/useCloudinary'
-import { useMutation } from '@tanstack/react-query'
-import { ReactNode, useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { ReactNode, useMemo, useState } from 'react'
 import { mediaText } from '../../utils/mediaText'
 import ReactMarkdown from 'react-markdown'
+import { useProfile } from '../../hooks/useProfile'
+import { useMe } from '../../hooks/useMe'
 
 export const PostForm = () => {
   const {
@@ -29,10 +35,13 @@ export const PostForm = () => {
     formState: { errors },
     setValue,
     getValues,
-    watch
+    watch,
+    control
   } = useFormContext<PostFormType>()
 
   const { uploadMedia } = useCloudinary()
+  const { getJoinedSquads } = useProfile()
+  const { data: meData } = useMe()
 
   const { mutate: upload, isPending: isPosting } = useMutation({
     mutationFn: ({ file, type }: { file: File; type: string }) =>
@@ -43,6 +52,26 @@ export const PostForm = () => {
         getValues('text') +
           mediaText(response.original_filename, response.secure_url)
       )
+    }
+  })
+
+  const { mutate: uploadPreview, isPending: isPostingPreview } = useMutation({
+    mutationFn: ({ file, type }: { file: File; type: string }) =>
+      uploadMedia(file, type),
+    onSuccess: (response) => {
+      setValue('previewImage', response.secure_url)
+    }
+  })
+
+  const { data: squadData } = useQuery({
+    queryKey: ['get-joined-squads'],
+    queryFn: () => getJoinedSquads(meData?.id || ''),
+    select: (data) => {
+      return data.data.result.map((squad) => ({
+        value: squad.tagName,
+        label: squad.name,
+        ...squad
+      }))
     }
   })
 
@@ -71,7 +100,10 @@ export const PostForm = () => {
     PRIVATE: <GIcon name="LockFilled" size={16} />
   }
 
-  const RenderOption: SelectProps['renderOption'] = ({ option, checked }) => {
+  const PrivacyRenderOption: SelectProps['renderOption'] = ({
+    option,
+    checked
+  }) => {
     return (
       <Group>
         {privacyIcons[option.value]}
@@ -79,6 +111,40 @@ export const PostForm = () => {
         {checked && <GIcon name="Check" size={20} color="gray" />}
       </Group>
     )
+  }
+
+  const squadByTagName = useMemo(() => {
+    if (!squadData) return {}
+
+    return squadData?.reduce(
+      (acc, squad) => {
+        return { ...acc, [squad.tagName]: squad }
+      },
+      {} as Record<string, (typeof squadData)[0]>
+    )
+  }, [squadData])
+
+  const SquadRenderOption: SelectProps['renderOption'] = ({ option }) => {
+    return (
+      <Group>
+        <Avatar
+          src={squadByTagName[option.value].avatarUrl}
+          className="border border-gray-200"
+        />
+        <Stack gap={0}>
+          <Text>{squadByTagName[option.value].name}</Text>
+          <Text size="sm" c="dimmed">
+            {squadByTagName[option.value].tagName}
+          </Text>
+        </Stack>
+      </Group>
+    )
+  }
+
+  const handleUploadPreviewImage = (file: File | null) => {
+    if (file) {
+      uploadPreview({ file, type: 'image' })
+    }
   }
 
   return (
@@ -91,7 +157,6 @@ export const PostForm = () => {
           })}
           error={errors.title?.message}
           placeholder="Your title"
-          size="md"
           label="Title"
           radius="md"
         />
@@ -101,13 +166,29 @@ export const PostForm = () => {
           value={watch('privacy')}
           defaultValue={'PUBLIC'}
           allowDeselect={false}
-          renderOption={RenderOption}
+          renderOption={PrivacyRenderOption}
           label="Choose your post privacy"
           radius="md"
-          size="md"
           className="grow"
         />
       </Flex>
+      <Controller
+        control={control}
+        name="squadTagName"
+        render={({ field }) => (
+          <Select
+            data={squadData || []}
+            defaultValue={''}
+            allowDeselect={false}
+            label="Choose your squad"
+            radius="md"
+            renderOption={SquadRenderOption}
+            className="grow"
+            placeholder="Choose your squad you want to post on"
+            {...field}
+          />
+        )}
+      />
       <Tabs defaultValue="write">
         <Tabs.List className="rounded-t-lg border border-gray-300">
           <Tabs.Tab
@@ -136,7 +217,6 @@ export const PostForm = () => {
               minRows={8}
               autosize
               radius="md"
-              size="md"
               disabled={isPosting}
               styles={{
                 input: {
@@ -195,6 +275,41 @@ export const PostForm = () => {
           </Box>
         </Tabs.Panel>
       </Tabs>
+
+      <Controller
+        control={control}
+        name="previewImage"
+        render={() => {
+          return (
+            <Stack>
+              <FileInput
+                accept="image/*"
+                label="Preview image"
+                radius={'md'}
+                placeholder="Choose your preview image"
+                onChange={(file) => handleUploadPreviewImage(file)}
+              />
+              {isPostingPreview ? (
+                <Loader mx={'auto'} />
+              ) : watch('previewImage') ? (
+                <Image src={watch('previewImage')} />
+              ) : (
+                <Box
+                  className="flex items-center justify-center rounded-lg border border-dashed border-gray-400"
+                  h={200}
+                >
+                  <Group gap={8}>
+                    <GIcon name="Photo" size={28} color="gray" />
+                    <Text c="dimmed" size="sm">
+                      Your preview image goes here
+                    </Text>
+                  </Group>
+                </Box>
+              )}
+            </Stack>
+          )
+        }}
+      />
     </Stack>
   )
 }
