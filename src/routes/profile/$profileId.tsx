@@ -34,8 +34,8 @@ function RouteComponent() {
 
   const { data: squadsData } = useQuery({
     queryKey: ['get-joined-squads', profileId],
-    queryFn: () => getJoinedSquads(profileId),
-  });
+    queryFn: () => getJoinedSquads(profileId)
+  })
 
   const joinedSquads = squadsData?.data.result || []
 
@@ -101,7 +101,7 @@ function RouteComponent() {
                                   size="md"
                                   style={{
                                     cursor: 'pointer',
-                                    border: '2px solid #ccc',
+                                    border: '2px solid #ccc'
                                   }}
                                 />
                               </Link>
