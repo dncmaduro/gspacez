@@ -37,9 +37,9 @@ export const useProfile = () => {
     })
   }
 
-  const getJoinedSquads = async () => {
+  const getJoinedSquads = async (id: string) => {
     return callApi<never, JoinedSquadsResponse>({
-      path: `/v1/profile-service/squads/joined`,
+      path: `/v1/profile-service/squads/joined/${id}`,
       method: 'GET',
       accessToken,
       onClearAuth: clearAuth
