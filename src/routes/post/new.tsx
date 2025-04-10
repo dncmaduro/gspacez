@@ -18,6 +18,8 @@ export type PostFormType = {
   text: string
   hashTags?: string[]
   privacy: string | null
+  previewImage: string
+  squadTagName: string
 }
 
 function RouteComponent() {
