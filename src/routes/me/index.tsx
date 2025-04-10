@@ -15,22 +15,16 @@ import {
 import { GIcon } from '../../components/common/GIcon'
 import { useProfile } from '../../hooks/useProfile'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
+import { useMe } from '../../hooks/useMe'
 
 export const Route = createFileRoute('/me/')({
   component: RouteComponent
 })
 
 function RouteComponent() {
-  const { getMe, getJoinedSquads } = useProfile()
+  const { getJoinedSquads } = useProfile()
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['get-profile'],
-    queryFn: () => {
-      return getMe()
-    }
-  })
-  
-  const profileData = data?.data.result
+  const { data: profileData, isLoading } = useMe()
   const profileId = profileData?.id
   
   const { data: squadsData } = useQuery({
