@@ -29,17 +29,16 @@ function RouteComponent() {
       return getMe()
     }
   })
-
+  
+  const profileData = data?.data.result
+  
   const { data: squadsData } = useQuery({
-    queryKey: ['get-joined-squads'],
-    queryFn: () => {
-      return getJoinedSquads()
-    }
-  })
+    queryKey: ['get-joined-squads', profileData!.id],
+    queryFn: () => getJoinedSquads(profileData!.id),
+  });
 
   const joinedSquads = squadsData?.data.result || []
-  const profileData = data?.data.result
-
+  
   const tabs = [
     {
       label: 'Posts',
@@ -113,7 +112,10 @@ function RouteComponent() {
                                   src={squad.avatarUrl}
                                   radius="xl"
                                   size="md"
-                                  style={{ cursor: 'pointer' }}
+                                  style={{
+                                    cursor: 'pointer',
+                                    border: '2px solid #ccc',
+                                  }}
                                 />
                               </Link>
                             </Tooltip>
