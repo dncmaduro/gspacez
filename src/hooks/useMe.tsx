@@ -4,12 +4,13 @@ import { useProfile } from './useProfile'
 export const useMe = () => {
   const { getMe } = useProfile()
 
-  const data = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['medata'],
     queryFn: () => getMe()
   })
 
   return {
-    data: data.data?.data.result
+    data: data?.data.result,
+    isLoading
   }
 }
