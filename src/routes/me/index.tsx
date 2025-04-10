@@ -31,10 +31,12 @@ function RouteComponent() {
   })
   
   const profileData = data?.data.result
+  const profileId = profileData?.id
   
   const { data: squadsData } = useQuery({
-    queryKey: ['get-joined-squads', profileData!.id],
-    queryFn: () => getJoinedSquads(profileData!.id),
+    queryKey: ['get-joined-squads', profileId],
+    queryFn: () => getJoinedSquads(profileId!),
+    enabled: !!profileId
   });
 
   const joinedSquads = squadsData?.data.result || []
