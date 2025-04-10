@@ -144,7 +144,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" maw={1000} px={12}>
+      <Box mx="auto" bg={'white'} maw={1000} px={12}>
         {isLoading ? (
           <Loader />
         ) : (

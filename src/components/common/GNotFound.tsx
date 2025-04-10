@@ -9,9 +9,9 @@ export const GNotFound = () => {
 
   return (
     <AppShell>
-      <AppShell.Main w="100vw">
+      <AppShell.Main w="100vw" bg={'gray.1'}>
         <Flex w="100vw" h="100vh" align={'center'} justify={'center'}>
-          <Box className="flex flex-col items-center gap-4 rounded-lg border border-gray-200 p-8">
+          <Box className="flex flex-col items-center gap-4 rounded-lg border border-gray-200 bg-white p-8">
             <Image w={200} src={Logo} />
             <Text>Your page is not found</Text>
             <Group>

@@ -46,7 +46,7 @@ export const AppLayout = ({
         <AppShell.Navbar className="transition-all duration-300 ease-in-out">
           <AppSidebar toggle={toggle} opened={opended} />
         </AppShell.Navbar>
-        <AppShell.Main>{children}</AppShell.Main>
+        <AppShell.Main bg={'gray.0'}>{children}</AppShell.Main>
       </AppShell>
     </GAuthGuard>
   )

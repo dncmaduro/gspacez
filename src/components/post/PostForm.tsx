@@ -189,7 +189,7 @@ export const PostForm = () => {
           />
         )}
       />
-      <Tabs defaultValue="write">
+      <Tabs defaultValue="write" bg={'white'}>
         <Tabs.List className="rounded-t-lg border border-gray-300">
           <Tabs.Tab
             value="write"

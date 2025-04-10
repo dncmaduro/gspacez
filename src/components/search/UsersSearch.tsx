@@ -63,7 +63,7 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
   }, [isLoading, hasNextPage, fetchNextPage])
 
   return (
-    <Box>
+    <Box bg={'white'}>
       <ScrollArea.Autosize mah={'80vh'}>
         <Stack gap={8}>
           {usersData?.map((user) => (

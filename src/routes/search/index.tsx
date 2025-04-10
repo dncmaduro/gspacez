@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { UsersSearch } from '../../components/search/UsersSearch'
 import { useQueryClient } from '@tanstack/react-query'
 import { PostsSearch } from '../../components/search/PostsSearch'
-import { SquadsSearch } from '../../components/search/SquadsSearch'
 
 export const Route = createFileRoute('/search/')({
   component: RouteComponent,
@@ -34,13 +33,6 @@ function RouteComponent() {
       label: 'Posts',
       value: 'posts',
       tab: <PostsSearch searchText={searchText} triggerSearch={triggerSearch} />
-    },
-    {
-      label: 'Squads',
-      value: 'squads',
-      tab: (
-        <SquadsSearch searchText={searchText} triggerSearch={triggerSearch} />
-      )
     }
   ]
 
