@@ -1,4 +1,9 @@
-import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+  useRouter
+} from '@tanstack/react-router'
 import { usePost } from '../../hooks/usePost'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { ActionIcon, Box, Button, Group, Loader, Text } from '@mantine/core'
@@ -19,6 +24,7 @@ function RouteComponent() {
   const { updatePost, getPost } = usePost()
   const { postId } = useParams({ from: `/post/edit/$postId` })
   const navigate = useNavigate()
+  const router = useRouter()
 
   const { data, isLoading } = useQuery({
     queryKey: ['edit-post', postId],
@@ -35,7 +41,9 @@ function RouteComponent() {
     defaultValues: {
       title: existedPost?.title,
       text: existedPost?.content.text,
-      hashTags: existedPost?.hashTags
+      hashTags: existedPost?.hashTags,
+      previewImage: existedPost?.previewImage,
+      squadTagName: existedPost?.squad.tagName
     }
   })
 
@@ -44,7 +52,9 @@ function RouteComponent() {
       formMethods.reset({
         title: existedPost.title,
         text: existedPost.content.text,
-        hashTags: existedPost.hashTags
+        hashTags: existedPost.hashTags,
+        previewImage: existedPost.previewImage,
+        squadTagName: existedPost.squad.tagName
       })
     }
   }, [existedPost, formMethods])
@@ -85,7 +95,12 @@ function RouteComponent() {
         ) : (
           <>
             <Group align="center" mt={20} gap={8}>
-              <ActionIcon size="md" variant="subtle" color="gray">
+              <ActionIcon
+                size="md"
+                variant="subtle"
+                color="gray"
+                onClick={() => router.history.back()}
+              >
                 <GIcon name="ArrowLeft" size={20} />
               </ActionIcon>
               <Text className="text-center !text-2xl !font-bold">

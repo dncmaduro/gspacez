@@ -16,6 +16,19 @@ export interface IPost {
   disliked: boolean
   totalLike: number
   totalDislike: number
+  previewImage: string
+  squad: {
+    id: string
+    name: string
+    tagName: string
+    avatarUrl: string
+    privacy: string
+    setting: {
+      allowPostModeration: boolean
+      allowChangeProfileAccessibility: boolean
+      allowPostInteraction: boolean
+    }
+  }
 }
 
 export interface IComment {

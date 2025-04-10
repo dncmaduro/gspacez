@@ -17,6 +17,7 @@ import {
   Divider,
   Flex,
   Group,
+  Image,
   Loader,
   Text,
   Tooltip
@@ -182,6 +183,11 @@ function RouteComponent() {
             <Text className="!text-2xl !font-bold" mt={24}>
               {postData?.title || 'Title'}
             </Text>
+            <Image
+              src={postData?.previewImage}
+              my={16}
+              className="border border-gray-300"
+            />
             <Box
               mt={14}
               className="rounded-lg border border-gray-200"
