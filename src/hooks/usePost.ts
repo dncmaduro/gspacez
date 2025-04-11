@@ -7,6 +7,8 @@ import {
   GetCommentsReponse,
   GetHistoryRequest,
   GetHistoryResponse,
+  GetLikedPostsByProfileRequest,
+  GetLikedPostsByProfileResponse,
   GetNewsfeedRequest,
   GetNewsfeedResponse,
   GetPostRequest,
@@ -107,6 +109,15 @@ export const usePost = () => {
     })
   }
 
+  const getLikedPostsByProfile = async (id: string, req: GetLikedPostsByProfileRequest) => {
+    return callApi<GetLikedPostsByProfileRequest, GetLikedPostsByProfileResponse>({
+      path: `/v1/post-service/posts/liked/by/${id}?size=${req.size}&page=${req.page}`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     getNewsfeed,
     getPost,
@@ -116,7 +127,8 @@ export const usePost = () => {
     getComments,
     reactPost,
     getHistory,
-    getPostsByProfile
+    getPostsByProfile,
+    getLikedPostsByProfile
   }
 }
 function clearAuth(): void {

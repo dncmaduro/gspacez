@@ -10,16 +10,16 @@ import {
   Loader,
   Tabs,
   Button,
-  Tooltip
 } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useProfile } from '../../hooks/useProfile'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useMe } from '../../hooks/useMe'
 import { usePost } from '../../hooks/usePost'
-import { useEffect, useRef } from 'react'
-import { GetPostsByProfileResponse } from '../../hooks/models'
+import { useEffect, useRef, useState } from 'react'
+import { GetLikedPostsByProfileResponse, GetPostsByProfileResponse } from '../../hooks/models'
 import GProfilePosts from '../../components/common/GProfilePosts'
+import { GProfileSquads } from '../../components/common/GProfileSquads'
 
 export const Route = createFileRoute('/me/')({
   component: RouteComponent
@@ -27,7 +27,8 @@ export const Route = createFileRoute('/me/')({
 
 function RouteComponent() {
   const { getJoinedSquads } = useProfile()
-  const { getPostsByProfile } = usePost()
+  const { getPostsByProfile, getLikedPostsByProfile } = usePost()
+  const [activeTab, setActiveTab] = useState<'posts' | 'upvoted'>('posts')
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const pageSize = 5
 
@@ -66,49 +67,85 @@ function RouteComponent() {
       enabled: !!profileId
     })
 
+  const {
+    data: likedPostData,
+    fetchNextPage: fetchNextLikedPage,
+    hasNextPage: hasNextLikedPage,
+    isFetchingNextPage: isFetchingNextLikedPage,
+    isLoading: isLikedPostLoading,
+  } = useInfiniteQuery({
+    queryKey: ['get-liked-posts-by-profile', profileId],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getLikedPostsByProfile(profileId!, {
+        size: pageSize,
+        page: pageParam,
+      })
+      return response.data
+    },
+    getNextPageParam: (
+      lastPage: GetLikedPostsByProfileResponse,
+      allPages: GetLikedPostsByProfileResponse[]
+    ) => {
+      return lastPage.result.length === pageSize
+        ? allPages.length
+        : undefined
+    },
+    initialPageParam: 0,
+    enabled: !!profileId
+  })
+  const posts = postData?.pages.flatMap((page) => page.result) || []
+  const likedPosts = likedPostData?.pages.flatMap((page) => page.result) || []
+
+  const tabConfig = {
+    posts: {
+      label: 'Posts',
+      value: 'posts',
+      posts: posts,
+      isLoading: isPostLoading,
+      hasNextPage: hasNextPage,
+      fetchNextPage: fetchNextPage,
+      isFetchingNextPage: isFetchingNextPage
+    },
+    upvoted: {
+      label: 'Upvoted',
+      value: 'upvoted',
+      posts: likedPosts,
+      isLoading: isLikedPostLoading,
+      hasNextPage: hasNextLikedPage,
+      fetchNextPage: fetchNextLikedPage,
+      isFetchingNextPage: isFetchingNextLikedPage
+    }
+  }
+  
+  const currentTabData = tabConfig[(activeTab as 'posts' | 'upvoted') ?? 'posts'] || tabConfig['posts']
+
+  const handleTabChange = (tab: string | null) => {
+    if (!tab || !(tab in tabConfig)) return
+    setActiveTab(tab as 'posts' | 'upvoted')
+  }
+  
   useEffect(() => {
+    if (!loaderRef.current) return
+  
     const observer = new IntersectionObserver(
-      (entries) => {
-        const firstEntry = entries[0]
-        if (firstEntry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          currentTabData.hasNextPage &&
+          !currentTabData.isFetchingNextPage
+        ) {
+          currentTabData.fetchNextPage()
         }
       },
       { threshold: 1.0 }
     )
-
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current)
-    }
-
+  
+    observer.observe(loaderRef.current)
+  
     return () => {
-      if (loaderRef.current) {
-        observer.unobserve(loaderRef.current)
-      }
+      if (loaderRef.current) observer.unobserve(loaderRef.current)
     }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
-
-  const posts = postData?.pages.flatMap((page) => page.result) || []
-
-  const tabs = [
-    {
-      label: 'Posts',
-      value: 'posts',
-      item: (
-        <GProfilePosts
-          posts={posts}
-          isLoading={isPostLoading}
-          hasNextPage={hasNextPage}
-          loaderRef={loaderRef}
-        />
-      )
-    },
-    {
-      label: 'Upvoted',
-      value: 'upvoted',
-      item: <></>
-    }
-  ]
+  }, [loaderRef, currentTabData.fetchNextPage, currentTabData.hasNextPage, currentTabData.isFetchingNextPage, currentTabData])
 
   return (
     <AppLayout>
@@ -150,47 +187,7 @@ function RouteComponent() {
                     </Button>
                   </Stack>
                 </Box>
-                <Box
-                  className="rounded-lg border border-indigo-200"
-                  bg={'white'}
-                  p={16}
-                >
-                  <Text size="md">Involved Squads</Text>
-                  {!joinedSquads || joinedSquads.length === 0 ? (
-                    <Text c="dimmed" size="sm">
-                      You haven't joined any squads yet. Join one to start your
-                      journey!
-                    </Text>
-                  ) : (
-                    <Group pt={10}>
-                      <Tooltip.Group openDelay={300} closeDelay={100}>
-                        <Box
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: 16
-                          }}
-                        >
-                          {joinedSquads.map((squad) => (
-                            <Tooltip label={squad.name} withArrow>
-                              <Link to={`/squad/${squad.tagName}`}>
-                                <Avatar
-                                  src={squad.avatarUrl}
-                                  radius="xl"
-                                  size="md"
-                                  style={{
-                                    cursor: 'pointer',
-                                    border: '2px solid #ccc'
-                                  }}
-                                />
-                              </Link>
-                            </Tooltip>
-                          ))}
-                        </Box>
-                      </Tooltip.Group>
-                    </Group>
-                  )}
-                </Box>
+                <GProfileSquads squads={joinedSquads} />
                 <Box
                   className="rounded-lg border border-indigo-200"
                   p={16}
@@ -203,19 +200,22 @@ function RouteComponent() {
                 className="grow rounded-lg border border-indigo-200"
                 bg={'white'}
               >
-                <Tabs defaultValue={tabs[0].value}>
+                <Tabs defaultValue={currentTabData.value} onChange={handleTabChange}>
                   <Tabs.List h={44}>
-                    {tabs.map((tab) => (
-                      <Tabs.Tab key={tab.value} value={tab.value}>
+                    {Object.values(tabConfig).map((tab, index) => (
+                      <Tabs.Tab key={index} value={tab.value}>
                         {tab.label}
                       </Tabs.Tab>
                     ))}
                   </Tabs.List>
-                  {tabs.map((tab) => (
-                    <Tabs.Panel key={tab.value} value={tab.value}>
-                      {tab.item}
-                    </Tabs.Panel>
-                  ))}
+                  <Tabs.Panel value={currentTabData.value}>
+                    <GProfilePosts
+                      posts={currentTabData.posts}
+                      isLoading={currentTabData.isLoading}
+                      hasNextPage={currentTabData.hasNextPage}
+                      loaderRef={loaderRef}
+                    />
+                  </Tabs.Panel>
                 </Tabs>
               </Box>
             </Flex>

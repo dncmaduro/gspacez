@@ -76,6 +76,16 @@ export interface GetPostsByProfileResponse {
   result: IPost[]
 }
 
+export interface GetLikedPostsByProfileRequest {
+  size: number
+  page: number
+}
+
+export interface GetLikedPostsByProfileResponse {
+  message?: string
+  result: IPost[]
+}
+
 export interface GetPostRequest {
   id: string
 }
