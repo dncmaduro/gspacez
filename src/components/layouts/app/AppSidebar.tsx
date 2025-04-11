@@ -9,14 +9,14 @@ import {
   Text,
   TextInput
 } from '@mantine/core'
-import { SidebarPart } from './SidebarPart'
+import { SidebarPart } from '../SidebarPart'
 import { GIcon } from '../../common/GIcon'
-import { SidebarItem } from './SidebarItem'
+import { SidebarItem } from '../SidebarItem'
 import { Link } from '@tanstack/react-router'
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
 import { useSquad } from '../../../hooks/useSquad'
 import { useQuery } from '@tanstack/react-query'
-import { SidebarSquad } from './SidebarSquad'
+import { SidebarSquad } from '../SidebarSquad'
 import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
