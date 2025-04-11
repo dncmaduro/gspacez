@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Collapse, Stack } from '@mantine/core'
-import { ChildProps } from '../../../utils/props'
-import { GIcon } from '../../common/GIcon'
+import { ChildProps } from '../../utils/props'
+import { GIcon } from '../common/GIcon'
 import { useDisclosure } from '@mantine/hooks'
 
 interface Props extends ChildProps {
