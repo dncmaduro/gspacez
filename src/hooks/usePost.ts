@@ -11,6 +11,8 @@ import {
   GetNewsfeedResponse,
   GetPostRequest,
   GetPostResponse,
+  GetPostsByProfileRequest,
+  GetPostsByProfileResponse,
   ReactPostRequest,
   ReactPostResponse,
   UpdatePostRequest,
@@ -96,6 +98,15 @@ export const usePost = () => {
     })
   }
 
+  const getPostsByProfile = async (id: string, req: GetPostsByProfileRequest) => {
+    return callApi<GetPostsByProfileRequest, GetPostsByProfileResponse>({
+      path: `/v1/post-service/posts/own-post/${id}?pageNum=${req.pageNum}&pageSize=${req.pageSize}`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     getNewsfeed,
     getPost,
@@ -104,7 +115,8 @@ export const usePost = () => {
     createComment,
     getComments,
     reactPost,
-    getHistory
+    getHistory,
+    getPostsByProfile
   }
 }
 function clearAuth(): void {
