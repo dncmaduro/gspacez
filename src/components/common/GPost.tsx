@@ -5,6 +5,7 @@ import {
   Box,
   CopyButton,
   Flex,
+  Image,
   Stack,
   Text,
   Tooltip
@@ -69,6 +70,12 @@ export const GPost = ({ post }: Props) => {
           >
             {post.title}
           </Text>
+          <Image
+            src={post.previewImage}
+            mah={140}
+            hidden={!post.previewImage}
+            className="border border-gray-200"
+          />
           <Box h={40} mt={12}>
             <Flex wrap="wrap" gap={8}>
               {visibleTags.map((tag, index) => (
