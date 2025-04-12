@@ -413,3 +413,12 @@ export interface UpdateRoleRequest {
 export interface SignOutRequest {
   token: string
 }
+
+export interface GetSquadPostsRequest {
+  size: number
+  page: number
+}
+
+export interface GetSquadPostsResponse {
+  result: IPost[]
+}

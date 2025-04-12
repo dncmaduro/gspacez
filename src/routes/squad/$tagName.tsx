@@ -34,6 +34,7 @@ import { GJoinButton } from '../../components/common/GJoinButton'
 import { useMe } from '../../hooks/useMe'
 import { PendingRequests } from '../../components/squad/admin/PendingRequests'
 import { Members } from '../../components/squad/admin/Members'
+import { SquadPosts } from '../../components/squad/posts/SquadPosts'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent,
@@ -199,7 +200,7 @@ function RouteComponent() {
       label: 'Posts',
       value: 'posts',
       onlyAdmin: false,
-      panel: <></>
+      panel: <SquadPosts tagName={tagName} totalPosts={data?.totalPosts || 0} />
     },
     {
       label: 'Manage squad',
