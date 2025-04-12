@@ -1,4 +1,4 @@
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import {
   Avatar,
@@ -20,16 +20,33 @@ import { GetLikedPostsByProfileResponse, GetPostsByProfileResponse } from '../..
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 
 export const Route = createFileRoute('/profile/$profileId')({
-  component: RouteComponent
+  component: RouteComponent,
+  validateSearch: (search) => {
+    return {
+      tab: search.tab === 'posts' || search.tab === 'upvoted' ? search.tab : undefined,
+    }
+  }
 })
 
 function RouteComponent() {
   const { profileId } = useParams({ from: `/profile/$profileId` })
-  const { getProfile, getJoinedSquads } = useProfile()
-  const { getPostsByProfile, getLikedPostsByProfile } = usePost()
-  const [activeTab, setActiveTab] = useState<'posts' | 'upvoted'>('posts')
+  const search = useSearch({ from: Route.fullPath })
+  const navigate = useNavigate({ from: Route.fullPath })
+
+  const defaultTab = search.tab === 'upvoted' ? 'upvoted' : 'posts'
+  const [activeTab, setActiveTab] = useState<'posts' | 'upvoted'>(defaultTab)
+
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const pageSize = 5
+
+  const { getProfile, getJoinedSquads } = useProfile()
+  const { getPostsByProfile, getLikedPostsByProfile } = usePost()
+
+  useEffect(() => {
+    if (!search.tab) {
+      navigate({ search: { tab: 'posts' } })
+    }
+  }, [search.tab, navigate])
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-profile'],
@@ -120,10 +137,11 @@ function RouteComponent() {
     }
   }
   
-  const currentTabData = tabConfig[(activeTab as 'posts' | 'upvoted') ?? 'posts'] || tabConfig['posts']
+  const currentTabData = tabConfig[activeTab] || tabConfig['posts']
 
   const handleTabChange = (tab: string | null) => {
     if (!tab || !(tab in tabConfig)) return
+    navigate({ search: (prev: { tab?: string }) => ({ ...prev, tab }) })
     setActiveTab(tab as 'posts' | 'upvoted')
   }
   
@@ -190,7 +208,7 @@ function RouteComponent() {
                 className="grow rounded-lg border border-indigo-200"
                 bg={'white'}
               >
-                <Tabs defaultValue={currentTabData.value} onChange={handleTabChange}>
+                <Tabs value={activeTab} onChange={handleTabChange}>
                   <Tabs.List h={44}>
                     {Object.values(tabConfig).map((tab, index) => (
                       <Tabs.Tab key={index} value={tab.value}>
@@ -198,7 +216,7 @@ function RouteComponent() {
                       </Tabs.Tab>
                     ))}
                   </Tabs.List>
-                  <Tabs.Panel value={currentTabData.value}>
+                  <Tabs.Panel value={activeTab}>
                     <GProfilePosts
                       posts={currentTabData.posts}
                       isLoading={currentTabData.isLoading}
