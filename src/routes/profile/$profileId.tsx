@@ -1,4 +1,9 @@
-import { createFileRoute, useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+  useSearch
+} from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import {
   Avatar,
@@ -8,7 +13,7 @@ import {
   Loader,
   Stack,
   Tabs,
-  Text,
+  Text
 } from '@mantine/core'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useProfile } from '../../hooks/useProfile'
@@ -16,14 +21,20 @@ import { GIcon } from '../../components/common/GIcon'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
-import { GetLikedPostsByProfileResponse, GetPostsByProfileResponse } from '../../hooks/models'
+import {
+  GetLikedPostsByProfileResponse,
+  GetPostsByProfileResponse
+} from '../../hooks/models'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 
 export const Route = createFileRoute('/profile/$profileId')({
   component: RouteComponent,
   validateSearch: (search) => {
     return {
-      tab: search.tab === 'posts' || search.tab === 'upvoted' ? search.tab : undefined,
+      tab:
+        search.tab === 'posts' || search.tab === 'upvoted'
+          ? search.tab
+          : undefined
     }
   }
 })
@@ -64,41 +75,42 @@ function RouteComponent() {
 
   const joinedSquads = squadsData?.data.result || []
 
-  const { 
-    data: postData, 
-    fetchNextPage, 
-    hasNextPage, 
-    isFetchingNextPage, 
-    isLoading: isPostLoading, 
+  const {
+    data: postData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isPostLoading
   } = useInfiniteQuery({
-      queryKey: ['get-posts-by-profile', profileId],
-      queryFn: async ({ pageParam = 0 }) => {
-        const response = await getPostsByProfile(profileId, {pageNum: pageParam, pageSize })
-        return response.data
-      },
-      getNextPageParam: (
-        lastPage: GetPostsByProfileResponse,
-        allPages: GetPostsByProfileResponse[]
-      ) => {
-        return lastPage.result.length === pageSize
-          ? allPages.length
-          : undefined
-      },
-      initialPageParam: 0
-    })
+    queryKey: ['get-posts-by-profile', profileId],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getPostsByProfile(profileId, {
+        pageNum: pageParam,
+        pageSize
+      })
+      return response.data
+    },
+    getNextPageParam: (
+      lastPage: GetPostsByProfileResponse,
+      allPages: GetPostsByProfileResponse[]
+    ) => {
+      return lastPage.result.length === pageSize ? allPages.length : undefined
+    },
+    initialPageParam: 0
+  })
 
   const {
     data: likedPostData,
     fetchNextPage: fetchNextLikedPage,
     hasNextPage: hasNextLikedPage,
     isFetchingNextPage: isFetchingNextLikedPage,
-    isLoading: isLikedPostLoading,
+    isLoading: isLikedPostLoading
   } = useInfiniteQuery({
     queryKey: ['get-liked-posts-by-profile', profileId],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await getLikedPostsByProfile(profileId!, {
         size: pageSize,
-        page: pageParam,
+        page: pageParam
       })
       return response.data
     },
@@ -106,9 +118,7 @@ function RouteComponent() {
       lastPage: GetLikedPostsByProfileResponse,
       allPages: GetLikedPostsByProfileResponse[]
     ) => {
-      return lastPage.result.length === pageSize
-        ? allPages.length
-        : undefined
+      return lastPage.result.length === pageSize ? allPages.length : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId
@@ -136,7 +146,7 @@ function RouteComponent() {
       isFetchingNextPage: isFetchingNextLikedPage
     }
   }
-  
+
   const currentTabData = tabConfig[activeTab] || tabConfig['posts']
 
   const handleTabChange = (tab: string | null) => {
@@ -144,10 +154,10 @@ function RouteComponent() {
     navigate({ search: (prev: { tab?: string }) => ({ ...prev, tab }) })
     setActiveTab(tab as 'posts' | 'upvoted')
   }
-  
+
   useEffect(() => {
     if (!loaderRef.current) return
-  
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (
@@ -160,13 +170,19 @@ function RouteComponent() {
       },
       { threshold: 1.0 }
     )
-  
+
     observer.observe(loaderRef.current)
-  
+
     return () => {
       if (loaderRef.current) observer.unobserve(loaderRef.current)
     }
-  }, [loaderRef, currentTabData.fetchNextPage, currentTabData.hasNextPage, currentTabData.isFetchingNextPage, currentTabData])
+  }, [
+    loaderRef,
+    currentTabData.fetchNextPage,
+    currentTabData.hasNextPage,
+    currentTabData.isFetchingNextPage,
+    currentTabData
+  ])
 
   return (
     <AppLayout>

@@ -8,6 +8,8 @@ import {
   GetMembersResponse,
   GetPendingRequestsRequest,
   GetPendingRequestsResponse,
+  GetSquadPostsRequest,
+  GetSquadPostsResponse,
   GetSquadResponse,
   JoinSquadRequest,
   LastAccessResponse,
@@ -137,6 +139,15 @@ export const useSquad = () => {
     })
   }
 
+  const getSquadPosts = async (tagName: string, req: GetSquadPostsRequest) => {
+    return callApi<never, GetSquadPostsResponse>({
+      method: 'GET',
+      path: `/v1/post-service/posts/squad/${tagName}/accepted?page=${req.page}&size=${req.size}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     createSquad,
     getSquad,
@@ -149,6 +160,7 @@ export const useSquad = () => {
     rejectRequest,
     approveRequest,
     getMembers,
-    updateRole
+    updateRole,
+    getSquadPosts
   }
 }

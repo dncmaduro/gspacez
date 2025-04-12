@@ -100,7 +100,10 @@ export const usePost = () => {
     })
   }
 
-  const getPostsByProfile = async (id: string, req: GetPostsByProfileRequest) => {
+  const getPostsByProfile = async (
+    id: string,
+    req: GetPostsByProfileRequest
+  ) => {
     return callApi<GetPostsByProfileRequest, GetPostsByProfileResponse>({
       path: `/v1/post-service/posts/own-post/${id}?pageNum=${req.pageNum}&pageSize=${req.pageSize}`,
       method: 'GET',
@@ -109,8 +112,14 @@ export const usePost = () => {
     })
   }
 
-  const getLikedPostsByProfile = async (id: string, req: GetLikedPostsByProfileRequest) => {
-    return callApi<GetLikedPostsByProfileRequest, GetLikedPostsByProfileResponse>({
+  const getLikedPostsByProfile = async (
+    id: string,
+    req: GetLikedPostsByProfileRequest
+  ) => {
+    return callApi<
+      GetLikedPostsByProfileRequest,
+      GetLikedPostsByProfileResponse
+    >({
       path: `/v1/post-service/posts/liked/by/${id}?size=${req.size}&page=${req.page}`,
       method: 'GET',
       accessToken,
