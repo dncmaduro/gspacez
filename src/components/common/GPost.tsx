@@ -56,9 +56,8 @@ export const GPost = ({ post }: Props) => {
 
   return (
     <Box
-      className="w-full cursor-pointer rounded-lg border border-indigo-200 shadow-md hover:border-indigo-400"
+      className="w-full cursor-pointer rounded-lg border border-indigo-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
       px={24}
-      bg={'white'}
       py={16}
     >
       <Link to={`/post/${post.id}`} className="w-full">
