@@ -16,6 +16,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as SearchIndexImport } from './routes/search/index'
 import { Route as MeIndexImport } from './routes/me/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
+import { Route as ExploreIndexImport } from './routes/explore/index'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as AiIndexImport } from './routes/ai/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
@@ -60,6 +61,12 @@ const MeIndexRoute = MeIndexImport.update({
 const HistoryIndexRoute = HistoryIndexImport.update({
   id: '/history/',
   path: '/history/',
+  getParentRoute: () => rootRoute
+} as any)
+
+const ExploreIndexRoute = ExploreIndexImport.update({
+  id: '/explore/',
+  path: '/explore/',
   getParentRoute: () => rootRoute
 } as any)
 
@@ -242,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexImport
       parentRoute: typeof rootRoute
     }
+    '/explore/': {
+      id: '/explore/'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/history/': {
       id: '/history/'
       path: '/history'
@@ -303,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/explore': typeof ExploreIndexRoute
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
   '/search': typeof SearchIndexRoute
@@ -325,6 +340,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/explore': typeof ExploreIndexRoute
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
   '/search': typeof SearchIndexRoute
@@ -348,6 +364,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
+  '/explore/': typeof ExploreIndexRoute
   '/history/': typeof HistoryIndexRoute
   '/me/': typeof MeIndexRoute
   '/search/': typeof SearchIndexRoute
@@ -372,6 +389,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/explore'
     | '/history'
     | '/me'
     | '/search'
@@ -393,6 +411,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/explore'
     | '/history'
     | '/me'
     | '/search'
@@ -414,6 +433,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ai/'
     | '/app/'
+    | '/explore/'
     | '/history/'
     | '/me/'
     | '/search/'
@@ -437,6 +457,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
+  ExploreIndexRoute: typeof ExploreIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
   MeIndexRoute: typeof MeIndexRoute
   SearchIndexRoute: typeof SearchIndexRoute
@@ -459,6 +480,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
+  ExploreIndexRoute: ExploreIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
   MeIndexRoute: MeIndexRoute,
   SearchIndexRoute: SearchIndexRoute,
@@ -490,6 +512,7 @@ export const routeTree = rootRoute
         "/admin/",
         "/ai/",
         "/app/",
+        "/explore/",
         "/history/",
         "/me/",
         "/search/",
@@ -536,6 +559,9 @@ export const routeTree = rootRoute
     },
     "/app/": {
       "filePath": "app/index.tsx"
+    },
+    "/explore/": {
+      "filePath": "explore/index.tsx"
     },
     "/history/": {
       "filePath": "history/index.tsx"
