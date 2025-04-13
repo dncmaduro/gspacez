@@ -96,7 +96,12 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
               href="/app"
               opened={opened}
             />
-            <SidebarItem icon="Flame" label="Explore" opened={opened} />
+            <SidebarItem
+              icon="Flame"
+              href="/explore"
+              label="Explore"
+              opened={opened}
+            />
             <SidebarItem
               icon="History"
               label="History"

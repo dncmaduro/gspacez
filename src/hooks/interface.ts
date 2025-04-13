@@ -83,3 +83,18 @@ export interface IMember {
   role: string
   joinedAt: string
 }
+
+export interface IExplore {
+  source: {
+    id: string | null
+    name: string
+  }
+  author: string
+  title: string
+  description: string
+  url: string
+  urlToImage: string
+  publishedAt: string
+  content: string
+  active: boolean
+}
