@@ -186,7 +186,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box maw={1000} mx="auto" px={12}>
+      <Box maw={1200} mx="auto" px={12}>
         {isLoading ? (
           <Loader />
         ) : (
@@ -222,6 +222,7 @@ function RouteComponent() {
               </Stack>
               <Box
                 className="grow rounded-lg border border-indigo-200"
+                maw={'66%'}
                 bg={'white'}
               >
                 <Tabs value={activeTab} onChange={handleTabChange}>

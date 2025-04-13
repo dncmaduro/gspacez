@@ -63,17 +63,24 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box maw={1000} mx="auto" px={32} py={20}>
+      <Box
+        maw={1000}
+        mx="auto"
+        px={32}
+        py={20}
+        className="rounded-lg bg-white shadow-sm"
+      >
         <Group align="center" mt={20} gap={8}>
           <ActionIcon
             size="md"
             variant="subtle"
             color="gray"
             onClick={() => router.history.go(-1)}
+            className="transition-colors hover:bg-gray-100"
           >
             <GIcon name="ArrowLeft" size={20} />
           </ActionIcon>
-          <Text className="text-center !text-2xl !font-bold">
+          <Text className="text-center !text-2xl !font-bold text-indigo-800">
             Share your knowledge with others
           </Text>
         </Group>
@@ -82,14 +89,24 @@ function RouteComponent() {
             <PostForm />
           </FormProvider>
         </Box>
-        <Button
-          mt={32}
-          onClick={handleSubmit(submit)}
-          loading={isPosting}
-          disabled={!isDirty}
-        >
-          Submit
-        </Button>
+        <Group justify="right" mt={32}>
+          <Button
+            variant="default"
+            onClick={() => router.history.go(-1)}
+            className="hover:bg-gray-100"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit(submit)}
+            loading={isPosting}
+            disabled={!isDirty}
+            className="bg-indigo-600 transition-colors hover:bg-indigo-700"
+            leftSection={<GIcon name="Send" size={16} />}
+          >
+            Publish
+          </Button>
+        </Group>
       </Box>
     </AppLayout>
   )

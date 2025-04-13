@@ -66,11 +66,20 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
         overflowY: 'scroll',
         scrollbarWidth: 'none', // Firefox
         msOverflowStyle: 'none', // IE/Edge
+        transition: 'all 300ms ease-in-out',
+        width: '100%'
       }}
+      className="no-scrollbar"
     >
-      <Group justify={opened ? 'space-between' : 'center'}>
+      <Group
+        justify={opened ? 'space-between' : 'center'}
+        className="transition-all duration-300 ease-in-out"
+      >
         {opened && (
-          <Text c="gray" className="!text-[12px] !font-bold">
+          <Text
+            c="gray"
+            className="!text-[12px] !font-bold transition-opacity duration-300"
+          >
             MENU
           </Text>
         )}
@@ -83,6 +92,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             }
             toggle()
           }}
+          className="transition-transform duration-300 ease-in-out"
         >
           <GIcon
             name={
@@ -92,10 +102,15 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             }
             size={20}
             color="gray"
+            className="transition-transform duration-300 ease-in-out"
           />
         </ActionIcon>
       </Group>
-      <Stack gap={32} pt={24}>
+      <Stack
+        gap={32}
+        pt={24}
+        className="transition-all duration-300 ease-in-out"
+      >
         <SidebarPart opened={opened}>
           <Stack gap={4}>
             <SidebarItem

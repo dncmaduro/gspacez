@@ -117,10 +117,13 @@ function RouteComponent() {
             </ActionIcon>
           </Group>
           <Box
-            className="rounded-xl border border-indigo-200"
+            className="relative overflow-hidden rounded-xl border border-indigo-200 shadow-lg transition-all duration-300 hover:shadow-indigo-100/50"
             w="100%"
             h={1000}
           >
+            {/* Subtle pulse effect on border */}
+            <div className="absolute inset-0 animate-pulse rounded-xl border-2 border-indigo-300/30"></div>
+
             {messages.length ? (
               <MessageBox
                 messages={messages}
@@ -130,13 +133,25 @@ function RouteComponent() {
                 loadingId={loadingId}
               />
             ) : (
-              <Flex mt={300} justify="center">
-                Enter prompt to start a conversation
+              <Flex mt={300} justify="center" className="relative z-10">
+                <div className="flex flex-col items-center gap-4 rounded-xl bg-white/80 p-6 shadow-sm backdrop-blur-sm">
+                  <GIcon
+                    name="Sparkles"
+                    size={32}
+                    className="text-indigo-500"
+                  />
+                  <Text className="text-lg font-medium text-gray-700">
+                    Enter prompt to start a conversation
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    Ask me anything about coding, tech, or general knowledge
+                  </Text>
+                </div>
               </Flex>
             )}
           </Box>
         </Stack>
-        <Group mt={8}>
+        <Group mt={8} className="relative">
           <TextInput
             size="md"
             radius="md"
@@ -144,12 +159,33 @@ function RouteComponent() {
             color="indigo"
             placeholder="Ask AI something..."
             onChange={(e) => setPrompt(e.currentTarget.value)}
-            className="grow"
+            className="grow transition-all duration-300 focus-within:shadow-md focus-within:shadow-indigo-200/50"
             onKeyDownCapture={(e) => {
               if (e.key === 'Enter' && !isSendingPrompt) {
                 send()
               }
             }}
+            styles={{
+              input: {
+                border: '1px solid #e9ecef',
+                '&:focus': {
+                  borderColor: 'var(--mantine-color-indigo-5)',
+                  boxShadow: '0 0 0 2px var(--mantine-color-indigo-1)'
+                }
+              }
+            }}
+            rightSection={
+              prompt && (
+                <ActionIcon
+                  color="gray"
+                  variant="subtle"
+                  onClick={() => setPrompt('')}
+                  className="opacity-70 transition-opacity hover:opacity-100"
+                >
+                  <GIcon name="X" size={16} />
+                </ActionIcon>
+              )
+            }
           />
           <Button
             size="md"
@@ -157,6 +193,9 @@ function RouteComponent() {
             rightSection={<GIcon name="Send" size={18} />}
             onClick={() => send()}
             disabled={isSendingPrompt || !prompt}
+            className="transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:shadow-indigo-300/50"
+            variant={prompt ? 'filled' : 'light'}
+            color="indigo"
           >
             Send
           </Button>
