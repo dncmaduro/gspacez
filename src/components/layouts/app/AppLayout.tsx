@@ -39,6 +39,8 @@ export const AppLayout = ({
           breakpoint: 0
         }}
         padding="md"
+        transitionDuration={300}
+        transitionTimingFunction="ease"
       >
         <AppShell.Header>
           <AppHeader hideSearchInput={hideSearchInput} />

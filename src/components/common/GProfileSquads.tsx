@@ -26,7 +26,7 @@ export const GProfileSquads = ({ squads }: Props) => {
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: 12
+                gap: 16
               }}
             >
               {squads.map((squad) => (

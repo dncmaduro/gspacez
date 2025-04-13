@@ -12,7 +12,7 @@ interface Props {
 
 const GProfilePosts = ({ posts, isLoading, hasNextPage, loaderRef }: Props) => {
   return (
-    <Box w={700} m={20} className="text-center">
+    <Box m={20} className="text-center">
       <Stack gap={24}>
         {isLoading ? (
           <Loader />

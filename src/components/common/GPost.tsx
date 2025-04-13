@@ -56,7 +56,7 @@ export const GPost = ({ post }: Props) => {
 
   return (
     <Box
-      className="w-full cursor-pointer rounded-lg border border-indigo-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
+      className="w-full cursor-pointer rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
       px={24}
       py={16}
     >

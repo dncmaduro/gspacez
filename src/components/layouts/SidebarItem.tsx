@@ -1,6 +1,6 @@
 import { NavLink, NavLinkProps, Tooltip } from '@mantine/core'
-import { GIcon } from '../common/GIcon'
 import { Link, useLocation } from '@tanstack/react-router'
+import { GIcon } from '../common/GIcon'
 
 interface Props extends NavLinkProps {
   icon: string

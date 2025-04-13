@@ -158,7 +158,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   )
 
   return (
-    <Box w="100%" h="100%" className="shadow-sm">
+    <Box w="100%" h="100%" className="shadow-md">
       <Flex align="center" px={16} h="100%" justify="space-between">
         <Group gap={16}>
           <Link to="/app">
@@ -215,7 +215,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
                 size="md"
               />
             </Menu.Target>
-            <Menu.Dropdown w={180}>
+            <Menu.Dropdown w={180} className="shadow-md">
               <Menu.Item
                 component={Link}
                 to="/me"
