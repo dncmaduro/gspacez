@@ -59,7 +59,15 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
   }
 
   return (
-    <Box pt={12} px={opened ? 12 : 4}>
+    <Box
+      pt={12}
+      px={opened ? 12 : 4}
+      style={{
+        overflowY: 'scroll',
+        scrollbarWidth: 'none', // Firefox
+        msOverflowStyle: 'none', // IE/Edge
+      }}
+    >
       <Group justify={opened ? 'space-between' : 'center'}>
         {opened && (
           <Text c="gray" className="!text-[12px] !font-bold">
