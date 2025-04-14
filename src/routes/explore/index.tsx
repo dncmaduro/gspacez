@@ -30,12 +30,9 @@ function RouteComponent() {
         const response = await getArticles({ size, page: pageParam })
         return response.data
       },
-      getNextPageParam: (
-        lastPage: GetArticlesResponse,
-        allPages: GetArticlesResponse[]
-      ) => {
-        return lastPage.result.content.length === size
-          ? allPages.length
+      getNextPageParam: (lastPage) => {
+        return lastPage.result.number + 1 < lastPage.result.totalPages
+          ? lastPage.result.number + 1
           : undefined
       },
       initialPageParam: 0

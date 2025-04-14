@@ -19,7 +19,7 @@ export const SquadPosts = ({ tagName }: Props) => {
     fetchNextPage
   } = useInfiniteQuery({
     queryKey: ['get-squad-posts', tagName],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam }) => 
       getSquadPosts(tagName, { page: pageParam, size: 10 }),
     select: (data) => {
       return data.pages.map((page) => page.data.result.content).flat()
@@ -59,7 +59,7 @@ export const SquadPosts = ({ tagName }: Props) => {
       <Stack gap={24}>
         {postsData && postsData.length > 0 ? (
           <>
-            {postsData?.map((post, index) => (
+            {postsData.map((post, index) => (
               <GSimplePost key={index} post={post} />
             ))}
             {hasNextPage ? (
