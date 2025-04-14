@@ -200,7 +200,7 @@ function RouteComponent() {
       label: 'Posts',
       value: 'posts',
       onlyAdmin: false,
-      panel: <SquadPosts tagName={tagName} totalPosts={data?.totalPosts || 0} />
+      panel: <SquadPosts tagName={tagName} />
     },
     {
       label: 'Manage squad',
@@ -227,28 +227,40 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box maw={1200} m="auto" pt={12} bg={'white'} px={20} mih={'90vh'}>
+      <Box
+        maw={1200}
+        m="auto"
+        pt={16}
+        bg={'white'}
+        px={24}
+        mih={'90vh'}
+        className="rounded-lg shadow-sm"
+      >
         {isLoading ? (
-          <Loader mx={'auto'} />
+          <Flex justify="center" align="center" h="50vh">
+            <Loader size="md" />
+          </Flex>
         ) : (
           <>
             <Helmet>
               <title>{data?.name} - Squad</title>
             </Helmet>
-            <Stack gap={0}>
+            <Stack gap={8}>
               <Flex align={'flex-start'} justify={'space-between'}>
-                <Group gap={16}>
+                <Group gap={20}>
                   <Avatar
                     src={data?.avatarUrl}
-                    size={'lg'}
-                    className="border border-gray-300"
+                    size={'xl'}
+                    className="border-2 border-indigo-200 shadow-sm"
+                    radius="md"
                   />
-                  <Stack gap={0}>
+                  <Stack gap={4}>
                     <Group>
-                      <Text className="!text-lg">{data?.name}</Text>
+                      <Text className="!text-2xl !font-bold">{data?.name}</Text>
                       <Badge
                         color={isPrivate ? 'red' : 'indigo'}
                         variant="light"
+                        size="lg"
                         leftSection={
                           <GIcon
                             name={isPrivate ? 'LockFilled' : 'World'}
@@ -259,8 +271,8 @@ function RouteComponent() {
                         {data?.privacy}
                       </Badge>
                     </Group>
-                    <Text size="sm" c={'dimmed'}>
-                      {data?.tagName}
+                    <Text size="md" c={'dimmed'} className="!font-medium">
+                      @{data?.tagName}
                     </Text>
                   </Stack>
                 </Group>
@@ -304,58 +316,74 @@ function RouteComponent() {
                 )}
               </Flex>
 
-              <Group mt={24} gap={12}>
-                {adminResults.map(
-                  (adminResult, index) =>
-                    adminResult.data && (
-                      <Group key={data?.adminList[index].profileId} gap={12}>
-                        <Avatar src={adminResult.data.avatarUrl} size={'sm'} />
-                        <Text
-                          component={Link}
-                          to={`/profile/${adminResult.data.id}`}
+              <Box mt={24}>
+                <Text size="sm" fw={500} c="dimmed" mb={8}>
+                  Squad Admins
+                </Text>
+                <Group gap={16}>
+                  {adminResults.map(
+                    (adminResult, index) =>
+                      adminResult.data && (
+                        <Group
+                          key={data?.adminList[index].profileId}
+                          gap={8}
+                          className="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50"
                         >
-                          {adminResult.data.firstName}{' '}
-                          {adminResult.data.lastName}
-                        </Text>
-                      </Group>
-                    )
-                )}
-              </Group>
+                          <Avatar
+                            src={adminResult.data.avatarUrl}
+                            size={'sm'}
+                            radius="xl"
+                          />
+                          <Text
+                            component={Link}
+                            to={`/profile/${adminResult.data.id}`}
+                            className="!font-medium"
+                          >
+                            {adminResult.data.firstName}{' '}
+                            {adminResult.data.lastName}
+                          </Text>
+                        </Group>
+                      )
+                  )}
+                </Group>
+              </Box>
 
               {data?.description && (
                 <Box
-                  p={8}
-                  mt={16}
-                  bg={'gray.1'}
-                  className="rounded-lg border border-gray-200"
-                  maw={400}
+                  p={16}
+                  mt={20}
+                  bg={'gray.0'}
+                  className="rounded-lg border border-gray-200 shadow-sm"
+                  maw={500}
                 >
-                  <Text className="!font-bold" pl={8}>
+                  <Text className="!text-lg !font-bold" mb={8}>
                     About this squad
                   </Text>
-                  <Text pl={8} pt={16}>
+                  <Text className="leading-relaxed text-gray-700">
                     {data?.description}
                   </Text>
                 </Box>
               )}
 
-              <Divider mt={16} />
+              <Divider mt={24} mb={8} />
 
-              <Group mt={16}>
-                <GIcon name="Users" size={16} />
-                <Text>
-                  {data?.totalMembers === 1
-                    ? '1 member'
-                    : `${data?.totalMembers} members`}
-                </Text>
-              </Group>
-              <Group mt={8}>
-                <GIcon name="FilePencil" size={16} />
-                <Text>
-                  {data?.totalPosts === 1
-                    ? '1 post'
-                    : `${data?.totalPosts} posts`}
-                </Text>
+              <Group mt={8} gap={24}>
+                <Group gap={8} className="rounded-full bg-gray-50 px-4 py-2">
+                  <GIcon name="Users" size={18} color="#4263eb" />
+                  <Text fw={500}>
+                    {data?.totalMembers === 1
+                      ? '1 member'
+                      : `${data?.totalMembers} members`}
+                  </Text>
+                </Group>
+                <Group gap={8} className="rounded-full bg-gray-50 px-4 py-2">
+                  <GIcon name="FilePencil" size={18} color="#4263eb" />
+                  <Text fw={500}>
+                    {data?.totalPosts === 1
+                      ? '1 post'
+                      : `${data?.totalPosts} posts`}
+                  </Text>
+                </Group>
               </Group>
               <Tabs
                 variant="outline"
