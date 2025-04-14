@@ -151,7 +151,7 @@ function RouteComponent() {
             )}
           </Box>
         </Stack>
-        <Group mt={8} className="relative">
+        <Group mt={8} pb={24} className="relative">
           <TextInput
             size="md"
             radius="md"
@@ -159,7 +159,7 @@ function RouteComponent() {
             color="indigo"
             placeholder="Ask AI something..."
             onChange={(e) => setPrompt(e.currentTarget.value)}
-            className="grow transition-all duration-300 focus-within:shadow-md focus-within:shadow-indigo-200/50"
+            className="grow rounded-lg transition-all duration-300 focus-within:shadow-md focus-within:shadow-indigo-200/50"
             onKeyDownCapture={(e) => {
               if (e.key === 'Enter' && !isSendingPrompt) {
                 send()

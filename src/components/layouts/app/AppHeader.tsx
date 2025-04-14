@@ -158,21 +158,28 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   )
 
   return (
-    <Box w="100%" h="100%" className="shadow-md">
-      <Flex align="center" px={16} h="100%" justify="space-between">
-        <Group gap={16}>
-          <Link to="/app">
-            <Image src={Logo} h={56} />
+    <Box w="100%" h="100%" className="bg-white shadow-md">
+      <Flex align="center" px={24} h="100%" justify="space-between">
+        <Group gap={20}>
+          <Link to="/app" className="transition-transform hover:scale-105">
+            <Image src={Logo} h={48} />
           </Link>
         </Group>
         {!hideSearchInput && (
           <Autocomplete
-            leftSection={<GIcon name="ZoomCode" size={20} />}
-            w={400}
+            leftSection={<GIcon name="ZoomCode" size={20} color="#4F46E5" />}
+            w={450}
             radius="xl"
             placeholder="Search in GspaceZ"
             onChange={(e) => setSearchText(e)}
             value={searchText}
+            className="rounded-full transition-shadow duration-200 focus-within:border-indigo-200/50 hover:shadow-sm"
+            styles={{
+              input: {
+                border: '1px solid #E5E7EB',
+                height: '42px'
+              }
+            }}
             onKeyDownCapture={(e) => {
               if (e.key === 'Enter') {
                 navigate({ to: `/search?searchText=${searchText}` })
@@ -195,44 +202,52 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
             }}
           />
         )}
-        <Group gap={16}>
+        <Group gap={20}>
           {location.pathname !== '/post/new' && (
             <Button
               component={Link}
               to="/post/new"
               radius="xl"
-              variant="light"
+              variant="filled"
+              className="bg-indigo-600 transition-colors duration-200 hover:bg-indigo-700"
               leftSection={<GIcon name="Sparkles" size={18} />}
+              px={20}
             >
               Create my new post
             </Button>
           )}
-          <Menu>
+          <Menu position="bottom-end" shadow="md" width={200}>
             <Menu.Target>
               <Avatar
                 src={profileData?.avatarUrl}
-                className="cursor-pointer"
+                className="cursor-pointer border-2 border-indigo-100 transition-colors duration-200 hover:border-indigo-300"
                 size="md"
+                radius="xl"
               />
             </Menu.Target>
-            <Menu.Dropdown w={180} className="shadow-md">
+            <Menu.Dropdown className="rounded-lg p-1 shadow-lg">
               <Menu.Item
                 component={Link}
                 to="/me"
-                leftSection={<GIcon name="User" size={14} />}
+                leftSection={<GIcon name="User" size={16} />}
+                className="rounded-md py-2 hover:bg-indigo-50"
               >
                 Profile
               </Menu.Item>
-              <Menu.Item leftSection={<GIcon name="Settings" size={14} />}>
+              <Menu.Item
+                leftSection={<GIcon name="Settings" size={16} />}
+                className="rounded-md py-2 hover:bg-indigo-50"
+              >
                 Settings
               </Menu.Item>
 
               <Menu.Divider />
 
               <Menu.Item
-                leftSection={<GIcon name="Power" size={14} />}
+                leftSection={<GIcon name="Power" size={16} />}
                 color="red"
                 onClick={() => onSignOut()}
+                className="rounded-md py-2 hover:bg-red-50"
               >
                 Sign out
               </Menu.Item>
