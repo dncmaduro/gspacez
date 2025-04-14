@@ -1,14 +1,14 @@
 import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
-import { GetArticlesResponse } from './models'
+import { GetArticlesRequest, GetArticlesResponse } from './models'
 
 export const useExplore = () => {
   const { accessToken } = useAuthStore()
 
-  const getArticles = () => {
-    return callApi<never, GetArticlesResponse>({
+  const getArticles = (req: GetArticlesRequest) => {
+    return callApi<GetArticlesRequest, GetArticlesResponse>({
       method: 'GET',
-      path: `/v1/post-service/explore/articles`,
+      path: `/v1/post-service/explore/articles?size=${req.size}&page=${req.page}`,
       accessToken
     })
   }

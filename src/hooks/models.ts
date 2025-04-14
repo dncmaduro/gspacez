@@ -489,6 +489,11 @@ export interface GetSquadPostsResponse {
   }
 }
 
+export interface GetArticlesRequest {
+  size: number
+  page: number
+}
+
 export interface GetArticlesResponse {
   result: {
     content: IExplore[]
