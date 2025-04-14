@@ -23,7 +23,7 @@ export const SquadPosts = ({ tagName, totalPosts }: Props) => {
     queryFn: ({ pageParam }) =>
       getSquadPosts(tagName, { page: pageParam, size: 10 }),
     select: (data) => {
-      return data.pages[0].data.result
+      return data.pages[0].data.result.content
     },
     initialPageParam: 0,
     getNextPageParam: () => {

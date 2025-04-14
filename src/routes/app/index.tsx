@@ -31,14 +31,14 @@ function RouteComponent() {
         lastPage: GetNewsfeedResponse,
         allPages: GetNewsfeedResponse[]
       ) => {
-        return lastPage.result.length === pageSize
+        return lastPage.result.content.length === pageSize
           ? allPages.length + 1
           : undefined
       },
       initialPageParam: 1
     })
 
-  const posts = data?.pages.flatMap((page) => page.result) || []
+  const posts = data?.pages.flatMap((page) => page.result.content) || []
 
   useEffect(() => {
     const observer = new IntersectionObserver(
