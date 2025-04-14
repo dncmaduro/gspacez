@@ -1,17 +1,17 @@
 import {
   Box,
-  CopyButton,
   Flex,
   Group,
   Image,
-  Menu,
-  Stack,
-  Text
+  Text,
+  Badge,
+  Divider,
+  Tooltip
 } from '@mantine/core'
 import { IExplore } from '../../hooks/interface'
-import { GIcon } from './GIcon'
-import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
+import { Link } from '@tanstack/react-router'
+import { GIcon } from './GIcon'
 
 interface Props {
   article: IExplore
@@ -19,49 +19,58 @@ interface Props {
 
 export const GExplore = ({ article }: Props) => {
   return (
-    <Box className="rounded-lg border border-gray-300" px={16} py={12} w={1000}>
-      <Flex align={'center'} justify={'space-between'}>
-        <Text className="!text-lg !font-bold">{article.title}</Text>
-
-        <Menu>
-          <Menu.Target>
-            <Text>
-              <GIcon name="DotsVertical" size={18} className="cursor-pointer" />
-            </Text>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Item component={Link} to={article.url} target="_blank">
-              Open in new tab
-            </Menu.Item>
-            <CopyButton value={article.url}>
-              {({ copy }) => (
-                <Menu.Item onClick={copy}>Copy article URL</Menu.Item>
-              )}
-            </CopyButton>
-          </Menu.Dropdown>
-        </Menu>
+    <Box
+      className="rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
+      px={24}
+      py={16}
+      w={1000}
+      component={Link}
+      to={article.url}
+      target="blank"
+    >
+      <Flex align={'center'} justify={'space-between'} mb={12}>
+        <Text className="!text-xl !font-bold text-indigo-800">
+          {article.title}
+        </Text>
+        <Tooltip label={article.source.name} openDelay={300}>
+          <Badge color="indigo" radius="sm" variant="light">
+            {article.source.name}
+          </Badge>
+        </Tooltip>
       </Flex>
-      <Text c={'dimmed'} size="sm">
+
+      <Text c={'dimmed'} size="sm" mb={20} className="leading-relaxed">
         {article.description}
       </Text>
+
       <Image
         src={article.urlToImage}
-        w={500}
-        className="border border-gray-300"
+        w={600}
+        className="rounded-md border border-gray-300 shadow-sm"
         mt={16}
         mx={'auto'}
       />
-      <Box mt={32}>{article.content}</Box>
 
-      <Group mt={48} align="flex-end">
-        <Stack gap={0}>
-          <Text c={'indigo'}>From {article.source.name}</Text>
-          <Text>By {article.author}</Text>
-        </Stack>
-        <Text c={'dimmed'} size="sm">
-          {format(new Date(article.publishedAt), 'PP')}
-        </Text>
+      <Box mt={32} className="leading-relaxed text-gray-700">
+        {article.content}
+      </Box>
+
+      <Divider my={24} />
+
+      <Group justify="apart" align="center">
+        <Group gap={8}>
+          <GIcon name="User" size={16} color="#4F46E5" />
+          <Text className="font-medium">
+            By {article.author || 'Anonymous'}
+          </Text>
+        </Group>
+
+        <Group gap={8}>
+          <GIcon name="Calendar" size={16} color="#6B7280" />
+          <Text c={'dimmed'} size="sm">
+            {format(new Date(article.publishedAt), 'PP')}
+          </Text>
+        </Group>
       </Group>
     </Box>
   )
