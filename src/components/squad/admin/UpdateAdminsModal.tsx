@@ -41,7 +41,7 @@ export const UpdateAdminsModal = ({ tagName }: Props) => {
     queryKey: ['get-members'],
     queryFn: () => getMembers({ tagName }),
     select: (data) => {
-      return data.data.result
+      return data.data.result.content
     }
   })
 

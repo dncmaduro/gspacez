@@ -90,7 +90,7 @@ function RouteComponent() {
       lastPage: GetPostsByProfileResponse,
       allPages: GetPostsByProfileResponse[]
     ) => {
-      return lastPage.result.length === pageSize ? allPages.length : undefined
+      return lastPage.result.content.length === pageSize ? allPages.length : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId
@@ -115,13 +115,13 @@ function RouteComponent() {
       lastPage: GetLikedPostsByProfileResponse,
       allPages: GetLikedPostsByProfileResponse[]
     ) => {
-      return lastPage.result.length === pageSize ? allPages.length : undefined
+      return lastPage.result.content.length === pageSize ? allPages.length : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId
   })
-  const posts = postData?.pages.flatMap((page) => page.result) || []
-  const likedPosts = likedPostData?.pages.flatMap((page) => page.result) || []
+  const posts = postData?.pages.flatMap((page) => page.result.content) || []
+  const likedPosts = likedPostData?.pages.flatMap((page) => page.result.content) || []
 
   const tabConfig = {
     posts: {

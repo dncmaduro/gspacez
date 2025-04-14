@@ -63,7 +63,18 @@ export interface GetNewsfeedRequest {
 
 export interface GetNewsfeedResponse {
   message?: string
-  result: IPost[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    content: IPost[],
+    size: number
+    number: number
+  }
 }
 
 export interface GetPostsByProfileRequest {
@@ -73,7 +84,18 @@ export interface GetPostsByProfileRequest {
 
 export interface GetPostsByProfileResponse {
   message?: string
-  result: IPost[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    content: IPost[],
+    size: number
+    number: number
+  }
 }
 
 export interface GetLikedPostsByProfileRequest {
@@ -83,7 +105,18 @@ export interface GetLikedPostsByProfileRequest {
 
 export interface GetLikedPostsByProfileResponse {
   message?: string
-  result: IPost[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    content: IPost[],
+    size: number
+    number: number
+  }
 }
 
 export interface GetPostRequest {
@@ -386,7 +419,18 @@ export interface GetPendingRequestsRequest {
 }
 
 export interface GetPendingRequestsResponse {
-  result: IMember[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IMember[]
+  }
 }
 
 export interface RejectRequestsRequest {
@@ -402,7 +446,18 @@ export interface GetMembersRequest {
 }
 
 export interface GetMembersResponse {
-  result: IMember[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IMember[]
+  }
 }
 
 export interface UpdateRoleRequest {
@@ -420,7 +475,23 @@ export interface GetSquadPostsRequest {
 }
 
 export interface GetSquadPostsResponse {
-  result: IPost[]
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IPost[]
+  }
+}
+
+export interface GetArticlesRequest {
+  size: number
+  page: number
 }
 
 export interface GetArticlesResponse {
