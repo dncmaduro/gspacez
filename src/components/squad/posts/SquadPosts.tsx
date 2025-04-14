@@ -6,10 +6,9 @@ import { useEffect, useRef } from 'react'
 
 interface Props {
   tagName: string
-  totalPosts: number
 }
 
-export const SquadPosts = ({ tagName, totalPosts }: Props) => {
+export const SquadPosts = ({ tagName }: Props) => {
   const { getSquadPosts } = useSquad()
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
@@ -23,13 +22,13 @@ export const SquadPosts = ({ tagName, totalPosts }: Props) => {
     queryFn: ({ pageParam }) =>
       getSquadPosts(tagName, { page: pageParam, size: 10 }),
     select: (data) => {
-      return data.pages[0].data.result.content
+      return data.pages.map((page) => page.data.result.content).flat()
     },
     initialPageParam: 0,
-    getNextPageParam: () => {
-      // BE bug
-      const nextPage = 1
-      return nextPage < Math.ceil(totalPosts / 10) ? nextPage : undefined
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.result.number + 1 < lastPage.data.result.totalPages
+        ? lastPage.data.result.number + 1
+        : undefined
     }
   })
 
@@ -58,7 +57,7 @@ export const SquadPosts = ({ tagName, totalPosts }: Props) => {
   return (
     <Box mx="auto" w={800} mt={32} className="text-center">
       <Stack gap={24}>
-        {postsData && postsData[0] ? (
+        {postsData && postsData.length > 0 ? (
           <>
             {postsData?.map((post, index) => (
               <GSimplePost key={index} post={post} />
@@ -86,12 +85,12 @@ export const SquadPosts = ({ tagName, totalPosts }: Props) => {
               </Box>
             ) : (
               <Stack gap={8} mt={16} align="center">
-                <Text>There are no more pages.</Text>
+                <Text>There are no more posts.</Text>
               </Stack>
             )}
           </>
         ) : (
-          <Text>Maybe this squad is empty.</Text>
+          <Text>This squad has no posts.</Text>
         )}
       </Stack>
     </Box>
