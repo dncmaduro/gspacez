@@ -22,10 +22,6 @@ import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useMe } from '../../hooks/useMe'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
-import {
-  GetLikedPostsByProfileResponse,
-  GetPostsByProfileResponse
-} from '../../hooks/models'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 

@@ -21,10 +21,6 @@ import { GIcon } from '../../components/common/GIcon'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
-import {
-  GetLikedPostsByProfileResponse,
-  GetPostsByProfileResponse
-} from '../../hooks/models'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 
 export const Route = createFileRoute('/profile/$profileId')({

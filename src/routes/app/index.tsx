@@ -8,7 +8,6 @@ import { GIcon } from '../../components/common/GIcon'
 import { GPost } from '../../components/common/GPost'
 import { GPostSkeleton } from '../../components/common/GPostSkeleton'
 import { Helmet } from 'react-helmet-async'
-import { GetNewsfeedResponse } from '../../hooks/models'
 
 export const Route = createFileRoute('/app/')({
   component: RouteComponent

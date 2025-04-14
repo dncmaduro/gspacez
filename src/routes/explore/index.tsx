@@ -5,7 +5,6 @@ import { Box, Group, Loader, Stack, Text } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { GExplore } from '../../components/common/GExplore'
 import { useEffect, useRef } from 'react'
-import { GetArticlesResponse } from '../../hooks/models'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { GExploreSkeleton } from '../../components/common/GExploreSkeleton'
 
