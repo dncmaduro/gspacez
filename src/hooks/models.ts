@@ -113,7 +113,7 @@ export interface GetLikedPostsByProfileResponse {
       pageSize: number
       offset: number
     }
-    content: IPost[],
+    content: IPost[]
     size: number
     number: number
   }

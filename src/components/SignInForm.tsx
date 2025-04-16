@@ -70,7 +70,7 @@ export const SignInForm = () => {
       px={32}
       pb={32}
       pt={24}
-      className="rounded-xl border border-indigo-400 shadow-md"
+      className="rounded-xl border border-indigo-400 shadow-md duration-300 hover:shadow-lg"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={24} align="center">

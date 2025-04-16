@@ -118,7 +118,8 @@ function RouteComponent() {
     enabled: !!profileId
   })
   const posts = postData?.pages.flatMap((page) => page.result.content) || []
-  const likedPosts = likedPostData?.pages.flatMap((page) => page.result.content) || []
+  const likedPosts =
+    likedPostData?.pages.flatMap((page) => page.result.content) || []
 
   const tabConfig = {
     posts: {
