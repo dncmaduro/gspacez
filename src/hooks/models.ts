@@ -71,7 +71,7 @@ export interface GetNewsfeedResponse {
       pageSize: number
       offset: number
     }
-    content: IPost[],
+    content: IPost[]
     size: number
     number: number
   }
@@ -92,7 +92,7 @@ export interface GetPostsByProfileResponse {
       pageSize: number
       offset: number
     }
-    content: IPost[],
+    content: IPost[]
     size: number
     number: number
   }
@@ -496,6 +496,15 @@ export interface GetArticlesRequest {
 
 export interface GetArticlesResponse {
   result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
     content: IExplore[]
   }
 }

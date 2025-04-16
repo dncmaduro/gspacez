@@ -21,10 +21,6 @@ import { GIcon } from '../../components/common/GIcon'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
-import {
-  GetLikedPostsByProfileResponse,
-  GetPostsByProfileResponse
-} from '../../hooks/models'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 
 export const Route = createFileRoute('/profile/$profileId')({
@@ -90,11 +86,10 @@ function RouteComponent() {
       })
       return response.data
     },
-    getNextPageParam: (
-      lastPage: GetPostsByProfileResponse,
-      allPages: GetPostsByProfileResponse[]
-    ) => {
-      return lastPage.result.content.length === pageSize ? allPages.length : undefined
+    getNextPageParam: (lastPage) => {
+      return lastPage.result.number + 1 < lastPage.result.totalPages
+        ? lastPage.result.number + 1
+        : undefined
     },
     initialPageParam: 0
   })
@@ -114,11 +109,10 @@ function RouteComponent() {
       })
       return response.data
     },
-    getNextPageParam: (
-      lastPage: GetLikedPostsByProfileResponse,
-      allPages: GetLikedPostsByProfileResponse[]
-    ) => {
-      return lastPage.result.content.length === pageSize ? allPages.length : undefined
+    getNextPageParam: (lastPage) => {
+      return lastPage.result.number + 1 < lastPage.result.totalPages
+        ? lastPage.result.number + 1
+        : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId

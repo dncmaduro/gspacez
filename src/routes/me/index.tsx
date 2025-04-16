@@ -22,10 +22,6 @@ import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useMe } from '../../hooks/useMe'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
-import {
-  GetLikedPostsByProfileResponse,
-  GetPostsByProfileResponse
-} from '../../hooks/models'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 
@@ -86,11 +82,10 @@ function RouteComponent() {
       })
       return response.data
     },
-    getNextPageParam: (
-      lastPage: GetPostsByProfileResponse,
-      allPages: GetPostsByProfileResponse[]
-    ) => {
-      return lastPage.result.content.length === pageSize ? allPages.length : undefined
+    getNextPageParam: (lastPage) => {
+      return lastPage.result.number + 1 < lastPage.result.totalPages
+        ? lastPage.result.number + 1
+        : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId
@@ -111,11 +106,10 @@ function RouteComponent() {
       })
       return response.data
     },
-    getNextPageParam: (
-      lastPage: GetLikedPostsByProfileResponse,
-      allPages: GetLikedPostsByProfileResponse[]
-    ) => {
-      return lastPage.result.content.length === pageSize ? allPages.length : undefined
+    getNextPageParam: (lastPage) => {
+      return lastPage.result.number + 1 < lastPage.result.totalPages
+        ? lastPage.result.number + 1
+        : undefined
     },
     initialPageParam: 0,
     enabled: !!profileId

@@ -5,7 +5,6 @@ import { Box, Group, Loader, Stack, Text } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { GExplore } from '../../components/common/GExplore'
 import { useEffect, useRef } from 'react'
-import { GetArticlesResponse } from '../../hooks/models'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { GExploreSkeleton } from '../../components/common/GExploreSkeleton'
 
@@ -30,12 +29,9 @@ function RouteComponent() {
         const response = await getArticles({ size, page: pageParam })
         return response.data
       },
-      getNextPageParam: (
-        lastPage: GetArticlesResponse,
-        allPages: GetArticlesResponse[]
-      ) => {
-        return lastPage.result.content.length === size
-          ? allPages.length
+      getNextPageParam: (lastPage) => {
+        return lastPage.result.number + 1 < lastPage.result.totalPages
+          ? lastPage.result.number + 1
           : undefined
       },
       initialPageParam: 0

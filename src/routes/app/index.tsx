@@ -8,7 +8,6 @@ import { GIcon } from '../../components/common/GIcon'
 import { GPost } from '../../components/common/GPost'
 import { GPostSkeleton } from '../../components/common/GPostSkeleton'
 import { Helmet } from 'react-helmet-async'
-import { GetNewsfeedResponse } from '../../hooks/models'
 
 export const Route = createFileRoute('/app/')({
   component: RouteComponent
@@ -23,21 +22,18 @@ function RouteComponent() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ['newsfeed'],
-      queryFn: async ({ pageParam = 1 }) => {
+      queryFn: async ({ pageParam }) => {
         const response = await getNewsfeed({ pageNum: pageParam, pageSize })
         return response.data
       },
-      getNextPageParam: (
-        lastPage: GetNewsfeedResponse,
-        allPages: GetNewsfeedResponse[]
-      ) => {
-        return lastPage.result.content.length === pageSize
-          ? allPages.length + 1
+      getNextPageParam: (lastPage) => {
+        return lastPage.result.number + 1 < lastPage.result.totalPages
+          ? lastPage.result.number + 1
           : undefined
       },
-      initialPageParam: 1
+      initialPageParam: 0
     })
-
+    
   const posts = data?.pages.flatMap((page) => page.result.content) || []
 
   useEffect(() => {
