@@ -33,7 +33,7 @@ function RouteComponent() {
       },
       initialPageParam: 0
     })
-    
+
   const posts = data?.pages.flatMap((page) => page.result.content) || []
 
   useEffect(() => {

@@ -1,4 +1,11 @@
-import { IComment, IExplore, IMember, IPost, ISquad } from './interface'
+import {
+  IComment,
+  IExplore,
+  IMember,
+  INotification,
+  IPost,
+  ISquad
+} from './interface'
 
 export interface SignInRequest {
   email: string
@@ -507,4 +514,8 @@ export interface GetArticlesResponse {
     number: number
     content: IExplore[]
   }
+}
+
+export interface GetNotificationsResponse {
+  result: INotification[]
 }

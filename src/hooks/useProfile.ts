@@ -2,6 +2,7 @@ import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
   GetMeResponse,
+  GetNotificationsResponse,
   GetProfileResponse,
   JoinedSquadsResponse,
   UpdateMeRequest,
@@ -46,5 +47,14 @@ export const useProfile = () => {
     })
   }
 
-  return { getMe, getProfile, updateMe, getJoinedSquads }
+  const getNotifications = async (id: string) => {
+    return callApi<never, GetNotificationsResponse>({
+      path: `/v1/notification/get-notification/${id}`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return { getMe, getProfile, updateMe, getJoinedSquads, getNotifications }
 }
