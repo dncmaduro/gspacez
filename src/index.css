@@ -13,6 +13,25 @@
   animation: fadeInUp 0.3s ease-out forwards;
 }
 
+/* Thêm animation cho gradient background */
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #3364e0, #acb8e1, #b0bef1, #3b57d6);
+  background-size: 400% 400%;
+  animation: gradient-animation 4s ease infinite;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

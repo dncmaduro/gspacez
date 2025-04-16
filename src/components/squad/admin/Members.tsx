@@ -22,7 +22,10 @@ export const Members = ({ tagName, name }: Props) => {
     queryKey: ['get-members'],
     queryFn: () => getMembers({ tagName }),
     select: (data) => {
-      return data.data.result.content.reduce<{ admins: IMember[]; members: IMember[] }>(
+      return data.data.result.content.reduce<{
+        admins: IMember[]
+        members: IMember[]
+      }>(
         (acc, member) => {
           if (member.role === 'ADMIN') {
             return { ...acc, admins: [...acc.admins, member] }

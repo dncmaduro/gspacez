@@ -17,33 +17,38 @@ function RouteComponent() {
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const size = 20
 
-  const { 
-    data: exploreData, 
-    fetchNextPage: fetchNextExplorePage, 
-    hasNextPage: hasNextExplorePage, 
-    isFetchingNextPage: isFetchingNextExplorePage, 
-    isLoading: isExploreLoading 
+  const {
+    data: exploreData,
+    fetchNextPage: fetchNextExplorePage,
+    hasNextPage: hasNextExplorePage,
+    isFetchingNextPage: isFetchingNextExplorePage,
+    isLoading: isExploreLoading
   } = useInfiniteQuery({
-      queryKey: ['get-articles'],
-      queryFn: async ({ pageParam = 0 }) => {
-        const response = await getArticles({ size, page: pageParam })
-        return response.data
-      },
-      getNextPageParam: (lastPage) => {
-        return lastPage.result.number + 1 < lastPage.result.totalPages
-          ? lastPage.result.number + 1
-          : undefined
-      },
-      initialPageParam: 0
-    })
+    queryKey: ['get-articles'],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await getArticles({ size, page: pageParam })
+      return response.data
+    },
+    getNextPageParam: (lastPage) => {
+      return lastPage.result.number + 1 < lastPage.result.totalPages
+        ? lastPage.result.number + 1
+        : undefined
+    },
+    initialPageParam: 0
+  })
 
-  const articles = exploreData?.pages.flatMap((page) => page.result.content) || []
+  const articles =
+    exploreData?.pages.flatMap((page) => page.result.content) || []
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0]
-        if (firstEntry.isIntersecting && hasNextExplorePage && !isFetchingNextExplorePage) {
+        if (
+          firstEntry.isIntersecting &&
+          hasNextExplorePage &&
+          !isFetchingNextExplorePage
+        ) {
           fetchNextExplorePage()
         }
       },
