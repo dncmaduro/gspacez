@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Autocomplete,
   AutocompleteProps,
   Avatar,
@@ -8,6 +9,7 @@ import {
   Group,
   Image,
   Menu,
+  Popover,
   Stack,
   Text
 } from '@mantine/core'
@@ -22,6 +24,7 @@ import { useCallbackStore } from '../../../store/callbackStore'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../../hooks/useAuth'
 import { useGSearch } from '../../../hooks/useGSearch'
+import { HeaderNotifications } from '../HeaderNotifications'
 
 interface Props {
   hideSearchInput?: boolean
@@ -216,6 +219,17 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               Create my new post
             </Button>
           )}
+          <Popover withArrow>
+            <Popover.Target>
+              <ActionIcon variant="subtle" size={'xl'} p={4} radius={'xl'}>
+                <GIcon name="Bell" />
+              </ActionIcon>
+            </Popover.Target>
+
+            <Popover.Dropdown>
+              <HeaderNotifications />
+            </Popover.Dropdown>
+          </Popover>
           <Menu position="bottom-end" shadow="md" width={200}>
             <Menu.Target>
               <Avatar

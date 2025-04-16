@@ -98,3 +98,59 @@ export interface IExplore {
   content: string
   active: boolean
 }
+
+export interface INotification {
+  id: string
+  profileId: string
+  content: string
+  type: 'COMMENT' | 'LIKE' | 'DISLIKE'
+  entity: INotificationComment | INotificationReact
+  createdAt: string
+  read: boolean
+}
+
+export interface INotificationComment {
+  id: string
+  postId: string
+  commentId: string
+  commentRequest: {
+    content: {
+      text: string
+    }
+    parentId: string | null
+  }
+  receiver: {
+    id: string
+    profileId: string
+    profileName: string
+    email: string | null
+    profileImageUrl: string
+  }
+  sender: {
+    id: string
+    profileId: string
+    profileName: string
+    email: string | null
+    profileImageUrl: string | null
+  }
+  createdAt: string
+}
+
+export interface INotificationReact {
+  id: string
+  postId: string
+  receiver: {
+    id: string
+    profileId: string
+    profileName: string
+    email: string | null
+    profileImageUrl: string
+  }
+  sender: {
+    id: string
+    profileId: string
+    profileName: string
+    email: string | null
+    profileImageUrl: string | null
+  }
+}
