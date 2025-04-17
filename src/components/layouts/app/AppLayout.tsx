@@ -8,6 +8,11 @@ import { useAuthStore } from '../../../store/authStore'
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useCallbackStore } from '../../../store/callbackStore'
+import { useStompClient } from '../../../hooks/useStompClient'
+import { INotification } from '../../../hooks/interface'
+import { useMe } from '../../../hooks/useMe'
+import { GToast } from '../../common/GToast'
+import renderNotiContent from '../../../utils/getNoti'
 
 interface Props {
   hideSearchInput?: boolean
@@ -17,9 +22,9 @@ export const AppLayout = ({
   children,
   hideSearchInput
 }: ChildProps & Props) => {
+  const { data: meData } = useMe()
   const [opended, { toggle }] = useDisclosure(true)
   const navigate = useNavigate()
-
   const { accessToken } = useAuthStore()
   const { setCallbackUrl } = useCallbackStore()
 
@@ -29,6 +34,19 @@ export const AppLayout = ({
       navigate({ to: '/' })
     }
   }, [accessToken])
+
+  useStompClient<INotification>({
+    url: 'wss://gspacez.tech/api/v1/notification/ws',
+    token: accessToken,
+    topic: `/queue/notifications/${meData?.id}`,
+    onMessage: (notification: INotification) => {
+      const renderContent = renderNotiContent(notification)
+      GToast.information({
+        title: renderContent.title,
+        subtitle: renderContent.subtitle
+      })
+    }
+  })
 
   return (
     <GAuthGuard>

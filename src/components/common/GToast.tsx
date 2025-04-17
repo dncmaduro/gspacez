@@ -20,5 +20,13 @@ export const GToast = {
       message: toast.subtitle ?? '',
       color: 'red'
     })
+  },
+
+  information: (toast: ToastType) => {
+    notifications.show({
+      title: toast.title,
+      message: toast.subtitle ?? '',
+      color: 'indigo'
+    })
   }
 }

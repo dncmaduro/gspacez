@@ -12,7 +12,7 @@ export const HeaderNotifications = () => {
     queryKey: ['get-notifications', meData?.id || ''],
     queryFn: () => getNotifications(meData?.id || ''),
     select: (data) => {
-      return data.data.result
+      return data.data.result || []
     }
   })
 
