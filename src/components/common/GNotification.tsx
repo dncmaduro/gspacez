@@ -4,6 +4,7 @@ import { INotification } from '../../hooks/interface'
 import { GIcon } from './GIcon'
 import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
+import renderNotiContent from '../../utils/getNoti'
 
 interface Props {
   notification: INotification
@@ -11,42 +12,7 @@ interface Props {
 
 export const GNotification = ({ notification }: Props) => {
   const notiContent = useMemo(() => {
-    if (notification.type === 'COMMENT') {
-      return {
-        title: (
-          <span>
-            <b>{notification.entity.sender.profileName}</b> has left a comment
-            on your post
-          </span>
-        ),
-        href: `/post/${notification.entity.postId}`
-      }
-    }
-
-    if (notification.type === 'LIKE') {
-      return {
-        title: (
-          <span>
-            <b>{notification.entity.sender.profileName}</b> has liked your post
-          </span>
-        ),
-        href: `/post/${notification.entity.postId}`
-      }
-    }
-
-    if (notification.type === 'DISLIKE') {
-      return {
-        title: (
-          <span>
-            <b>{notification.entity.sender.profileName}</b> has disliked your
-            post
-          </span>
-        ),
-        href: `/post/${notification.entity.postId}`
-      }
-    }
-
-    return { title: <></>, href: '.' }
+    return renderNotiContent(notification)
   }, [notification])
 
   return (
