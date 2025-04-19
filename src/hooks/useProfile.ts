@@ -4,6 +4,7 @@ import {
   GetMeResponse,
   GetNotificationsResponse,
   GetProfileResponse,
+  GetStreakResponse,
   JoinedSquadsResponse,
   UpdateMeRequest,
   UpdateMeResponse
@@ -56,5 +57,21 @@ export const useProfile = () => {
     })
   }
 
-  return { getMe, getProfile, updateMe, getJoinedSquads, getNotifications }
+  const getStreak = async (id: string) => {
+    return callApi<never, GetStreakResponse>({
+      path: `/v1/profile-service/info/${id}/streak`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return {
+    getMe,
+    getProfile,
+    updateMe,
+    getJoinedSquads,
+    getNotifications,
+    getStreak
+  }
 }

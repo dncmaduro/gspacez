@@ -519,3 +519,9 @@ export interface GetArticlesResponse {
 export interface GetNotificationsResponse {
   result: INotification[]
 }
+
+export interface GetStreakResponse {
+  result: {
+    currentStreak: number
+  }
+}

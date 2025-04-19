@@ -11,7 +11,8 @@ import {
   Menu,
   Popover,
   Stack,
-  Text
+  Text,
+  Tooltip
 } from '@mantine/core'
 import Logo from '../../../public/Logo.png'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
@@ -25,6 +26,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../../hooks/useAuth'
 import { useGSearch } from '../../../hooks/useGSearch'
 import { HeaderNotifications } from '../HeaderNotifications'
+import { useProfile } from '../../../hooks/useProfile'
 
 interface Props {
   hideSearchInput?: boolean
@@ -46,6 +48,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const [searchText, setSearchText] = useState<string>('')
   const { data: profileData } = useMe()
   const { signOut } = useAuth()
+  const { getStreak } = useProfile()
 
   const { mutate: onSignOut } = useMutation({
     mutationKey: ['sign-out'],
@@ -160,6 +163,15 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     </Group>
   )
 
+  const { data: streakData } = useQuery({
+    queryKey: ['get-streak', profileData?.id || ''],
+    queryFn: () => getStreak(profileData?.id || ''),
+    select: (data) => {
+      return data.data.result.currentStreak
+    },
+    enabled: !!profileData?.id
+  })
+
   return (
     <Box w="100%" h="100%" className="bg-white shadow-md">
       <Flex align="center" px={24} h="100%" justify="space-between">
@@ -230,6 +242,21 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               <HeaderNotifications />
             </Popover.Dropdown>
           </Popover>
+          <Box className="rounded-full bg-orange-200/50" px={16} py={8}>
+            <Tooltip
+              withArrow
+              color="orange"
+              openDelay={300}
+              label={`You have ${streakData} days of streak`}
+            >
+              <Group gap={4}>
+                <GIcon name="FlameFilled" size={20} color="#f66427" />
+                <Text c={'orange'} className="!font-bold">
+                  {streakData}
+                </Text>
+              </Group>
+            </Tooltip>
+          </Box>
           <Menu position="bottom-end" shadow="md" width={200}>
             <Menu.Target>
               <Avatar
