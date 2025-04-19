@@ -26,7 +26,7 @@ import { PostFormType } from '../../routes/post/new'
 import { GIcon } from '../common/GIcon'
 import { useCloudinary } from '../../hooks/useCloudinary'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { ReactNode, useMemo, useState, useEffect } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { mediaText } from '../../utils/mediaText'
 import ReactMarkdown from 'react-markdown'
 import { useProfile } from '../../hooks/useProfile'
@@ -153,16 +153,17 @@ export const PostForm = () => {
     }
   }
 
-  // Thêm state để lưu các squad đã xem gần đây
-  const [recentSquads, setRecentSquads] = useState<typeof squadData>([])
-
-  // Thêm useEffect để lấy các squad đã xem gần đây từ localStorage
-  useEffect(() => {
-    if (squadData && squadData.length > 0) {
-      // Lấy 3 squad đầu tiên làm recent squads (thực tế nên lấy từ localStorage)
-      setRecentSquads(squadData.slice(0, 3))
+  const { data: recentSquads } = useQuery({
+    queryKey: ['get-recent-squads', meData?.id || ''],
+    queryFn: () => getJoinedSquads(meData?.id || ''),
+    select: (data) => {
+      return data.data.result.slice(0, 3).map((squad) => ({
+        value: squad.tagName,
+        label: squad.name,
+        ...squad
+      }))
     }
-  }, [squadData])
+  })
 
   return (
     <Stack gap={24}>
@@ -208,6 +209,7 @@ export const PostForm = () => {
                   <ActionIcon
                     variant="light"
                     color="indigo"
+                    radius={'xl'}
                     onClick={() => setValue('squadTagName', squad.tagName)}
                     className={
                       watch('squadTagName') === squad.tagName
