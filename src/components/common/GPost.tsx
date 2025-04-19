@@ -4,7 +4,9 @@ import {
   Badge,
   Box,
   CopyButton,
+  Divider,
   Flex,
+  Group,
   Image,
   Stack,
   Text,
@@ -35,6 +37,7 @@ export const GPost = ({ post }: Props) => {
   const [disliked, setDisliked] = useState(post.disliked)
   const [totalLikes, setTotalLikes] = useState(post.totalLike)
   const [totalDislikes, setTotalDislikes] = useState(post.totalDislike)
+  const [isHovered, setIsHovered] = useState(false)
 
   const { reactPost } = usePost()
 
@@ -56,26 +59,58 @@ export const GPost = ({ post }: Props) => {
 
   return (
     <Box
-      className="w-full cursor-pointer rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
-      px={24}
-      py={16}
+      className="w-full rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
+      px={0}
+      py={0}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <Link to={`/post/${post.id}`} className="w-full">
-        <Stack gap={4}>
-          <Avatar src={post.avatarUrl} className="border border-indigo-200" />
+      <Link to={`/post/${post.id}`} className="block w-full">
+        {post.previewImage && (
+          <Box className="relative h-48 w-full overflow-hidden rounded-t-lg">
+            <Image
+              src={post.previewImage}
+              className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
+              style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
+            />
+            <Box className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+              <Badge color="indigo" radius="sm">
+                @{post.squad.tagName}
+              </Badge>
+            </Box>
+          </Box>
+        )}
+
+        <Box px={24} py={16}>
+          <Group justify="apart" mb={12}>
+            <Group>
+              <Avatar
+                src={post.avatarUrl}
+                className="border-2 border-indigo-200"
+                radius="xl"
+              />
+              <Stack gap={0}>
+                <Text className="!font-bold">{post.profileName}</Text>
+                <Text size="xs" c="dimmed">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </Text>
+              </Stack>
+            </Group>
+          </Group>
+
           <Text
-            className="min-h-[48px] truncate !text-xl !font-bold"
+            className={`${post.previewImage ? 'min-h-[auto]' : 'min-h-[48px]'} overflow-wrap !text-xl leading-tight !font-bold break-words whitespace-normal`}
             title={post.title}
+            style={{
+              wordBreak: 'break-word',
+              hyphens: 'auto',
+              maxWidth: '100%'
+            }}
           >
             {post.title}
           </Text>
-          <Image
-            src={post.previewImage}
-            mah={140}
-            hidden={!post.previewImage}
-            className="border border-gray-200"
-          />
-          <Box h={40} mt={12}>
+
+          <Box mt={12} mb={8}>
             <Flex wrap="wrap" gap={8}>
               {visibleTags.map((tag, index) => (
                 <Badge
@@ -90,14 +125,17 @@ export const GPost = ({ post }: Props) => {
               ))}
               {restTags > 0 && (
                 <Badge size="sm" variant="outline" color="gray">
-                  + {restTags}
+                  +{restTags}
                 </Badge>
               )}
             </Flex>
           </Box>
-        </Stack>
+        </Box>
       </Link>
-      <Flex justify="space-between" mt={16} align="center">
+
+      <Divider />
+
+      <Flex justify="space-between" px={24} py={12} align="center">
         <GLikeButton
           onClick={() => {
             react({
@@ -129,7 +167,11 @@ export const GPost = ({ post }: Props) => {
                 variant="subtle"
                 size="lg"
                 color="gray.9"
-                onClick={copy}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  copy()
+                }}
               >
                 <GIcon name="Link" size={20} />
               </ActionIcon>
