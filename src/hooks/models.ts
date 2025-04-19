@@ -517,6 +517,7 @@ export interface GetArticlesResponse {
 }
 
 export interface GetNotificationsResponse {
+  size: number
   result: INotification[]
 }
 

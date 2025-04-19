@@ -10,7 +10,8 @@ export const GToast = {
     notifications.show({
       title: toast.title,
       message: toast.subtitle ?? '',
-      color: 'green'
+      color: 'green',
+      position: 'bottom-left'
     })
   },
 
@@ -18,7 +19,8 @@ export const GToast = {
     notifications.show({
       title: toast.title,
       message: toast.subtitle ?? '',
-      color: 'red'
+      color: 'red',
+      position: 'bottom-left'
     })
   },
 
@@ -26,7 +28,8 @@ export const GToast = {
     notifications.show({
       title: toast.title,
       message: toast.subtitle ?? '',
-      color: 'indigo'
+      color: 'indigo',
+      position: 'bottom-left'
     })
   }
 }

@@ -1,20 +1,25 @@
-import { useQuery } from '@tanstack/react-query'
-import { useMe } from '../../hooks/useMe'
-import { useProfile } from '../../hooks/useProfile'
 import { Loader, ScrollArea, Stack, Text } from '@mantine/core'
 import { GNotification } from '../common/GNotification'
+import { INotification } from '../../hooks/interface'
+import { useEffect } from 'react'
+import { useNotificationStore } from '../../store/notificationStore'
 
-export const HeaderNotifications = () => {
-  const { data: meData } = useMe()
-  const { getNotifications } = useProfile()
+interface Props {
+  notifications: INotification[]
+  isLoading: boolean
+  size: number
+}
 
-  const { data: notificationsData, isLoading } = useQuery({
-    queryKey: ['get-notifications', meData?.id || ''],
-    queryFn: () => getNotifications(meData?.id || ''),
-    select: (data) => {
-      return data.data.result || []
-    }
-  })
+export const HeaderNotifications = ({
+  notifications,
+  isLoading,
+  size
+}: Props) => {
+  const { setNotificationsQuantity } = useNotificationStore()
+
+  useEffect(() => {
+    setNotificationsQuantity(size)
+  }, [])
 
   return (
     <Stack align="center">
@@ -23,8 +28,8 @@ export const HeaderNotifications = () => {
           <Loader />
         ) : (
           <>
-            {notificationsData ? (
-              notificationsData.map((notification) => (
+            {notifications ? (
+              notifications.map((notification) => (
                 <GNotification
                   key={notification.id}
                   notification={notification}

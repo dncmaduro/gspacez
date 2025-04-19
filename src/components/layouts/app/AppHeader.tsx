@@ -8,6 +8,7 @@ import {
   Flex,
   Group,
   Image,
+  Indicator,
   Menu,
   Popover,
   Stack,
@@ -27,6 +28,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useGSearch } from '../../../hooks/useGSearch'
 import { HeaderNotifications } from '../HeaderNotifications'
 import { useProfile } from '../../../hooks/useProfile'
+import { useNotificationStore } from '../../../store/notificationStore'
 
 interface Props {
   hideSearchInput?: boolean
@@ -46,9 +48,10 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { clearAuth } = useAuthStore()
   const { clearCallbackUrl } = useCallbackStore()
   const [searchText, setSearchText] = useState<string>('')
-  const { data: profileData } = useMe()
+  const { data: meData } = useMe()
   const { signOut } = useAuth()
-  const { getStreak } = useProfile()
+  const { getStreak, getNotifications } = useProfile()
+  const { notificationsQuantity } = useNotificationStore()
 
   const { mutate: onSignOut } = useMutation({
     mutationKey: ['sign-out'],
@@ -164,13 +167,25 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   )
 
   const { data: streakData } = useQuery({
-    queryKey: ['get-streak', profileData?.id || ''],
-    queryFn: () => getStreak(profileData?.id || ''),
+    queryKey: ['get-streak', meData?.id || ''],
+    queryFn: () => getStreak(meData?.id || ''),
     select: (data) => {
       return data.data.result.currentStreak
     },
-    enabled: !!profileData?.id
+    enabled: !!meData?.id
   })
+
+  const { data: notificationsData, isLoading: isNotificationLoading } =
+    useQuery({
+      queryKey: ['get-notifications', meData?.id || ''],
+      queryFn: () => getNotifications(meData?.id || ''),
+      select: (data) => {
+        return {
+          notifications: data.data.result || [],
+          quantity: data.data.size
+        }
+      }
+    })
 
   return (
     <Box w="100%" h="100%" className="bg-white shadow-md">
@@ -233,13 +248,39 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           )}
           <Popover withArrow>
             <Popover.Target>
-              <ActionIcon variant="subtle" size={'xl'} p={4} radius={'xl'}>
-                <GIcon name="Bell" />
+              <ActionIcon
+                variant="subtle"
+                size={'xl'}
+                p={4}
+                className="overflow-visible"
+                radius={'xl'}
+              >
+                {notificationsQuantity !== notificationsData?.quantity ? (
+                  <Indicator
+                    label={
+                      notificationsData
+                        ? notificationsData.quantity - notificationsQuantity
+                        : undefined
+                    }
+                    color="red"
+                    offset={8}
+                    inline
+                    size={notificationsQuantity ? 16 : 12}
+                  >
+                    <GIcon name="Bell" size={28} />
+                  </Indicator>
+                ) : (
+                  <GIcon name="Bell" size={28} />
+                )}
               </ActionIcon>
             </Popover.Target>
 
             <Popover.Dropdown>
-              <HeaderNotifications />
+              <HeaderNotifications
+                size={notificationsData?.quantity || 0}
+                notifications={notificationsData?.notifications || []}
+                isLoading={isNotificationLoading}
+              />
             </Popover.Dropdown>
           </Popover>
           <Box className="rounded-full bg-orange-200/50" px={16} py={8}>
@@ -260,7 +301,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           <Menu position="bottom-end" shadow="md" width={200}>
             <Menu.Target>
               <Avatar
-                src={profileData?.avatarUrl}
+                src={meData?.avatarUrl}
                 className="cursor-pointer border-2 border-indigo-100 transition-colors duration-200 hover:border-indigo-300"
                 size="md"
                 radius="xl"
