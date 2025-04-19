@@ -25,7 +25,7 @@ export const PostComments = () => {
     <Stack gap={8}>
       {parentComments.map((comment) => (
         <Box
-          className="rounded-lg border border-gray-200"
+          className="rounded-lg border border-gray-200 shadow-md"
           key={comment.id}
           p={16}
         >
@@ -36,6 +36,7 @@ export const PostComments = () => {
                 (c) => c.parentId === comment.id
               ) || []
             }
+            postId={postId}
           />
         </Box>
       ))}
