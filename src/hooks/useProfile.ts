@@ -1,6 +1,7 @@
 import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
+  GetLatestPostedSquads,
   GetMeResponse,
   GetNotificationsResponse,
   GetProfileResponse,
@@ -66,12 +67,22 @@ export const useProfile = () => {
     })
   }
 
+  const lastPostedSquads = async (id: string) => {
+    return callApi<never, GetLatestPostedSquads>({
+      path: `/v1/profile-service/squads/recently-posted/by/${id}`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     getMe,
     getProfile,
     updateMe,
     getJoinedSquads,
     getNotifications,
-    getStreak
+    getStreak,
+    lastPostedSquads
   }
 }

@@ -526,3 +526,7 @@ export interface GetStreakResponse {
     currentStreak: number
   }
 }
+
+export interface GetLatestPostedSquads {
+  result: ISquad[]
+}
