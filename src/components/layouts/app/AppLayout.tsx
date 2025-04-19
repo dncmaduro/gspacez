@@ -13,6 +13,7 @@ import { INotification } from '../../../hooks/interface'
 import { useMe } from '../../../hooks/useMe'
 import { GToast } from '../../common/GToast'
 import renderNotiContent from '../../../utils/getNoti'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface Props {
   hideSearchInput?: boolean
@@ -27,6 +28,7 @@ export const AppLayout = ({
   const navigate = useNavigate()
   const { accessToken } = useAuthStore()
   const { setCallbackUrl } = useCallbackStore()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (!accessToken) {
@@ -44,6 +46,9 @@ export const AppLayout = ({
       GToast.information({
         title: renderContent.title,
         subtitle: renderContent.subtitle
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['get-notifications', meData?.id || '']
       })
     }
   })
