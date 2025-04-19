@@ -13,7 +13,11 @@ import {
   Loader,
   Stack,
   Tabs,
-  Text
+  Text,
+  Divider,
+  ActionIcon,
+  Tooltip,
+  Button
 } from '@mantine/core'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useProfile } from '../../hooks/useProfile'
@@ -22,6 +26,7 @@ import GProfilePosts from '../../components/common/GProfilePosts'
 import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
+import { Helmet } from 'react-helmet-async'
 
 export const Route = createFileRoute('/profile/$profileId')({
   component: RouteComponent,
@@ -56,7 +61,7 @@ function RouteComponent() {
   }, [search.tab, navigate])
 
   const { data, isLoading } = useQuery({
-    queryKey: ['get-profile'],
+    queryKey: ['get-profile', profileId],
     queryFn: () => {
       return getProfile(profileId)
     }
@@ -117,6 +122,7 @@ function RouteComponent() {
     initialPageParam: 0,
     enabled: !!profileId
   })
+
   const posts = postData?.pages.flatMap((page) => page.result.content) || []
   const likedPosts =
     likedPostData?.pages.flatMap((page) => page.result.content) || []
@@ -125,6 +131,7 @@ function RouteComponent() {
     posts: {
       label: 'Posts',
       value: 'posts',
+      icon: 'Article',
       posts: posts,
       isLoading: isPostLoading,
       hasNextPage: hasNextPage,
@@ -134,6 +141,7 @@ function RouteComponent() {
     upvoted: {
       label: 'Upvoted',
       value: 'upvoted',
+      icon: 'ThumbUp',
       posts: likedPosts,
       isLoading: isLikedPostLoading,
       hasNextPage: hasNextLikedPage,
@@ -180,68 +188,198 @@ function RouteComponent() {
   ])
 
   return (
-    <AppLayout>
-      <Box maw={1200} mx="auto" px={12}>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <>
-            <Flex h="100%" gap={8} mih={1000}>
-              <Stack w="30%" gap={4}>
-                <Box
-                  className="rounded-lg border border-indigo-200"
-                  bg={'white'}
-                  p={16}
-                >
-                  <Stack gap={16}>
-                    <Group gap={8}>
-                      <Avatar src={profileData?.avatarUrl} size="md" />
-                      <Text className="!text-[17px] !font-bold">
+    <>
+      <Helmet>
+        <title>
+          {profileData
+            ? `${profileData.firstName} ${profileData.lastName} - Profile`
+            : 'User Profile'}{' '}
+          - GspaceZ
+        </title>
+      </Helmet>
+      <AppLayout>
+        <Box maw={1200} mx="auto" px={12} py={24}>
+          {isLoading ? (
+            <Flex h="70vh" align="center" justify="center">
+              <Loader size="lg" color="indigo" />
+            </Flex>
+          ) : (
+            <>
+              <Flex h="100%" gap={16} mih={1000}>
+                {/* Sidebar */}
+                <Stack w="30%" gap={16}>
+                  {/* Profile Card */}
+                  <Box
+                    className="rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                    bg={'white'}
+                    p={24}
+                  >
+                    <Stack gap={24} align="center">
+                      <Avatar
+                        src={profileData?.avatarUrl}
+                        size={100}
+                        radius={100}
+                        className="border-4 border-indigo-100 shadow-md"
+                      />
+                      <Text className="!text-center !text-xl !font-bold text-indigo-900">
                         {profileData?.firstName} {profileData?.lastName}
                       </Text>
-                    </Group>
-                    <Group gap={8}>
-                      <GIcon name="Calendar" size={16} />
-                      <Text size="sm">{profileData?.dob}</Text>
-                    </Group>
-                  </Stack>
-                </Box>
-                <GProfileSquads squads={joinedSquads} />
+
+                      <Group>
+                        <Tooltip label="Message">
+                          <ActionIcon
+                            variant="light"
+                            color="indigo"
+                            size="lg"
+                            radius="xl"
+                            className="transition-transform duration-200 hover:scale-105"
+                          >
+                            <GIcon name="Message" size={20} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Button
+                          variant="outline"
+                          color="indigo"
+                          radius="xl"
+                          leftSection={<GIcon name="UserPlus" size={16} />}
+                          className="transition-all duration-200 hover:bg-indigo-50"
+                        >
+                          Follow
+                        </Button>
+                      </Group>
+
+                      <Divider w="100%" color="gray.2" />
+
+                      <Stack gap={12} w="100%">
+                        <Group gap={12}>
+                          <GIcon name="Calendar" size={18} color="#4F46E5" />
+                          <Text size="sm" fw={500}>
+                            {profileData?.dob || 'Not specified'}
+                          </Text>
+                        </Group>
+                      </Stack>
+                    </Stack>
+                  </Box>
+
+                  {/* Squads Card */}
+                  <GProfileSquads squads={joinedSquads} />
+
+                  {/* Social Accounts Card */}
+                  <Box
+                    className="rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                    p={24}
+                    bg={'white'}
+                  >
+                    <Stack gap={16}>
+                      <Group gap={12}>
+                        <GIcon name="Share" size={20} color="#4F46E5" />
+                        <Text size="lg" fw={600}>
+                          Social Accounts
+                        </Text>
+                      </Group>
+
+                      <Divider color="gray.2" />
+
+                      <Button
+                        variant="light"
+                        color="blue"
+                        leftSection={<GIcon name="BrandTwitter" size={18} />}
+                        fullWidth
+                      >
+                        Connect Twitter
+                      </Button>
+                      <Button
+                        variant="light"
+                        color="indigo"
+                        leftSection={<GIcon name="BrandLinkedin" size={18} />}
+                        fullWidth
+                      >
+                        Connect LinkedIn
+                      </Button>
+                      <Button
+                        variant="light"
+                        color="gray"
+                        leftSection={<GIcon name="BrandGithub" size={18} />}
+                        fullWidth
+                      >
+                        Connect GitHub
+                      </Button>
+                    </Stack>
+                  </Box>
+                </Stack>
+
+                {/* Main Content */}
                 <Box
-                  className="rounded-lg border border-indigo-200"
+                  className="grow rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                  maw={'68%'}
                   bg={'white'}
-                  p={16}
                 >
-                  <Text size="md">View other social accounts</Text>
+                  <Tabs
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    color="indigo"
+                    radius="md"
+                  >
+                    <Tabs.List
+                      h={60}
+                      px={16}
+                      className="border-b border-indigo-100 bg-gray-50"
+                    >
+                      {Object.values(tabConfig).map((tab) => (
+                        <Tabs.Tab
+                          key={tab.value}
+                          value={tab.value}
+                          leftSection={<GIcon name={tab.icon} size={16} />}
+                          className="text-base font-medium"
+                        >
+                          {tab.label}
+                        </Tabs.Tab>
+                      ))}
+                    </Tabs.List>
+
+                    <Box p={16}>
+                      <Tabs.Panel value={activeTab}>
+                        {currentTabData.posts.length === 0 &&
+                        !currentTabData.isLoading ? (
+                          <Flex
+                            direction="column"
+                            align="center"
+                            justify="center"
+                            h={300}
+                            gap={16}
+                          >
+                            <GIcon
+                              name={
+                                activeTab === 'posts'
+                                  ? 'FileDescription'
+                                  : 'ThumbUp'
+                              }
+                              size={48}
+                              color="#E5E7EB"
+                            />
+                            <Text c="dimmed" size="lg" ta="center">
+                              {activeTab === 'posts'
+                                ? 'No posts yet'
+                                : 'No upvoted posts yet'}
+                            </Text>
+                          </Flex>
+                        ) : (
+                          <GProfilePosts
+                            posts={currentTabData.posts}
+                            isLoading={currentTabData.isLoading}
+                            hasNextPage={currentTabData.hasNextPage}
+                            loaderRef={loaderRef}
+                          />
+                        )}
+                      </Tabs.Panel>
+                    </Box>
+                  </Tabs>
                 </Box>
-              </Stack>
-              <Box
-                className="grow rounded-lg border border-indigo-200"
-                maw={'66%'}
-                bg={'white'}
-              >
-                <Tabs value={activeTab} onChange={handleTabChange}>
-                  <Tabs.List h={44}>
-                    {Object.values(tabConfig).map((tab, index) => (
-                      <Tabs.Tab key={index} value={tab.value}>
-                        {tab.label}
-                      </Tabs.Tab>
-                    ))}
-                  </Tabs.List>
-                  <Tabs.Panel value={activeTab}>
-                    <GProfilePosts
-                      posts={currentTabData.posts}
-                      isLoading={currentTabData.isLoading}
-                      hasNextPage={currentTabData.hasNextPage}
-                      loaderRef={loaderRef}
-                    />
-                  </Tabs.Panel>
-                </Tabs>
-              </Box>
-            </Flex>
-          </>
-        )}
-      </Box>
-    </AppLayout>
+              </Flex>
+            </>
+          )}
+        </Box>
+      </AppLayout>
+    </>
   )
 }
