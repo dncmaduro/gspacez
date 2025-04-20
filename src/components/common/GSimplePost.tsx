@@ -1,13 +1,4 @@
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Button,
-  Group,
-  Stack,
-  Text,
-  Badge
-} from '@mantine/core'
+import { Avatar, Box, Button, Group, Stack, Text, Badge } from '@mantine/core'
 import { IPost } from '../../hooks/interface'
 import { format } from 'date-fns'
 import { DATE_SIMPLE_FORMAT } from '../../utils/constants'
@@ -15,6 +6,11 @@ import ReactMarkdown from 'react-markdown'
 import { GIcon } from './GIcon'
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { GLikeButton } from './GLikeButton'
+import { usePost } from '../../hooks/usePost'
+import { useMutation } from '@tanstack/react-query'
+import { ReactPostRequest } from '../../hooks/models'
+import { GDislikeButton } from './GDislikeButton'
 
 interface Props {
   post: IPost
@@ -23,15 +19,35 @@ interface Props {
 export const GSimplePost = ({ post }: Props) => {
   const [liked, setLiked] = useState(false)
   const [disliked, setDisliked] = useState(false)
+  const { reactPost } = usePost()
+
+  const { mutate: react } = useMutation({
+    mutationKey: ['react', post.id],
+    mutationFn: ({ req }: { req: ReactPostRequest }) =>
+      reactPost(post.id || '', req),
+    onSuccess: () => {
+      // refetch()
+    }
+  })
 
   const handleLike = () => {
     setLiked(!liked)
     if (disliked) setDisliked(false)
+    react({
+      req: {
+        reactType: post.liked ? undefined : 'LIKE'
+      }
+    })
   }
 
   const handleDislike = () => {
     setDisliked(!disliked)
     if (liked) setLiked(false)
+    react({
+      req: {
+        reactType: post.disliked ? undefined : 'DISLIKE'
+      }
+    })
   }
 
   return (
@@ -78,25 +94,17 @@ export const GSimplePost = ({ post }: Props) => {
       </Box>
 
       <Group mt={24} gap={32} className="border-t border-gray-100 pt-3">
-        <ActionIcon
-          variant={liked ? 'filled' : 'subtle'}
-          color={liked ? 'indigo' : 'gray'}
-          size="sm"
+        <GLikeButton
           onClick={handleLike}
-          className="transition-all duration-200"
-        >
-          <GIcon name="ThumbUp" />
-        </ActionIcon>
+          quantity={post.totalLike + (liked ? 1 : 0)}
+          isLiked={liked}
+        />
 
-        <ActionIcon
-          variant={disliked ? 'filled' : 'subtle'}
-          color={disliked ? 'red' : 'gray'}
-          size="sm"
+        <GDislikeButton
           onClick={handleDislike}
-          className="transition-all duration-200"
-        >
-          <GIcon name="ThumbDown" />
-        </ActionIcon>
+          quantity={post.totalDislike + (disliked ? 1 : 0)}
+          isDisliked={disliked}
+        />
 
         <Button
           variant="light"
