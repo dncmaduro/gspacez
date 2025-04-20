@@ -54,6 +54,8 @@ function RouteComponent() {
   const { postId } = useParams({ from: `/post/$postId` })
   const [opened, { toggle }] = useDisclosure(params.comment ? true : false)
   const router = useRouter()
+  const [liked, setLiked] = useState(false)
+  const [disliked, setDisliked] = useState(false)
   const queryClient = useQueryClient()
 
   const { getPost, createComment, reactPost } = usePost()
@@ -145,8 +147,6 @@ function RouteComponent() {
     }
   }
 
-  // Giả sử postData có thể có trường hashTags hoặc tags
-  // Nếu không có, bạn cần cập nhật API và model để lấy thông tin này
   const hashtags = postData?.hashTags
 
   return (
@@ -309,17 +309,21 @@ function RouteComponent() {
                   <Group gap={24}>
                     <GLikeButton
                       onClick={() => {
+                        setLiked(!liked)
+                        if (disliked) setDisliked(false)
                         react({
                           req: {
                             reactType: postData?.liked ? undefined : 'LIKE'
                           }
                         })
                       }}
-                      quantity={postData?.totalLike || 0}
-                      isLiked={postData?.liked || false}
+                      quantity={postData?.totalLike || 0 + (liked ? 1 : 0)}
+                      isLiked={liked}
                     />
                     <GDislikeButton
                       onClick={() => {
+                        setDisliked(!disliked)
+                        if (liked) setLiked(false)
                         react({
                           req: {
                             reactType: postData?.disliked
@@ -328,8 +332,10 @@ function RouteComponent() {
                           }
                         })
                       }}
-                      quantity={postData?.totalDislike || 0}
-                      isDisliked={postData?.disliked || false}
+                      quantity={
+                        postData?.totalDislike || 0 + (disliked ? 1 : 0)
+                      }
+                      isDisliked={disliked}
                     />
                     <Tooltip label={tooltipText} position="bottom" withArrow>
                       <ActionIcon
