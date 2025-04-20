@@ -13,9 +13,11 @@ import {
   Select,
   Textarea,
   Button,
-  Image
+  Image,
+  ActionIcon,
+  Divider
 } from '@mantine/core'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useFieldArray } from 'react-hook-form'
 import { useCountries } from '../../hooks/useCountries'
 import { useEffect, useMemo } from 'react'
 import { GIcon } from '../../components/common/GIcon'
@@ -26,6 +28,7 @@ import { format, parse } from 'date-fns'
 import { useMe } from '../../hooks/useMe'
 import { UpdateMeRequest } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
+import { cloneDeep } from 'lodash'
 
 export const Route = createFileRoute('/me/edit')({
   component: RouteComponent
@@ -44,6 +47,10 @@ interface ProfileType {
   country?: string
   description?: string
   avatarUrl?: string
+  socialMediaRequests: {
+    platform: string
+    url: string
+  }[]
 }
 
 function RouteComponent() {
@@ -110,14 +117,43 @@ function RouteComponent() {
         dob: '',
         country: '',
         description: '',
-        avatarUrl: ''
+        avatarUrl: '',
+        socialMediaRequests: []
       }
     })
 
-  useEffect(() => {
-    if (profileData) {
-      reset(profileData)
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'socialMediaRequests'
+  })
+
+  const addSocialMedia = () => {
+    if (fields.length < 6) {
+      append({ platform: '', url: '' })
     }
+  }
+
+  useEffect(() => {
+    if (!profileData) return
+
+    const cloned = cloneDeep(profileData)
+    const platformsDefault = ['twitter', 'linkedin', 'github']
+
+    if (!Array.isArray(cloned.socialMediaRequests)) {
+      cloned.socialMediaRequests = []
+    }
+
+    const existingPlatforms = new Set(
+      cloned.socialMediaRequests.map((item) => item.platform.toLowerCase())
+    )
+
+    platformsDefault.forEach((platform) => {
+      if (!existingPlatforms.has(platform)) {
+        cloned.socialMediaRequests.unshift({ platform, url: '' })
+      }
+    })
+
+    reset(cloned)
   }, [profileData, reset])
 
   const onSubmit = (values: ProfileType) => {
@@ -140,161 +176,335 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Stack maw={1000} mx={'auto'} mt={32}>
-        <Text className="!text-2xl !font-bold">
-          Update things that people should know about you
-        </Text>
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
-          <Stack>
-            <Flex align="flex-start">
-              <Stack flex={3}>
-                <Group>
-                  <Controller
-                    control={control}
-                    name="firstName"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <TextInput
-                        {...field}
-                        withAsterisk
-                        label="First name"
-                        placeholder="Your first name"
-                        radius="md"
-                        size="md"
-                        className="grow"
-                        disabled={isLoading}
-                      />
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    name="lastName"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <TextInput
-                        {...field}
-                        withAsterisk
-                        label="Last name"
-                        placeholder="Your last name"
-                        radius="md"
-                        size="md"
-                        className="grow"
-                        disabled={isLoading}
-                      />
-                    )}
-                  />
-                </Group>
-                <Controller
-                  control={control}
-                  name="dob"
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    const dateValue = field.value
-                      ? parse(field.value, 'yyyy-MM-dd', new Date())
-                      : null
+      <Box maw={1200} mx="auto" py={40} px={{ base: 16, md: 32 }}>
+        <Stack gap={32}>
+          <Box>
+            <Text className="mb-2 !text-3xl !font-bold text-indigo-800">
+              Edit Profile
+            </Text>
+            <Text c="dimmed" size="lg">
+              Update your information to help others know you better
+            </Text>
+          </Box>
 
-                    return (
-                      <DatePickerInput
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Flex
+              direction={{ base: 'column', md: 'row' }}
+              gap={32}
+              align="flex-start"
+            >
+              {/* Avatar Section */}
+              <Box w={{ base: '100%', md: 280 }}>
+                <Box className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                  <Stack align="center" gap={16}>
+                    <Text className="!text-lg !font-semibold text-gray-700">
+                      Profile Photo
+                    </Text>
+
+                    {watch('avatarUrl') ? (
+                      <Box className="group relative">
+                        <Image
+                          src={watch('avatarUrl')}
+                          alt="Avatar"
+                          height={180}
+                          width={180}
+                          className="!rounded-full border-4 border-indigo-100 shadow-md transition-all duration-300"
+                        />
+                        <Box
+                          className="absolute inset-0 flex items-center justify-center rounded-full bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                          onClick={
+                            !isLoading ? openUploadAvatarModal : undefined
+                          }
+                        >
+                          <GIcon name="Camera" size={32} color="white" />
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Box
+                        h={180}
+                        w={180}
+                        onClick={!isLoading ? openUploadAvatarModal : undefined}
+                        className="flex cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-indigo-300 bg-indigo-50/50 transition-colors duration-300 hover:bg-indigo-100/50"
+                      >
+                        <GIcon name="Photo" size={40} color="#6366f1" />
+                      </Box>
+                    )}
+
+                    <Button
+                      leftSection={<GIcon name="Upload" size={16} />}
+                      variant="light"
+                      color="indigo"
+                      onClick={openUploadAvatarModal}
+                      disabled={isLoading}
+                      fullWidth
+                    >
+                      Upload new photo
+                    </Button>
+                  </Stack>
+                </Box>
+              </Box>
+
+              {/* Form Fields */}
+              <Box
+                className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm"
+                flex={1}
+              >
+                <Stack gap={24}>
+                  <Text className="!text-xl !font-semibold text-gray-800">
+                    Personal Information
+                  </Text>
+
+                  <Group grow>
+                    <Controller
+                      control={control}
+                      name="firstName"
+                      rules={{ required: 'First name is required' }}
+                      render={({ field, fieldState }) => (
+                        <TextInput
+                          {...field}
+                          withAsterisk
+                          label="First name"
+                          placeholder="Your first name"
+                          radius="md"
+                          size="md"
+                          error={fieldState.error?.message}
+                          disabled={isLoading}
+                          leftSection={<GIcon name="User" size={16} />}
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="lastName"
+                      rules={{ required: 'Last name is required' }}
+                      render={({ field, fieldState }) => (
+                        <TextInput
+                          {...field}
+                          withAsterisk
+                          label="Last name"
+                          placeholder="Your last name"
+                          radius="md"
+                          size="md"
+                          error={fieldState.error?.message}
+                          disabled={isLoading}
+                          leftSection={<GIcon name="User" size={16} />}
+                        />
+                      )}
+                    />
+                  </Group>
+
+                  <Group grow>
+                    <Controller
+                      control={control}
+                      name="dob"
+                      rules={{ required: 'Date of birth is required' }}
+                      render={({ field, fieldState }) => {
+                        const dateValue = field.value
+                          ? parse(field.value, 'yyyy-MM-dd', new Date())
+                          : null
+
+                        return (
+                          <DatePickerInput
+                            {...field}
+                            value={dateValue}
+                            onChange={(date) => {
+                              field.onChange(
+                                date ? format(date, 'yyyy-MM-dd') : ''
+                              )
+                            }}
+                            label="Date of Birth"
+                            placeholder="Select your date of birth"
+                            radius="md"
+                            size="md"
+                            disabled={isLoading}
+                            leftSection={<GIcon name="Calendar" size={16} />}
+                            withAsterisk
+                            error={fieldState.error?.message}
+                          />
+                        )
+                      }}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="country"
+                      rules={{ required: 'Country is required' }}
+                      render={({ field, fieldState }) => (
+                        <Select
+                          {...field}
+                          renderOption={renderSelectOption}
+                          data={countryOptions}
+                          searchable
+                          label="Country"
+                          placeholder="Where do you live?"
+                          withAsterisk
+                          radius="md"
+                          size="md"
+                          disabled={isLoading}
+                          error={fieldState.error?.message}
+                          leftSection={<GIcon name="MapPin" size={16} />}
+                        />
+                      )}
+                    />
+                  </Group>
+
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field }) => (
+                      <Textarea
                         {...field}
-                        value={dateValue}
-                        onChange={(date) => {
-                          field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
-                        }}
-                        label="Date of Birth"
-                        placeholder="Select your date of birth"
-                        radius="md"
+                        minRows={4}
+                        autosize
+                        maxRows={8}
                         size="md"
                         disabled={isLoading}
-                        leftSection={<GIcon name="Calendar" size={16} />}
-                        withAsterisk
+                        label="About me"
+                        placeholder="Share a bit about yourself, your interests, and what you're passionate about"
+                        leftSection={<GIcon name="InfoCircle" size={16} />}
                       />
-                    )
-                  }}
-                />
-                <Controller
-                  control={control}
-                  name="country"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      renderOption={renderSelectOption}
-                      data={countryOptions}
-                      searchable
-                      label="Where do you live?"
-                      withAsterisk
-                      radius="md"
-                      size="md"
+                    )}
+                  />
+
+                  {/* Social Media Section */}
+                  <Box mt={16}>
+                    <Divider
+                      my="md"
+                      label={<Text fw={500}>Social Media Links</Text>}
+                      labelPosition="center"
+                    />
+
+                    {fields.map((field, index) => {
+                      let icon = 'Link'
+                      if (field.platform === 'twitter') icon = 'BrandTwitter'
+                      if (field.platform === 'linkedin') icon = 'BrandLinkedin'
+                      if (field.platform === 'github') icon = 'BrandGithub'
+
+                      const isDefaultPlatform = index < 3
+
+                      return (
+                        <Group key={field.id} mt={16} align="flex-end">
+                          {isDefaultPlatform ? (
+                            <Controller
+                              control={control}
+                              name={`socialMediaRequests.${index}.platform`}
+                              render={({ field: formField }) => (
+                                <Select
+                                  {...formField}
+                                  label={index === 0 && 'Platform'}
+                                  placeholder="Select platform"
+                                  data={[
+                                    { value: 'twitter', label: 'Twitter' },
+                                    { value: 'linkedin', label: 'LinkedIn' },
+                                    { value: 'github', label: 'GitHub' }
+                                  ]}
+                                  defaultValue={field.platform}
+                                  size="md"
+                                  radius="md"
+                                  w="30%"
+                                  leftSection={<GIcon name={icon} size={16} />}
+                                  readOnly
+                                />
+                              )}
+                            />
+                          ) : (
+                            <Controller
+                              control={control}
+                              name={`socialMediaRequests.${index}.platform`}
+                              render={({ field }) => (
+                                <TextInput
+                                  {...field}
+                                  placeholder="Enter platform name"
+                                  size="md"
+                                  radius="md"
+                                  w="30%"
+                                  leftSection={<GIcon name="Link" size={16} />}
+                                />
+                              )}
+                            />
+                          )}
+
+                          <Controller
+                            control={control}
+                            name={`socialMediaRequests.${index}.url`}
+                            render={({ field }) => (
+                              <TextInput
+                                {...field}
+                                label={index === 0 && 'URL'}
+                                placeholder={
+                                  isDefaultPlatform
+                                    ? `https://${watch(`socialMediaRequests.${index}.platform`)}.com/...`
+                                    : 'https://example.com/...'
+                                }
+                                size="md"
+                                radius="md"
+                                w="60%"
+                                leftSection={
+                                  <GIcon
+                                    name={isDefaultPlatform ? icon : 'Link'}
+                                    size={16}
+                                  />
+                                }
+                              />
+                            )}
+                          />
+
+                          <ActionIcon
+                            color="red"
+                            onClick={() => remove(index)}
+                            variant="subtle"
+                            size="lg"
+                            disabled={isDefaultPlatform}
+                          >
+                            <GIcon name="Trash" size={18} />
+                          </ActionIcon>
+                        </Group>
+                      )
+                    })}
+
+                    {fields.length < 6 && (
+                      <Button
+                        mt={16}
+                        variant="light"
+                        color="indigo"
+                        leftSection={<GIcon name="Plus" size={16} />}
+                        onClick={addSocialMedia}
+                        fullWidth
+                      >
+                        Add Custom Social Media Link ({6 - fields.length}{' '}
+                        remaining)
+                      </Button>
+                    )}
+                  </Box>
+
+                  <Group justify="flex-end" mt={16}>
+                    <Button
+                      variant="subtle"
+                      color="gray"
                       disabled={isLoading}
-                    />
-                  )}
-                />
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({ field }) => (
-                    <Textarea
-                      {...field}
-                      minRows={4}
-                      autosize
-                      size="md"
-                      disabled={isLoading}
-                      label="More things you want to share with others"
-                    />
-                  )}
-                />
-              </Stack>
-              <Box flex={2}>
-                <Flex align="center" direction="column" gap={16}>
-                  <Text className="!text-md !font-semibold">
-                    Update your avatar
-                  </Text>
-                  {watch('avatarUrl') ? (
-                    <Image
-                      src={watch('avatarUrl')}
-                      alt="Avatar"
-                      mah={150}
-                      maw={150}
-                      className="!rounded-full border border-gray-400"
-                    />
-                  ) : (
-                    <Box
-                      h={150}
-                      w={150}
-                      onClick={!isLoading ? openUploadAvatarModal : undefined}
-                      className="flex cursor-pointer items-center justify-center rounded-full border-1 border-gray-400 hover:bg-gray-50"
+                      component={Link}
+                      to="/me"
+                      leftSection={<GIcon name="ArrowLeft" size={16} />}
                     >
-                      <GIcon name="Photo" size={24} color="gray" />
-                    </Box>
-                  )}
-                  <Button
-                    size="xs"
-                    variant="default"
-                    onClick={openUploadAvatarModal}
-                    disabled={isLoading}
-                  >
-                    Upload new avatar
-                  </Button>
-                </Flex>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      loading={isLoading}
+                      leftSection={
+                        !isLoading && <GIcon name="DeviceFloppy" size={16} />
+                      }
+                      color="indigo"
+                    >
+                      Save Changes
+                    </Button>
+                  </Group>
+                </Stack>
               </Box>
             </Flex>
-            <Group justify="center" mt={20}>
-              <Button
-                w="fit-content"
-                variant="default"
-                disabled={isLoading}
-                component={Link}
-                to="/me"
-              >
-                Cancel
-              </Button>
-              <Button w="fit-content" type="submit" loading={isLoading}>
-                Save
-              </Button>
-            </Group>
-          </Stack>
-        </form>
-      </Stack>
+          </form>
+        </Stack>
+      </Box>
     </AppLayout>
   )
 }

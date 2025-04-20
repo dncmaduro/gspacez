@@ -140,6 +140,8 @@ export interface CreatePostRequest {
   text: string
   hashTags?: string[]
   privacy: string
+  previewImage: string
+  squadTagName: string
 }
 
 export interface CreatePostReponse {
@@ -152,6 +154,8 @@ export interface UpdatePostRequest {
   text: string
   hashTags?: string[]
   privacy: string
+  previewImage: string
+  squadTagName: string
 }
 
 export interface UpdatePostResponse {
@@ -182,6 +186,10 @@ export interface GetMeResponse {
     firstName: string
     lastName: string
     dob: string
+    socialMediaRequests: {
+      platform: string
+      url: string
+    }[]
   }
 }
 
@@ -221,6 +229,10 @@ export interface GetProfileResponse {
     firstName: string
     lastName: string
     dob: string
+    socialMediaRequests: {
+      platform: string
+      url: string
+    }[]
   }
 }
 
@@ -246,6 +258,10 @@ export interface UpdateMeRequest {
   firstName: string
   lastName: string
   dob: string
+  socialMediaRequests: {
+    platform: string
+    url: string
+  }[]
 }
 
 export interface UpdateMeResponse {
@@ -258,6 +274,10 @@ export interface UpdateMeResponse {
     firstName: string
     lastName: string
     dob: string
+    socialMediaRequests: {
+      platform: string
+      url: string
+    }[]
   }
 }
 
