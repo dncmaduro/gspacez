@@ -355,7 +355,7 @@ function RouteComponent() {
                           {activeTab === 'posts' && (
                             <Button
                               component={Link}
-                              to="/post/create"
+                              to="/post/new"
                               variant="light"
                               leftSection={<GIcon name="Plus" size={16} />}
                             >
