@@ -249,22 +249,33 @@ function RouteComponent() {
               </Text>
 
               {/* Hashtags section */}
-              {hashtags && hashtags.length > 0 && (
-                <Group gap="xs" mb={16}>
-                  {hashtags.map((tag: string) => (
-                    <Badge
-                      color="indigo"
-                      variant="outline"
-                      radius="xl"
-                      size="sm"
-                      key={tag}
-                      style={{ textTransform: 'initial' }}
-                    >
-                      # {tag}
-                    </Badge>
-                  ))}
-                </Group>
-              )}
+              <Group gap="md" mb={16}>
+                <Link to={`/squad/${postData?.squad.tagName}`}>
+                  <Group
+                    gap={8}
+                    className="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50"
+                  >
+                    <Avatar src={postData?.squad.avatarUrl} />
+                    <Text>{postData?.squad.name}</Text>
+                  </Group>
+                </Link>
+                {hashtags && hashtags.length > 0 && (
+                  <>
+                    {hashtags.map((tag: string) => (
+                      <Badge
+                        color="indigo"
+                        variant="outline"
+                        radius="xl"
+                        size="sm"
+                        key={tag}
+                        style={{ textTransform: 'initial' }}
+                      >
+                        # {tag}
+                      </Badge>
+                    ))}
+                  </>
+                )}
+              </Group>
 
               {postData?.previewImage && (
                 <Box className="mb-8 overflow-hidden rounded-lg border border-gray-200">
