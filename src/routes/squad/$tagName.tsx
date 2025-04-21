@@ -279,7 +279,7 @@ function RouteComponent() {
                 {isAdmin ? (
                   <Group>
                     <CopyButton
-                      value={`/squad/invite/${data?.tagName}?id=${profileData?.id}`}
+                      value={`${window.location.origin}/squad/invite/${data?.tagName}?id=${profileData?.id}`}
                     >
                       {({ copied, copy }) => (
                         <Button
