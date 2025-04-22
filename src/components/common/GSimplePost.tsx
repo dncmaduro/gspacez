@@ -5,20 +5,24 @@ import { DATE_SIMPLE_FORMAT } from '../../utils/constants'
 import ReactMarkdown from 'react-markdown'
 import { GIcon } from './GIcon'
 import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GLikeButton } from './GLikeButton'
 import { usePost } from '../../hooks/usePost'
 import { useMutation } from '@tanstack/react-query'
 import { ReactPostRequest } from '../../hooks/models'
 import { GDislikeButton } from './GDislikeButton'
+import { GToast } from './GToast'
 
 interface Props {
   post: IPost
 }
 
 export const GSimplePost = ({ post }: Props) => {
-  const [liked, setLiked] = useState(false)
-  const [disliked, setDisliked] = useState(false)
+  const [liked, setLiked] = useState(post.liked)
+  const [disliked, setDisliked] = useState(post.disliked)
+  const otherLike = post.totalLike - (post.liked ? 1 : 0)
+  const otherDislike = post.totalDislike - (post.disliked ? 1 : 0)
+  const [prevReact, setPrevReact] = useState<'liked' | 'dislike' | undefined>()
   const { reactPost } = usePost()
 
   const { mutate: react } = useMutation({
@@ -26,16 +30,27 @@ export const GSimplePost = ({ post }: Props) => {
     mutationFn: ({ req }: { req: ReactPostRequest }) =>
       reactPost(post.id || '', req),
     onSuccess: () => {
-      // refetch()
+      setPrevReact(liked ? 'liked' : disliked ? 'dislike' : undefined)
+    },
+    onError: () => {
+      GToast.error({
+        title: 'React failed!'
+      })
+      setLiked(prevReact === 'liked' ? true : false)
+      setDisliked(prevReact === 'dislike' ? true : false)
     }
   })
+
+  useEffect(() => {
+    setPrevReact(post.liked ? 'liked' : post.disliked ? 'dislike' : undefined)
+  }, [post])
 
   const handleLike = () => {
     setLiked(!liked)
     if (disliked) setDisliked(false)
     react({
       req: {
-        reactType: post.liked ? undefined : 'LIKE'
+        reactType: 'LIKE'
       }
     })
   }
@@ -45,7 +60,7 @@ export const GSimplePost = ({ post }: Props) => {
     if (liked) setLiked(false)
     react({
       req: {
-        reactType: post.disliked ? undefined : 'DISLIKE'
+        reactType: 'DISLIKE'
       }
     })
   }
@@ -96,13 +111,13 @@ export const GSimplePost = ({ post }: Props) => {
       <Group mt={24} gap={32} className="border-t border-gray-100 pt-3">
         <GLikeButton
           onClick={handleLike}
-          quantity={post.totalLike + (liked ? 1 : 0)}
+          quantity={otherLike + (liked ? 1 : 0)}
           isLiked={liked}
         />
 
         <GDislikeButton
           onClick={handleDislike}
-          quantity={post.totalDislike + (disliked ? 1 : 0)}
+          quantity={otherDislike + (disliked ? 1 : 0)}
           isDisliked={disliked}
         />
 

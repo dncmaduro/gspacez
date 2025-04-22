@@ -36,6 +36,7 @@ import { PostComments } from '../../components/post/PostComments'
 import { GLikeButton } from '../../components/common/GLikeButton'
 import { GDislikeButton } from '../../components/common/GDislikeButton'
 import { useMe } from '../../hooks/useMe'
+import { GToast } from '../../components/common/GToast'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -56,6 +57,7 @@ function RouteComponent() {
   const router = useRouter()
   const [liked, setLiked] = useState(false)
   const [disliked, setDisliked] = useState(false)
+  const [prevReact, setPrevReact] = useState<'liked' | 'dislike' | undefined>()
   const queryClient = useQueryClient()
 
   const { getPost, createComment, reactPost } = usePost()
@@ -75,12 +77,28 @@ function RouteComponent() {
     }
   })
 
+  useEffect(() => {
+    setLiked(postData?.liked || false)
+    setDisliked(postData?.disliked || false)
+    setPrevReact(
+      postData?.liked ? 'liked' : postData?.disliked ? 'dislike' : undefined
+    )
+  }, [postData])
+
   const { mutate: react } = useMutation({
     mutationKey: ['react', postData?.id],
     mutationFn: ({ req }: { req: ReactPostRequest }) =>
       reactPost(postData?.id || '', req),
     onSuccess: () => {
       refetch()
+      setPrevReact(liked ? 'liked' : disliked ? 'dislike' : undefined)
+    },
+    onError: () => {
+      GToast.error({
+        title: 'React failed!'
+      })
+      setLiked(prevReact === 'liked' ? true : false)
+      setDisliked(prevReact === 'dislike' ? true : false)
     }
   })
 
@@ -141,7 +159,6 @@ function RouteComponent() {
       setTooltipText('Copied!')
       setTimeout(() => setTooltipText('Copy link to post'), 2000)
     } catch (err) {
-      console.error('Failed to copy link:', err)
       setTooltipText('Failed to copy')
       setTimeout(() => setTooltipText('Copy link to post'), 2000)
     }
