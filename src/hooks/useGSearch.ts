@@ -4,7 +4,10 @@ import {
   BaseSearchRequest,
   SearchPostsResponse,
   SearchSquadsResponse,
-  SearchUsersResponse
+  SearchUsersResponse,
+  SearchTagsResponse,
+  SearchTagsRequest,
+  SearchPostByTagRequest
 } from './models'
 
 export const useGSearch = () => {
@@ -37,5 +40,23 @@ export const useGSearch = () => {
     })
   }
 
-  return { searchUsers, searchPosts, searchSquads }
+  const searchTags = async (req: SearchTagsRequest) => {
+    return callApi<never, SearchTagsResponse>({
+      method: 'GET',
+      path: `/v1/post-service/tags/search?searchText=${req.searchText}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const searchPostsByTag = async (req: SearchPostByTagRequest) => {
+    return callApi<never, SearchPostsResponse>({
+      method: 'GET',
+      path: `/v1/post-service/posts/posts-by-hashtag?hashTag=${req.hashTag}&size=${req.size}&page=${req.page}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return { searchUsers, searchPosts, searchSquads, searchTags, searchPostsByTag }
 }

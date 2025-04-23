@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RecoveryImport } from './routes/recovery'
 import { Route as IndexImport } from './routes/index'
+import { Route as TagsIndexImport } from './routes/tags/index'
 import { Route as SearchIndexImport } from './routes/search/index'
 import { Route as MeIndexImport } from './routes/me/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
@@ -44,6 +45,12 @@ const RecoveryRoute = RecoveryImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TagsIndexRoute = TagsIndexImport.update({
+  id: '/tags/',
+  path: '/tags/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -291,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchIndexImport
       parentRoute: typeof rootRoute
     }
+    '/tags/': {
+      id: '/tags/'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof TagsIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/post/edit/$postId': {
       id: '/post/edit/$postId'
       path: '/post/edit/$postId'
@@ -336,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
   '/search': typeof SearchIndexRoute
+  '/tags': typeof TagsIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
@@ -360,6 +375,7 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryIndexRoute
   '/me': typeof MeIndexRoute
   '/search': typeof SearchIndexRoute
+  '/tags': typeof TagsIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
@@ -385,6 +401,7 @@ export interface FileRoutesById {
   '/history/': typeof HistoryIndexRoute
   '/me/': typeof MeIndexRoute
   '/search/': typeof SearchIndexRoute
+  '/tags/': typeof TagsIndexRoute
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
@@ -411,6 +428,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/me'
     | '/search'
+    | '/tags'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
@@ -434,6 +452,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/me'
     | '/search'
+    | '/tags'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
@@ -457,6 +476,7 @@ export interface FileRouteTypes {
     | '/history/'
     | '/me/'
     | '/search/'
+    | '/tags/'
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
@@ -482,6 +502,7 @@ export interface RootRouteChildren {
   HistoryIndexRoute: typeof HistoryIndexRoute
   MeIndexRoute: typeof MeIndexRoute
   SearchIndexRoute: typeof SearchIndexRoute
+  TagsIndexRoute: typeof TagsIndexRoute
   PostEditPostIdRoute: typeof PostEditPostIdRoute
   SquadEditTagNameRoute: typeof SquadEditTagNameRoute
   SquadInviteTagNameRoute: typeof SquadInviteTagNameRoute
@@ -506,6 +527,7 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryIndexRoute: HistoryIndexRoute,
   MeIndexRoute: MeIndexRoute,
   SearchIndexRoute: SearchIndexRoute,
+  TagsIndexRoute: TagsIndexRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
   SquadEditTagNameRoute: SquadEditTagNameRoute,
   SquadInviteTagNameRoute: SquadInviteTagNameRoute,
@@ -539,6 +561,7 @@ export const routeTree = rootRoute
         "/history/",
         "/me/",
         "/search/",
+        "/tags/",
         "/post/edit/$postId",
         "/squad/edit/$tagName",
         "/squad/invite/$tagName"
@@ -597,6 +620,9 @@ export const routeTree = rootRoute
     },
     "/search/": {
       "filePath": "search/index.tsx"
+    },
+    "/tags/": {
+      "filePath": "tags/index.tsx"
     },
     "/post/edit/$postId": {
       "filePath": "post/edit.$postId.tsx"

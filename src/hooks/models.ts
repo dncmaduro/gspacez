@@ -375,6 +375,20 @@ export interface SearchPostsResponse {
   }
 }
 
+export interface SearchTagsRequest {
+  searchText: string
+}
+
+export interface SearchTagsResponse {
+  result: string[]
+}
+
+export interface SearchPostByTagRequest {
+  hashTag: string
+  size: number
+  page: number
+}
+
 export interface GetSquadResponse {
   result: ISquad
 }
