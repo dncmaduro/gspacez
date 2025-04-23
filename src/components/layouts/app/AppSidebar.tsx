@@ -186,7 +186,12 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
         </SidebarPart>
 
         <SidebarPart opened={opened}>
-          <SidebarItem icon="DevicesStar" label="Feedback" opened={opened} />
+          <SidebarItem
+            icon="DevicesStar"
+            label="Feedback"
+            opened={opened}
+            href="/feedback"
+          />
         </SidebarPart>
       </Stack>
     </Box>

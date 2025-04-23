@@ -550,3 +550,19 @@ export interface GetStreakResponse {
 export interface GetLatestPostedSquads {
   result: ISquad[]
 }
+
+export interface SendFeedbackRequest {
+  content: string
+  rate: number
+}
+
+export interface SendFeedbackResponse {
+  code: number
+  result: {
+    id: string
+    profileId: string
+    content: string
+    rate: number
+    createdAt: string
+  }
+}
