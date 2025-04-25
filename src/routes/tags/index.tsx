@@ -35,7 +35,6 @@ function RouteComponent() {
   const params = useSearch({ strict: false })
   const [searchText, setSearchText] = useState<string>(params.searchText || '')
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
-  const [, setTriggerSearch] = useState<boolean>(false)
   const { searchTags, searchPostsByTag } = useGSearch()
   const loaderRef = useRef<HTMLDivElement | null>(null)
   const size = 5
@@ -48,6 +47,12 @@ function RouteComponent() {
     },
     enabled: !!searchText
   })
+
+  useEffect(() => {
+    if (!searchText) {
+      setSelectedTag(null)
+    }
+  }, [searchText])
 
   const {
     data: postsData,
@@ -157,7 +162,10 @@ function RouteComponent() {
               }}
               onKeyDownCapture={(e) => {
                 if (e.key === 'Enter') {
-                  setTriggerSearch((prev) => !prev)
+                  const item = data.byValues[searchText]
+                  if (item) {
+                    setSelectedTag(item.value)
+                  }
                 }
               }}
               data={data.data}
