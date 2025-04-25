@@ -180,7 +180,12 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
 
         <SidebarPart title="Discover" icon="Compass" opened={opened}>
           <Stack gap={4}>
-            <SidebarItem icon="Hash" label="Tags"  href="/tags" opened={opened} />
+            <SidebarItem
+              icon="Hash"
+              label="Tags"
+              href="/tags"
+              opened={opened}
+            />
             <SidebarItem icon="Message" label="Discussions" opened={opened} />
           </Stack>
         </SidebarPart>

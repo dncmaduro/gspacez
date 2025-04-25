@@ -58,5 +58,11 @@ export const useGSearch = () => {
     })
   }
 
-  return { searchUsers, searchPosts, searchSquads, searchTags, searchPostsByTag }
+  return {
+    searchUsers,
+    searchPosts,
+    searchSquads,
+    searchTags,
+    searchPostsByTag
+  }
 }
