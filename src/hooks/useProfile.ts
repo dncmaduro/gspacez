@@ -1,10 +1,12 @@
 import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
 import {
+  ChangeSettingsRequest,
   GetLatestPostedSquads,
   GetMeResponse,
   GetNotificationsResponse,
   GetProfileResponse,
+  GetSettingsResponse,
   GetStreakResponse,
   JoinedSquadsResponse,
   UpdateMeRequest,
@@ -76,6 +78,25 @@ export const useProfile = () => {
     })
   }
 
+  const getSettings = async () => {
+    return callApi<never, GetSettingsResponse>({
+      path: `/v1/profile-service/info/settings`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const changeSettings = async (req: ChangeSettingsRequest) => {
+    return callApi<ChangeSettingsRequest, never>({
+      path: `/v1/profile-service/info/settings/create`,
+      method: 'POST',
+      accessToken,
+      onClearAuth: clearAuth,
+      data: req
+    })
+  }
+
   return {
     getMe,
     getProfile,
@@ -83,6 +104,8 @@ export const useProfile = () => {
     getJoinedSquads,
     getNotifications,
     getStreak,
-    lastPostedSquads
+    lastPostedSquads,
+    getSettings,
+    changeSettings
   }
 }

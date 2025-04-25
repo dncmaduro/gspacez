@@ -4,8 +4,10 @@ import {
   IMember,
   INotification,
   IPost,
+  ISettings,
   ISquad
 } from './interface'
+import { FeedSettingsTimeline } from './types'
 
 export interface SignInRequest {
   email: string
@@ -578,5 +580,21 @@ export interface SendFeedbackResponse {
     content: string
     rate: number
     createdAt: string
+  }
+}
+
+export interface GetSettingsResponse {
+  code: number
+  result: ISettings
+}
+
+export interface ChangeSettingsRequest {
+  displayMode: string
+  feedSettings: {
+    hashtags: string[]
+    squads: string[]
+    ignoreSquads: string[]
+    timeline: FeedSettingsTimeline
+    likes: number
   }
 }

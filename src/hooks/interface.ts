@@ -1,3 +1,5 @@
+import { FeedSettingsTimeline } from './types'
+
 export interface IPost {
   id: string
   title: string
@@ -152,5 +154,16 @@ export interface INotificationReact {
     profileName: string
     email: string | null
     profileImageUrl: string | null
+  }
+}
+
+export interface ISettings {
+  displayMode: string
+  feedSettings: {
+    hashtags: string[]
+    squads: string[]
+    ignoreSquads: string[]
+    timeline: FeedSettingsTimeline
+    likes: number
   }
 }

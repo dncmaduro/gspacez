@@ -1,6 +1,15 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { Autocomplete, AutocompleteProps, Box, Group, Stack, Text, Grid, Loader } from '@mantine/core'
+import {
+  Autocomplete,
+  AutocompleteProps,
+  Box,
+  Group,
+  Stack,
+  Text,
+  Grid,
+  Loader
+} from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useGSearch } from '../../hooks/useGSearch'
@@ -11,7 +20,7 @@ import { Helmet } from 'react-helmet-async'
 import { IPost } from '../../hooks/interface'
 
 export const Route = createFileRoute('/tags/')({
-  component: RouteComponent,
+  component: RouteComponent
 })
 
 interface AutocompleteItem {
@@ -40,28 +49,32 @@ function RouteComponent() {
     enabled: !!searchText
   })
 
-  const { data: postsData, isLoading, hasNextPage, fetchNextPage } = 
-    useInfiniteQuery({
-      queryKey: ['search-posts-by-tag', selectedTag],
-      queryFn: async ({ pageParam = 0 }) => {
-        const response = await searchPostsByTag({ 
-          hashTag: selectedTag!, 
-          page: pageParam, 
-          size, 
-        })
-        return response
-      },
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        const nextPage = lastPage.data.result.number + 1
-        return nextPage < lastPage.data.result.totalPages ? nextPage : undefined
-      },
-      enabled: !!selectedTag
-    })
+  const {
+    data: postsData,
+    isLoading,
+    hasNextPage,
+    fetchNextPage
+  } = useInfiniteQuery({
+    queryKey: ['search-posts-by-tag', selectedTag],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await searchPostsByTag({
+        hashTag: selectedTag!,
+        page: pageParam,
+        size
+      })
+      return response
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.data.result.number + 1
+      return nextPage < lastPage.data.result.totalPages ? nextPage : undefined
+    },
+    enabled: !!selectedTag
+  })
 
   const posts: IPost[] = useMemo(() => {
     if (!postsData?.pages) return []
-    return postsData.pages.flatMap(page => page.data.result.content)
+    return postsData.pages.flatMap((page) => page.data.result.content)
   }, [postsData])
 
   useEffect(() => {
@@ -98,9 +111,7 @@ function RouteComponent() {
     })) as AutocompleteItem[]
 
     return {
-      data: [
-        { group: 'Tags', items: convertedTags.map((tag) => tag.value) }
-      ],
+      data: [{ group: 'Tags', items: convertedTags.map((tag) => tag.value) }],
       byValues: convertedTags.reduce(
         (acc, item) => {
           return { ...acc, [item.value]: item }
@@ -123,7 +134,9 @@ function RouteComponent() {
   return (
     <>
       <Helmet>
-        <title>{selectedTag ? `#${selectedTag} - GspaceZ` : 'Tags - GspaceZ'}</title>
+        <title>
+          {selectedTag ? `#${selectedTag} - GspaceZ` : 'Tags - GspaceZ'}
+        </title>
       </Helmet>
       <AppLayout hideSearchInput>
         <Box px={32} py={24}>
@@ -168,7 +181,7 @@ function RouteComponent() {
               </Text>
             </Box>
           )}
-          
+
           {isLoading && !posts.length ? (
             <Box>
               <Loader mt={32} />
@@ -200,4 +213,3 @@ function RouteComponent() {
     </>
   )
 }
-
