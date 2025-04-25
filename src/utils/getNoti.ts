@@ -27,6 +27,20 @@ const renderNotiContent = (notification: INotification) => {
     }
   }
 
+  if (notification.type === 'REQUEST_JOIN') {
+    return {
+      title: `${notification.entity.sender.profileName} has requested to join your squad`,
+      subtitle: ''
+    }
+  }
+
+  if (notification.type === 'ACCEPT') {
+    return {
+      title: `${notification.entity.sender.profileName} has accepted your request to join their squad`,
+      subtitle: ''
+    }
+  }
+
   return { title: '', href: '.' }
 }
 
