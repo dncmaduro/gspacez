@@ -366,7 +366,8 @@ function RouteComponent() {
                               onChange={(e) => setTagsSearchText(e)}
                               value={tagsSearchText}
                               data={(tagsData || []).filter(
-                                (option) => !field.value.includes(option)
+                                (option) =>
+                                  field.value && !field.value.includes(option)
                               )}
                               onOptionSubmit={(value) => {
                                 field.onChange(pushTags(field.value, value))
