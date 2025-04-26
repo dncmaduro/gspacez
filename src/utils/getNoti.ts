@@ -1,43 +1,58 @@
-import { INotification, INotificationComment } from '../hooks/interface'
+import {
+  INotification,
+  INotificationComment,
+  INotificationReact,
+  INotificationSquad
+} from '../hooks/interface'
 
 const renderNotiContent = (notification: INotification) => {
   if (notification.type === 'COMMENT') {
-    const comment = notification.entity as INotificationComment
+    const entity = notification.entity as INotificationComment
 
     return {
-      title: `${notification.entity.sender.profileName} has left a comment on your post`,
-      subtitle: comment.commentRequest.content.text,
-      href: `/post/${notification.entity.postId}`
+      title: `${entity.sender.profileName} has left a comment on your post`,
+      subtitle: entity.commentRequest.content.text,
+      href: `/post/${entity.postId}`
     }
   }
 
   if (notification.type === 'LIKE') {
+    const entity = notification.entity as INotificationReact
+
     return {
-      title: `${notification.entity.sender.profileName} has liked your post`,
+      title: `${entity.sender.profileName} has liked your post`,
       subtitle: '',
-      href: `/post/${notification.entity.postId}`
+      href: `/post/${entity.postId}`
     }
   }
 
   if (notification.type === 'DISLIKE') {
+    const entity = notification.entity as INotificationReact
+
     return {
-      title: `${notification.entity.sender.profileName} has disliked your post`,
+      title: `${entity.sender.profileName} has disliked your post`,
       subtitle: '',
-      href: `/post/${notification.entity.postId}`
+      href: `/post/${entity.postId}`
     }
   }
 
   if (notification.type === 'REQUEST_JOIN') {
+    const entity = notification.entity as INotificationSquad
+
     return {
-      title: `${notification.entity.sender.profileName} has requested to join your squad`,
-      subtitle: ''
+      title: `${entity.sender.profileName} has requested to join your squad`,
+      subtitle: '',
+      href: `/squad/${entity.tagName}?tab=manage-squad`
     }
   }
 
   if (notification.type === 'ACCEPT') {
+    const entity = notification.entity as INotificationSquad
+
     return {
-      title: `${notification.entity.sender.profileName} has accepted your request to join their squad`,
-      subtitle: ''
+      title: `${entity.sender.profileName} has accepted your request to join their squad`,
+      subtitle: '',
+      href: `/squad/${entity.tagName}`
     }
   }
 

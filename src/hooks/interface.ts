@@ -106,7 +106,7 @@ export interface INotification {
   profileId: string
   content: string
   type: 'COMMENT' | 'LIKE' | 'DISLIKE' | 'REQUEST_JOIN' | 'ACCEPT'
-  entity: INotificationComment | INotificationReact
+  entity: INotificationComment | INotificationReact | INotificationSquad
   createdAt: string
   read: boolean
 }
@@ -158,6 +158,8 @@ export interface INotificationReact {
 }
 
 export interface INotificationSquad {
+  squadName: string | null
+  tagName: string | null
   sender: {
     id: string
     profileId: string
