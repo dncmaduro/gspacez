@@ -598,3 +598,19 @@ export interface ChangeSettingsRequest {
     likes: number
   }
 }
+
+export interface GetFeedbacksRequest {
+  page: number
+  size: number
+}
+
+export interface GetFeedbacksResponse {
+  code: number
+  result: {
+    id: string
+    profileId: string
+    content: string
+    rate: number
+    createdAt: string
+  }[]
+}
