@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useFeedback } from '../../hooks/useFeedback'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { SendFeedbackRequest } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
@@ -17,10 +17,12 @@ import {
   Paper,
   Flex,
   Divider,
-  ThemeIcon
+  ThemeIcon,
+  Loader
 } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useState } from 'react'
+import { GFeedback } from '../../components/common/GFeedback'
 
 export const Route = createFileRoute('/feedback/')({
   component: RouteComponent
@@ -32,7 +34,7 @@ export type FeedbackType = {
 }
 
 function RouteComponent() {
-  const { sendFeedback } = useFeedback()
+  const { sendFeedback, getFeedbacks } = useFeedback()
   const [submitted, setSubmitted] = useState(false)
 
   const {
@@ -69,6 +71,15 @@ function RouteComponent() {
       rate: data.rate
     })
   }
+
+  const { data: feedbacks, isLoading: isFeedbackLoading } = useQuery({
+    queryKey: ['get-feedbacks'],
+    queryFn: () => getFeedbacks({ page: 0, size: 10 }),
+    enabled: !submitted,
+    select: (data) => {
+      return data.data.result
+    }
+  })
 
   return (
     <AppLayout>
@@ -215,6 +226,16 @@ function RouteComponent() {
             </form>
           )}
         </Stack>
+
+        {isFeedbackLoading ? (
+          <Loader />
+        ) : (
+          <Stack mt={16}>
+            {feedbacks?.map((feedback) => (
+              <GFeedback key={feedback.id} feedback={feedback} />
+            ))}
+          </Stack>
+        )}
       </Box>
     </AppLayout>
   )
