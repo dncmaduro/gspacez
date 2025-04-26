@@ -231,7 +231,6 @@ function RouteComponent() {
                         <Box>
                           <Button.Group>
                             {timelineOptions.map((option) => {
-                              console.log(watch('timeline'))
                               return (
                                 <Button
                                   key={option.value}
@@ -293,7 +292,9 @@ function RouteComponent() {
                         <Box>
                           <MultiSelect
                             data={(squadsSelectData || []).filter(
-                              (option) => !field.value.includes(option.value)
+                              (option) =>
+                                field.value &&
+                                !field.value.includes(option.value)
                             )}
                             {...field}
                             placeholder="Search squads"
