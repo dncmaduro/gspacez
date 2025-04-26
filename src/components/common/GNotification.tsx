@@ -17,9 +17,9 @@ export const GNotification = ({ notification }: Props) => {
 
   return (
     <Link to={notiContent.href}>
-      <Box className="rounded-lg p-3 transition-colors duration-200 hover:bg-indigo-50">
-        <Group justify="apart" align="flex-start">
-          <Group align="flex-start" gap="sm">
+      <Box className="rounded-lg p-3 transition-colors duration-200">
+        <Group justify="apart" align="center">
+          <Flex align="center" gap="sm">
             <Avatar
               size="md"
               src={notification.entity.sender.profileImageUrl}
@@ -34,7 +34,7 @@ export const GNotification = ({ notification }: Props) => {
                 </Text>
               </Flex>
             </Stack>
-          </Group>
+          </Flex>
         </Group>
       </Box>
     </Link>

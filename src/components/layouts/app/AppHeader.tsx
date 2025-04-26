@@ -29,6 +29,7 @@ import { useGSearch } from '../../../hooks/useGSearch'
 import { HeaderNotifications } from '../HeaderNotifications'
 import { useProfile } from '../../../hooks/useProfile'
 import { useNotificationStore } from '../../../store/notificationStore'
+import { useNotification } from '../../../hooks/useNotification'
 
 interface Props {
   hideSearchInput?: boolean
@@ -50,7 +51,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const [searchText, setSearchText] = useState<string>('')
   const { data: meData } = useMe()
   const { signOut } = useAuth()
-  const { getStreak, getNotifications } = useProfile()
+  const { getStreak } = useProfile()
+  const { getNotifications } = useNotification()
   const { notificationsQuantity } = useNotificationStore()
 
   const { mutate: onSignOut } = useMutation({
@@ -246,7 +248,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               Create my new post
             </Button>
           )}
-          <Popover withArrow>
+          <Popover withArrow width={400}>
             <Popover.Target>
               <ActionIcon
                 variant="subtle"

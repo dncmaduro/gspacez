@@ -4,7 +4,6 @@ import {
   ChangeSettingsRequest,
   GetLatestPostedSquads,
   GetMeResponse,
-  GetNotificationsResponse,
   GetProfileResponse,
   GetSettingsResponse,
   GetStreakResponse,
@@ -50,16 +49,6 @@ export const useProfile = () => {
       onClearAuth: clearAuth
     })
   }
-
-  const getNotifications = async (id: string) => {
-    return callApi<never, GetNotificationsResponse>({
-      path: `/v1/notification/get-notification/${id}`,
-      method: 'GET',
-      accessToken,
-      onClearAuth: clearAuth
-    })
-  }
-
   const getStreak = async (id: string) => {
     return callApi<never, GetStreakResponse>({
       path: `/v1/profile-service/info/${id}/streak`,
@@ -102,7 +91,6 @@ export const useProfile = () => {
     getProfile,
     updateMe,
     getJoinedSquads,
-    getNotifications,
     getStreak,
     lastPostedSquads,
     getSettings,
