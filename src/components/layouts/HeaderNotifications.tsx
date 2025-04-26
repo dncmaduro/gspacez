@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Box,
   Button,
@@ -15,6 +16,9 @@ import { useEffect, useMemo } from 'react'
 import { useNotificationStore } from '../../store/notificationStore'
 import { GIcon } from '../common/GIcon'
 import { Link } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNotification } from '../../hooks/useNotification'
+import { useMe } from '../../hooks/useMe'
 
 interface Props {
   notifications: INotification[]
@@ -28,6 +32,9 @@ export const HeaderNotifications = ({
   size
 }: Props) => {
   const { setNotificationsQuantity } = useNotificationStore()
+  const { data: meData } = useMe()
+  const { markAsRead, markAllAsRead, markAsUnread } = useNotification()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setNotificationsQuantity(size)
@@ -43,61 +50,122 @@ export const HeaderNotifications = ({
     )
   }, [notifications])
 
+  const { mutate: markAll } = useMutation({
+    mutationFn: () => markAllAsRead(meData?.id || ''),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['get-notifications', meData?.id || '']
+      })
+    }
+  })
+
+  const { mutate: markUnread } = useMutation({
+    mutationFn: (id: string) => markAsUnread(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['get-notifications', meData?.id || '']
+      })
+    }
+  })
+
+  const { mutate: markRead } = useMutation({
+    mutationFn: (id: string) => markAsRead(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['get-notifications', meData?.id || '']
+      })
+    }
+  })
+
   return (
-    <Box w={350}>
-      <Box className="mb-2 flex items-center justify-between px-2">
+    <Box w={'100%'} className="p-2">
+      <Box className="mb-3 flex items-center justify-between">
         <Title order={4} className="flex items-center gap-2">
           <GIcon name="Bell" size={20} />
           Notifications
           {unreadCount > 0 && (
-            <Badge color="red" variant="filled" size="sm">
+            <Badge color="red" variant="filled" size="sm" radius="xl">
               {unreadCount}
             </Badge>
           )}
         </Title>
         {hasNotifications && (
-          <Button variant="subtle" size="compact-xs">
+          <Button
+            variant="subtle"
+            size="compact-xs"
+            onClick={() => markAll()}
+            color="indigo"
+          >
             Mark all as read
           </Button>
         )}
       </Box>
 
-      <Divider mb="sm" />
+      <Divider mb="md" />
 
       <ScrollArea.Autosize mah={400} scrollbarSize={6}>
         {isLoading ? (
           <Box className="flex h-20 items-center justify-center">
-            <Loader size="sm" />
+            <Loader size="sm" color="indigo" />
           </Box>
         ) : (
-          <Stack gap="xs">
+          <Stack gap="sm">
             {hasNotifications ? (
               <>
                 {notifications.map((notification) => (
                   <Box
                     key={notification.id}
-                    className={`rounded-md transition-colors duration-200 ${!notification.read ? 'bg-indigo-50' : ''}`}
+                    className={`group relative rounded-md p-2 transition-colors duration-200 hover:bg-gray-100 ${!notification.read ? 'bg-indigo-50 hover:bg-indigo-100' : 'border border-gray-200'}`}
+                    onClick={() => {
+                      if (!notification.read) {
+                        markRead(notification.id)
+                      }
+                    }}
                   >
                     <GNotification notification={notification} />
+                    {notification.read && (
+                      <ActionIcon
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (notification.read) {
+                            markUnread(notification.id)
+                          }
+                        }}
+                        variant="subtle"
+                        size={'sm'}
+                        color="indigo"
+                        className="!absolute right-6 bottom-6 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      >
+                        {notification.read ? (
+                          <GIcon name="EyeOff" size={14} />
+                        ) : (
+                          <GIcon name="Eye" size={14} />
+                        )}
+                      </ActionIcon>
+                    )}
                   </Box>
                 ))}
 
-                <Divider my="xs" />
+                <Divider my="sm" />
 
                 <Button
                   component={Link}
                   to="/notifications"
                   variant="light"
+                  color="indigo"
                   fullWidth
+                  radius="md"
                   leftSection={<GIcon name="ListDetails" size={16} />}
                 >
                   View all notifications
                 </Button>
               </>
             ) : (
-              <Box className="flex h-32 flex-col items-center justify-center gap-2 p-4 text-center">
-                <GIcon name="InboxOff" size={32} color="gray" />
-                <Text c="dimmed">There are no notifications yet.</Text>
+              <Box className="flex h-32 flex-col items-center justify-center gap-3 p-4 text-center">
+                <GIcon name="InboxOff" size={36} color="gray" />
+                <Text c="dimmed" size="sm">
+                  There are no notifications yet.
+                </Text>
               </Box>
             )}
           </Stack>
