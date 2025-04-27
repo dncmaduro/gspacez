@@ -39,5 +39,14 @@ export const useFeedback = () => {
     })
   }
 
-  return { sendFeedback, getFeedbacks, getOwnFeedback }
+  const deleteFeedback = async (id: string) => {
+    return callApi<never, never>({
+      method: 'DELETE',
+      path: `/v1/profile-service/feedback/${id}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return { sendFeedback, getFeedbacks, getOwnFeedback, deleteFeedback }
 }
