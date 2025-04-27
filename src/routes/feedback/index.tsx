@@ -23,6 +23,8 @@ import {
 import { GIcon } from '../../components/common/GIcon'
 import { useState } from 'react'
 import { GFeedback } from '../../components/common/GFeedback'
+import { modals } from '@mantine/modals'
+import { format } from 'date-fns'
 
 export const Route = createFileRoute('/feedback/')({
   component: RouteComponent
@@ -34,7 +36,7 @@ export type FeedbackType = {
 }
 
 function RouteComponent() {
-  const { sendFeedback, getFeedbacks } = useFeedback()
+  const { sendFeedback, getFeedbacks, getOwnFeedback } = useFeedback()
   const [submitted, setSubmitted] = useState(false)
 
   const {
@@ -46,6 +48,14 @@ function RouteComponent() {
     defaultValues: {
       content: '',
       rate: 0
+    }
+  })
+
+  const { data: ownFeedback } = useQuery({
+    queryKey: ['get-own-feedback'],
+    queryFn: () => getOwnFeedback(),
+    select: (data) => {
+      return data.data.result
     }
   })
 
@@ -106,6 +116,49 @@ function RouteComponent() {
           </Flex>
 
           <Divider />
+
+          <Button
+            onClick={() => {
+              modals.open({
+                title: 'Your Feedbacks',
+                size: 'lg',
+                children: (
+                  <Stack>
+                    {ownFeedback
+                      ? ownFeedback.map((feedback) => (
+                          <Paper
+                            p={24}
+                            radius="md"
+                            withBorder
+                            className="border-indigo-200 bg-indigo-50/50"
+                            key={feedback.id}
+                          >
+                            <Stack gap={16}>
+                              <Flex align="center" justify="space-between">
+                                <Text fw={600} size="lg">
+                                  Feedback at{' '}
+                                  {format(new Date(feedback.createdAt), 'PP')}
+                                </Text>
+                                <Rating
+                                  value={feedback.rate}
+                                  readOnly
+                                  size="md"
+                                />
+                              </Flex>
+                              <Box className="rounded-md border border-indigo-100 bg-white p-3">
+                                <Text>{feedback.content}</Text>
+                              </Box>
+                            </Stack>
+                          </Paper>
+                        ))
+                      : null}
+                  </Stack>
+                )
+              })
+            }}
+          >
+            View your own feedbacks
+          </Button>
 
           {submitted ? (
             <Paper
