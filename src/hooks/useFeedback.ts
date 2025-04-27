@@ -3,6 +3,7 @@ import { callApi } from '../utils/axios'
 import {
   GetFeedbacksRequest,
   GetFeedbacksResponse,
+  GetOwnFeedbackResponse,
   SendFeedbackRequest,
   SendFeedbackResponse
 } from './models'
@@ -29,5 +30,14 @@ export const useFeedback = () => {
     })
   }
 
-  return { sendFeedback, getFeedbacks }
+  const getOwnFeedback = async () => {
+    return callApi<never, GetOwnFeedbackResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/feedback/me`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return { sendFeedback, getFeedbacks, getOwnFeedback }
 }

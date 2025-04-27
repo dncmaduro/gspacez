@@ -614,3 +614,14 @@ export interface GetFeedbacksResponse {
     createdAt: string
   }[]
 }
+
+export interface GetOwnFeedbackResponse {
+  code: number
+  result: {
+    id: string
+    profileId: string
+    content: string
+    rate: number
+    createdAt: string
+  }[]
+}
