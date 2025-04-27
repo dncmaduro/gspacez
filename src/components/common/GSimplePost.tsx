@@ -101,6 +101,12 @@ export const GSimplePost = ({ post }: Props) => {
         </Stack>
       </Group>
 
+      {post.title && (
+        <Text fw={700} size="lg" className="mt-4 mb-2 text-indigo-900">
+          {post.title}
+        </Text>
+      )}
+
       <Box
         mt={12}
         className="prose prose-sm prose-headings:text-indigo-700 prose-a:text-indigo-600 max-w-none text-gray-700"
