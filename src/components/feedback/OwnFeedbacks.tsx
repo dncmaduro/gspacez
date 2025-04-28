@@ -20,7 +20,7 @@ export const OwnFeedbacks = () => {
     }
   })
 
-  const { mutate: remove, isPending: isDeleting } = useMutation({
+  const { mutate: remove } = useMutation({
     mutationFn: (id: string) => deleteFeedback(id),
     onSuccess: () => {
       GToast.success({
