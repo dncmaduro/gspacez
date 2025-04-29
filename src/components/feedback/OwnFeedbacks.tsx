@@ -4,10 +4,13 @@ import { Box, Button, Flex, Paper, Rating, Stack, Text } from '@mantine/core'
 import { format } from 'date-fns'
 import { GIcon } from '../common/GIcon'
 import { GToast } from '../common/GToast'
+import { useState } from 'react'
 
 export const OwnFeedbacks = () => {
   const { getOwnFeedback, deleteFeedback } = useFeedback()
   const queryClient = useQueryClient()
+
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data: ownFeedback } = useQuery({
     queryKey: ['get-own-feedback'],
@@ -17,20 +20,27 @@ export const OwnFeedbacks = () => {
     }
   })
 
-  const { mutate: remove, isPending: isDeleting } = useMutation({
+  const { mutate: remove } = useMutation({
     mutationFn: (id: string) => deleteFeedback(id),
     onSuccess: () => {
       GToast.success({
         title: 'Delete feedback successfully!'
       })
       queryClient.invalidateQueries({ queryKey: ['get-own-feedback'] })
+      setDeletingId(null)
     },
     onError: () => {
       GToast.error({
         title: 'Delete feedback failed!'
       })
+      setDeletingId(null)
     }
   })
+
+  const handleDelete = (id: string) => {
+    setDeletingId(id)
+    remove(id)
+  }
 
   return (
     <Stack>
@@ -59,8 +69,8 @@ export const OwnFeedbacks = () => {
                 variant="subtle"
                 className="self-end"
                 size="xs"
-                onClick={() => remove(feedback.id)}
-                loading={isDeleting}
+                onClick={() => handleDelete(feedback.id)}
+                loading={deletingId === feedback.id}
               >
                 Delete this feedback
               </Button>
