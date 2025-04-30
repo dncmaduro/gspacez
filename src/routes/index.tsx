@@ -73,6 +73,7 @@ function RouteComponent() {
               <Box className="overflow-hidden rounded-2xl">
                 <Image
                   src={Logo}
+                  alt="GspaceZ Logo"
                   w={isMobile ? 150 : isTablet ? 180 : 200}
                   className="drop-shadow-md"
                 />
