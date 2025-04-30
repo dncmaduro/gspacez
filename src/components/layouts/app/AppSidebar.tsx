@@ -174,8 +174,13 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
           </Stack>
         </SidebarPart>
 
-        <SidebarPart title="AI" icon="Ai" opened={opened}>
-          <SidebarItem icon="Ai" label="AI" href="/ai" opened={opened} />
+        <SidebarPart title="AI Chat" icon="Sparkles" opened={opened}>
+          <SidebarItem
+            icon="Sparkles"
+            label="AI Chat"
+            href="/ai"
+            opened={opened}
+          />
         </SidebarPart>
 
         <SidebarPart title="Discover" icon="Compass" opened={opened}>
