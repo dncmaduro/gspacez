@@ -14,6 +14,7 @@ import { GIcon } from './common/GIcon'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '../hooks/useAuth'
 import { GToast } from './common/GToast'
+import { useMedia } from '../hooks/useMedia'
 
 type SignUpType = {
   email: string
@@ -26,6 +27,7 @@ type SignUpType = {
 export const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { signUp } = useAuth()
+  const { isMobile } = useMedia()
 
   const formMethods = useForm({
     defaultValues: {
@@ -76,18 +78,22 @@ export const SignUpForm = () => {
 
   return (
     <Box
-      px={32}
-      pb={32}
-      pt={24}
+      px={isMobile ? 16 : 32}
+      pb={isMobile ? 24 : 32}
+      pt={isMobile ? 16 : 24}
       className="rounded-xl border border-indigo-400 shadow-md duration-300 hover:shadow-lg"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap={24} align="center">
-          <Text className="!text-[22px] !font-bold">Sign up to GspaceZ</Text>
+        <Stack gap={isMobile ? 16 : 24} align="center">
+          <Text
+            className={`!font-bold ${isMobile ? '!text-xl' : '!text-[22px]'}`}
+          >
+            Sign up to GspaceZ
+          </Text>
           <FocusTrap active>
-            <Stack align="center" gap={16}>
+            <Stack align="center" gap={isMobile ? 12 : 16} w="100%">
               <TextInput
-                w={400}
+                w="100%"
                 {...register('email', {
                   required: { value: true, message: 'Email is required' },
                   pattern: {
@@ -97,40 +103,42 @@ export const SignUpForm = () => {
                 })}
                 error={errors.email?.message}
                 placeholder="Enter your email..."
-                leftSection={<GIcon name="Mail" size="18" />}
+                leftSection={
+                  <GIcon name="Mail" size={isMobile ? '16' : '18'} />
+                }
                 label="Email"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 withAsterisk
                 disabled={isSignUpLoading}
               />
-              <Group w={400} justify="space-between">
+              <Group w="100%" grow={isMobile} gap={isMobile ? 8 : 16}>
                 <TextInput
-                  w={190}
+                  w={isMobile ? '100%' : 190}
                   {...register('firstName', {
                     required: { value: true, message: 'Required' }
                   })}
                   error={errors.firstName?.message}
-                  placeholder="Enter your first name..."
+                  placeholder="First name..."
                   label="First name"
-                  size="md"
+                  size={isMobile ? 'sm' : 'md'}
                   withAsterisk
                   disabled={isSignUpLoading}
                 />
                 <TextInput
-                  w={190}
+                  w={isMobile ? '100%' : 190}
                   {...register('lastName', {
                     required: { value: true, message: 'Required' }
                   })}
                   error={errors.lastName?.message}
-                  placeholder="Enter your last name..."
+                  placeholder="Last name..."
                   label="Last name"
-                  size="md"
+                  size={isMobile ? 'sm' : 'md'}
                   withAsterisk
                   disabled={isSignUpLoading}
                 />
               </Group>
               <TextInput
-                w={400}
+                w="100%"
                 {...register('password', {
                   required: { value: true, message: 'Password is required' },
                   pattern: {
@@ -143,45 +151,63 @@ export const SignUpForm = () => {
                 error={errors.password?.message}
                 placeholder="Enter your password..."
                 label="Password"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 withAsterisk
-                leftSection={<GIcon name="Lock" size="18" />}
+                leftSection={
+                  <GIcon name="Lock" size={isMobile ? '16' : '18'} />
+                }
                 type={showPassword ? 'text' : 'password'}
                 rightSection={
                   <ActionIcon
                     variant="subtle"
                     onClick={() => setShowPassword(!showPassword)}
+                    size={isMobile ? 'sm' : 'md'}
                   >
-                    <GIcon name={showPassword ? 'EyeOff' : 'Eye'} />
+                    <GIcon
+                      name={showPassword ? 'EyeOff' : 'Eye'}
+                      size={isMobile ? '16' : '18'}
+                    />
                   </ActionIcon>
                 }
                 disabled={isSignUpLoading}
               />
               <TextInput
-                w={400}
+                w="100%"
                 {...register('confirmation', {
                   required: { value: true, message: 'Confirmation is required' }
                 })}
                 error={errors.confirmation?.message}
-                placeholder="Confirm your password..."
+                placeholder="Confirm password..."
                 label="Password confirmation"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 withAsterisk
-                leftSection={<GIcon name="Lock" size="18" />}
+                leftSection={
+                  <GIcon name="Lock" size={isMobile ? '16' : '18'} />
+                }
                 type={showPassword ? 'text' : 'password'}
                 rightSection={
                   <ActionIcon
                     variant="subtle"
                     onClick={() => setShowPassword(!showPassword)}
+                    size={isMobile ? 'sm' : 'md'}
                   >
-                    <GIcon name={showPassword ? 'EyeOff' : 'Eye'} />
+                    <GIcon
+                      name={showPassword ? 'EyeOff' : 'Eye'}
+                      size={isMobile ? '16' : '18'}
+                    />
                   </ActionIcon>
                 }
                 disabled={isSignUpLoading}
               />
             </Stack>
           </FocusTrap>
-          <Button type="submit" disabled={!isDirty} loading={isSignUpLoading}>
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            loading={isSignUpLoading}
+            size={isMobile ? 'sm' : 'md'}
+            fullWidth={isMobile}
+          >
             Sign up
           </Button>
         </Stack>

@@ -1,5 +1,13 @@
 import Logo from '../public/Logo.png'
-import { AppShell, Box, Button, Stack, Image } from '@mantine/core'
+import {
+  AppShell,
+  Box,
+  Button,
+  Stack,
+  Image,
+  Text,
+  Container
+} from '@mantine/core'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '../hooks/useAuth'
 import { useMutation } from '@tanstack/react-query'
@@ -11,9 +19,10 @@ import {
 import { GToast } from '../components/common/GToast'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ForgotForm } from '../components/auth/ForgotForm'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { VerifyForm } from '../components/auth/VerifyForm'
 import { ResetForm } from '../components/auth/ResetForm'
+import { useMedia } from '../hooks/useMedia'
 
 export const Route = createFileRoute('/recovery')({
   component: RouteComponent
@@ -40,6 +49,7 @@ function RouteComponent() {
   const { forgotPassword, verifyOtp, resetPassword } = useAuth()
   const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus>('forgot')
   const navigate = useNavigate()
+  const { isMobile } = useMedia()
 
   const forgotFormMethods = useForm<ForgotType>({
     defaultValues: {
@@ -60,11 +70,8 @@ function RouteComponent() {
     }
   })
 
-  const {
-    handleSubmit: handleSubmitForgot,
-    watch: watchForgot,
-    getValues: getValuesForgot
-  } = forgotFormMethods
+  const { handleSubmit: handleSubmitForgot, getValues: getValuesForgot } =
+    forgotFormMethods
   const {
     handleSubmit: handleSubmitVerify,
     watch: watchVerify,
@@ -95,7 +102,7 @@ function RouteComponent() {
       }
     })
 
-  const { mutate: mutateVerifyOtp, isPending: isVerifyingOtp } = useMutation({
+  const { mutate: mutateVerifyOtp } = useMutation({
     mutationKey: ['verify-otp'],
     mutationFn: (req: VerifyOtpRequest) => verifyOtp(req),
     onSuccess: () => {
@@ -160,7 +167,10 @@ function RouteComponent() {
   const FormComponents: Record<RecoveryStatus, ReactNode> = {
     forgot: (
       <FormProvider {...forgotFormMethods}>
-        <ForgotForm />
+        <ForgotForm
+          isLoading={isSendingRecovery}
+          onClick={handleSubmitForgot(submitForgot)}
+        />
       </FormProvider>
     ),
     verify: (
@@ -170,42 +180,59 @@ function RouteComponent() {
     ),
     recovery: (
       <FormProvider {...resetFormMethods}>
-        <ResetForm />
+        <ResetForm
+          isLoading={isResetingPassword}
+          onClick={handleSubmitReset(submitReset)}
+        />
       </FormProvider>
     )
   }
 
-  const isEmpty = useMemo(() => {
-    if (recoveryStatus === 'forgot' && watchForgot('email') === '') return true
-  }, [recoveryStatus, watchForgot('email')])
-
   return (
     <AppShell>
-      <AppShell.Main className="h-screen">
-        <Box className="mx-auto w-fit" mt={32}>
-          <Stack align="center">
-            <Image src={Logo} h={120} />
-            {FormComponents[recoveryStatus]}
-            {recoveryStatus !== 'verify' && (
-              <Button
-                size="md"
-                disabled={isEmpty}
-                onClick={
-                  recoveryStatus === 'forgot'
-                    ? handleSubmitForgot(submitForgot)
-                    : handleSubmitReset(submitReset)
-                }
-                loading={
-                  isSendingRecovery || isVerifyingOtp || isResetingPassword
-                }
+      <AppShell.Main className="animated-gradient h-screen">
+        <Container size="xs" px={isMobile ? 16 : 24} py={isMobile ? 24 : 32}>
+          <Box
+            className="animate-fade-in-up rounded-xl bg-white/90 shadow-lg backdrop-blur-sm"
+            p={isMobile ? 16 : 24}
+            mt={isMobile ? 40 : 60}
+          >
+            <Stack align="center" gap={isMobile ? 16 : 24}>
+              <Box>
+                <Image
+                  src={Logo}
+                  h={isMobile ? 24 : 32}
+                  fit="contain"
+                  className="drop-shadow-md"
+                  w={'auto'}
+                />
+              </Box>
+
+              <Text
+                size={isMobile ? 'lg' : 'xl'}
+                fw={500}
+                c="indigo.8"
+                ta="center"
               >
                 {recoveryStatus === 'forgot'
-                  ? 'Send recovery link'
-                  : 'Reset password'}
+                  ? 'Recover your account'
+                  : recoveryStatus === 'verify'
+                    ? 'Verify your identity'
+                    : 'Create new password'}
+              </Text>
+
+              {FormComponents[recoveryStatus]}
+
+              <Button
+                variant="subtle"
+                size={isMobile ? 'xs' : 'sm'}
+                onClick={() => navigate({ to: '/' })}
+              >
+                Back to login
               </Button>
-            )}
-          </Stack>
-        </Box>
+            </Stack>
+          </Box>
+        </Container>
       </AppShell.Main>
     </AppShell>
   )

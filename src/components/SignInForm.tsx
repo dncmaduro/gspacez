@@ -16,6 +16,7 @@ import { GToast } from './common/GToast'
 import { GoogleSignIn } from './GoogleSignIn'
 import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '../store/authStore'
+import { useMedia } from '../hooks/useMedia'
 
 type SignInType = {
   email: string
@@ -27,6 +28,7 @@ export const SignInForm = () => {
   const { signIn } = useAuth()
   const { setAuth } = useAuthStore()
   const navigate = useNavigate()
+  const { isMobile } = useMedia()
 
   const formMethods = useForm({
     defaultValues: {
@@ -67,54 +69,72 @@ export const SignInForm = () => {
 
   return (
     <Box
-      px={32}
-      pb={32}
-      pt={24}
+      px={isMobile ? 16 : 32}
+      pb={isMobile ? 24 : 32}
+      pt={isMobile ? 16 : 24}
       className="rounded-xl border border-indigo-400 shadow-md duration-300 hover:shadow-lg"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap={24} align="center">
-          <Text className="!text-[22px] !font-bold">Sign in to GspaceZ</Text>
+        <Stack gap={isMobile ? 16 : 24} align="center">
+          <Text
+            className={`!font-bold ${isMobile ? '!text-xl' : '!text-[22px]'}`}
+          >
+            Sign in to GspaceZ
+          </Text>
           <FocusTrap active>
-            <Stack align="center" gap={16}>
+            <Stack align="center" gap={isMobile ? 12 : 16} w="100%">
               <TextInput
-                w={400}
+                w="100%"
                 {...register('email', {
                   required: { value: true, message: 'Email is required' }
                 })}
                 error={errors.email?.message}
                 placeholder="Enter your email..."
-                leftSection={<GIcon name="Mail" size="18" />}
+                leftSection={
+                  <GIcon name="Mail" size={isMobile ? '16' : '18'} />
+                }
                 label="Email"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 withAsterisk
                 disabled={isSignInLoading}
               />
               <TextInput
-                w={400}
+                w="100%"
                 {...register('password', {
                   required: { value: true, message: 'Password is required' }
                 })}
                 error={errors.password?.message}
                 placeholder="Enter your password..."
                 label="Password"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 withAsterisk
-                leftSection={<GIcon name="Lock" size="18" />}
+                leftSection={
+                  <GIcon name="Lock" size={isMobile ? '16' : '18'} />
+                }
                 type={showPassword ? 'text' : 'password'}
                 disabled={isSignInLoading}
                 rightSection={
                   <ActionIcon
                     variant="subtle"
                     onClick={() => setShowPassword(!showPassword)}
+                    size={isMobile ? 'sm' : 'md'}
                   >
-                    <GIcon name={showPassword ? 'EyeOff' : 'Eye'} />
+                    <GIcon
+                      name={showPassword ? 'EyeOff' : 'Eye'}
+                      size={isMobile ? '16' : '18'}
+                    />
                   </ActionIcon>
                 }
               />
             </Stack>
           </FocusTrap>
-          <Button type="submit" disabled={!isDirty} loading={isSignInLoading}>
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            loading={isSignInLoading}
+            size={isMobile ? 'sm' : 'md'}
+            fullWidth={isMobile}
+          >
             Sign in
           </Button>
           <GoogleSignIn />
@@ -122,6 +142,8 @@ export const SignInForm = () => {
             variant="subtle"
             color="red"
             onClick={() => navigate({ to: '/recovery' })}
+            size={isMobile ? 'sm' : 'md'}
+            fullWidth={isMobile}
           >
             Forgot password?
           </Button>
