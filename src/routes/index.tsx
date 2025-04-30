@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { SignUpForm } from '../components/SignUpForm'
 import { useAuthStore } from '../store/authStore'
 import { useCallbackStore } from '../store/callbackStore'
+import { useMedia } from '../hooks/useMedia'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent
@@ -15,8 +16,8 @@ function RouteComponent() {
   const [isSignIn, setIsSignIn] = useState(true)
   const navigate = useNavigate()
   const { callbackUrl } = useCallbackStore()
-
   const { accessToken } = useAuthStore()
+  const { isMobile, isTablet } = useMedia()
 
   useEffect(() => {
     if (accessToken) {
@@ -27,24 +28,49 @@ function RouteComponent() {
   return (
     <AppShell>
       <AppShell.Main className="animated-gradient h-screen">
-        <Flex direction="column" align="center" justify="center" h="100%">
-          <Stack align="center" mb={32} className="animate-fade-in-up">
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          h="100%"
+          px={isMobile ? 16 : 32}
+        >
+          <Stack
+            align="center"
+            mb={isMobile ? 24 : 32}
+            className="animate-fade-in-up"
+            gap={isMobile ? 12 : 16}
+          >
             <Box className="overflow-hidden rounded-2xl">
-              <Image src={Logo} w={200} className="drop-shadow-md" />
+              <Image
+                src={Logo}
+                w={isMobile ? 150 : isTablet ? 180 : 200}
+                className="drop-shadow-md"
+              />
             </Box>
-            <Text size="xl" fw={500} c="indigo.8">
+            <Text
+              size={isMobile ? 'lg' : 'xl'}
+              fw={500}
+              c="indigo.8"
+              ta="center"
+            >
               Join with other tech enthusiasts
             </Text>
           </Stack>
 
-          <Box className="animate-fade-in-up rounded-xl bg-white/90 p-8 shadow-lg backdrop-blur-sm">
+          <Box
+            className="animate-fade-in-up rounded-xl bg-white/90 shadow-lg backdrop-blur-sm"
+            p={isMobile ? 16 : isTablet ? 20 : 24}
+            w={isMobile ? '100%' : isTablet ? '80%' : 'auto'}
+            maw={isMobile ? '100%' : isTablet ? 450 : 500}
+          >
             {isSignIn ? <SignInForm /> : <SignUpForm />}
 
             <Button
               variant="subtle"
-              size="sm"
+              size={isMobile ? 'xs' : 'sm'}
               fullWidth
-              mt={16}
+              mt={isMobile ? 12 : 16}
               onClick={() => setIsSignIn(!isSignIn)}
             >
               {isSignIn

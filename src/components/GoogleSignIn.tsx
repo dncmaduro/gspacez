@@ -4,8 +4,6 @@ import { GToast } from './common/GToast'
 
 export const GoogleSignIn = () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-  // const redirectUri = import.meta.env.VITE_ENVIRONMENT === "production" ? import.meta.env.VITE_GOOGLE_REDIRECT : "http://localhost:5000/integration/callback"
-  // testing
   const redirectUri = `${window.location.origin}/integration/callback`
   const scope = 'openid email profile'
   const responseType = 'code'

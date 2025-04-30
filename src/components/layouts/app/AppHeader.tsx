@@ -204,16 +204,23 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
         h="100%"
         justify="space-between"
       >
-        <Group gap={isMobile ? 10 : 20}>
+        <Flex gap={isMobile ? 10 : 20} align="center" w={'fit-content'}>
           {isMobile && (
             <ActionIcon variant="subtle" onClick={toggleSidebar}>
               <GIcon name="Menu" size={24} />
             </ActionIcon>
           )}
           <Link to="/app" className="transition-transform hover:scale-105">
-            <Image src={Logo} h={isMobile ? 44 : 48} />
+            <Image
+              src={Logo}
+              h={isMobile ? 16 : 20}
+              fit="contain"
+              className="drop-shadow-md"
+              my={'auto'}
+              w={'auto'}
+            />
           </Link>
-        </Group>
+        </Flex>
         {!hideSearchInput && !isMobile && (
           <Autocomplete
             leftSection={<GIcon name="ZoomCode" size={20} color="#4F46E5" />}
@@ -251,7 +258,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
             }}
           />
         )}
-        <Group gap={isMobile ? 20 : isTablet ? 16 : 20}>
+        <Group gap={isMobile ? 12 : isTablet ? 16 : 20}>
           {location.pathname !== '/post/new' && (
             <Button
               component={Link}
@@ -316,8 +323,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           </Popover>
           <Box
             className="rounded-full bg-orange-200/50"
-            px={isTablet ? 12 : 16}
-            py={8}
+            px={isMobile ? 8 : isTablet ? 12 : 16}
+            py={4}
           >
             <Tooltip
               withArrow
@@ -325,13 +332,17 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               openDelay={300}
               label={`You have ${streakData} days of streak`}
             >
-              <Group gap={4}>
+              <Group gap={isMobile ? 2 : 4}>
                 <GIcon
                   name="FlameFilled"
                   size={isTablet ? 16 : 20}
                   color="#f66427"
                 />
-                <Text c={'orange'} className="!font-bold">
+                <Text
+                  c={'orange'}
+                  size={isMobile ? 'sm' : 'md'}
+                  className="!font-bold"
+                >
                   {streakData}
                 </Text>
               </Group>
