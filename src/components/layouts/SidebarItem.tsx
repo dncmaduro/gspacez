@@ -14,14 +14,16 @@ export const SidebarItem = ({ icon, label, href, onClick, opened }: Props) => {
 
   if (!opened) {
     return (
-      <Tooltip label={label} withArrow>
-        <NavLink
-          leftSection={<GIcon name={icon} size={16} />}
-          h={32}
-          pl={8}
-          active={location.pathname === href}
-        />
-      </Tooltip>
+      <Link to={onClick ? '.' : href} className="w-full" onClick={onClick}>
+        <Tooltip label={label} withArrow>
+          <NavLink
+            leftSection={<GIcon name={icon} size={16} />}
+            h={32}
+            pl={8}
+            active={location.pathname === href}
+          />
+        </Tooltip>
+      </Link>
     )
   }
 
