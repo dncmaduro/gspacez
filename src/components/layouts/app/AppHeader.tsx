@@ -30,6 +30,8 @@ import { HeaderNotifications } from '../HeaderNotifications'
 import { useProfile } from '../../../hooks/useProfile'
 import { useNotificationStore } from '../../../store/notificationStore'
 import { useNotification } from '../../../hooks/useNotification'
+import { useMediaQuery } from '@mantine/hooks'
+import { useSidebarStore } from '../../../store/sidebarStore'
 
 interface Props {
   hideSearchInput?: boolean
@@ -189,20 +191,35 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
       }
     })
 
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const isTablet = useMediaQuery('(max-width: 1024px)')
+
+  const { toggle: toggleSidebar } = useSidebarStore()
+
   return (
     <Box w="100%" h="100%" className="bg-white shadow-md">
-      <Flex align="center" px={24} h="100%" justify="space-between">
-        <Group gap={20}>
+      <Flex
+        align="center"
+        px={isMobile ? 12 : 24}
+        h="100%"
+        justify="space-between"
+      >
+        <Group gap={isMobile ? 10 : 20}>
+          {isMobile && (
+            <ActionIcon variant="subtle" onClick={toggleSidebar}>
+              <GIcon name="Menu" size={24} />
+            </ActionIcon>
+          )}
           <Link to="/app" className="transition-transform hover:scale-105">
-            <Image src={Logo} h={48} />
+            <Image src={Logo} h={isMobile ? 44 : 48} />
           </Link>
         </Group>
-        {!hideSearchInput && (
+        {!hideSearchInput && !isMobile && (
           <Autocomplete
             leftSection={<GIcon name="ZoomCode" size={20} color="#4F46E5" />}
-            w={450}
+            w={isTablet ? 300 : 450}
             radius="xl"
-            placeholder="Search in GspaceZ"
+            placeholder={isTablet ? 'Search' : 'Search in GspaceZ'}
             onChange={(e) => setSearchText(e)}
             value={searchText}
             className="rounded-full transition-shadow duration-200 focus-within:border-indigo-200/50 hover:shadow-sm"
@@ -234,7 +251,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
             }}
           />
         )}
-        <Group gap={20}>
+        <Group gap={isMobile ? 20 : isTablet ? 16 : 20}>
           {location.pathname !== '/post/new' && (
             <Button
               component={Link}
@@ -242,17 +259,23 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               radius="xl"
               variant="filled"
               className="bg-indigo-600 transition-colors duration-200 hover:bg-indigo-700"
-              leftSection={<GIcon name="Sparkles" size={18} />}
-              px={20}
+              leftSection={
+                <GIcon
+                  name="Sparkles"
+                  size={isMobile ? 16 : isTablet ? 16 : 18}
+                />
+              }
+              px={isMobile ? 8 : isTablet ? 12 : 20}
+              size={isMobile ? 'xs' : isTablet ? 'sm' : 'md'}
             >
-              Create my new post
+              {isTablet ? 'New Post' : 'Create my new post'}
             </Button>
           )}
-          <Popover withArrow width={400}>
+          <Popover withArrow width={isMobile ? 300 : 400}>
             <Popover.Target>
               <ActionIcon
                 variant="subtle"
-                size={'xl'}
+                size={isMobile ? 'lg' : 'xl'}
                 p={4}
                 className="overflow-visible"
                 radius={'xl'}
@@ -269,10 +292,16 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
                     inline
                     size={notificationsQuantity ? 16 : 12}
                   >
-                    <GIcon name="Bell" size={28} />
+                    <GIcon
+                      name="Bell"
+                      size={isMobile ? 24 : isTablet ? 26 : 28}
+                    />
                   </Indicator>
                 ) : (
-                  <GIcon name="Bell" size={28} />
+                  <GIcon
+                    name="Bell"
+                    size={isMobile ? 24 : isTablet ? 26 : 28}
+                  />
                 )}
               </ActionIcon>
             </Popover.Target>
@@ -285,7 +314,11 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               />
             </Popover.Dropdown>
           </Popover>
-          <Box className="rounded-full bg-orange-200/50" px={16} py={8}>
+          <Box
+            className="rounded-full bg-orange-200/50"
+            px={isTablet ? 12 : 16}
+            py={8}
+          >
             <Tooltip
               withArrow
               color="orange"
@@ -293,7 +326,11 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               label={`You have ${streakData} days of streak`}
             >
               <Group gap={4}>
-                <GIcon name="FlameFilled" size={20} color="#f66427" />
+                <GIcon
+                  name="FlameFilled"
+                  size={isTablet ? 16 : 20}
+                  color="#f66427"
+                />
                 <Text c={'orange'} className="!font-bold">
                   {streakData}
                 </Text>
@@ -305,7 +342,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               <Avatar
                 src={meData?.avatarUrl}
                 className="cursor-pointer border-2 border-indigo-100 transition-colors duration-200 hover:border-indigo-300"
-                size="md"
+                size={isMobile ? 'sm' : 'md'}
                 radius="xl"
               />
             </Menu.Target>
