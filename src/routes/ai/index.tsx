@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import {
   ActionIcon,
@@ -16,6 +16,8 @@ import { useGemini } from '../../hooks/useGemini'
 import { useMutation } from '@tanstack/react-query'
 import { GToast } from '../../components/common/GToast'
 import { MessageBox } from '../../components/ai/MessageBox'
+import { SendChatMessageRequest } from '../../hooks/models'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface GeminiMessage {
   id: number
@@ -25,58 +27,45 @@ export interface GeminiMessage {
 }
 
 export const Route = createFileRoute('/ai/')({
-  component: RouteComponent
+  component: RouteComponent,
+  validateSearch: (search) =>
+    search as {
+      session?: string
+    }
 })
 
 function RouteComponent() {
-  const [prompt, setPrompt] = useState<string>('')
+  const sessionId = useSearch({ from: Route.fullPath }).session
+  const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<GeminiMessage[]>([])
   const [loadingId, setLoadingId] = useState<number>()
 
-  const { generateText } = useGemini()
+  const { sendChatMessage } = useGemini()
 
   const { mutate: sendPrompt, isPending: isSendingPrompt } = useMutation({
-    mutationKey: ['sendPrompt', new Date().toDateString()],
-    mutationFn: ({ prompt }: { prompt: string; id?: number }) => {
-      return generateText({ prompt })
+    mutationKey: ['send-chat', new Date().toDateString()],
+    mutationFn: (req: SendChatMessageRequest) => {
+      return sendChatMessage(req)
     },
-    onSuccess: (response, variables) => {
-      const id = variables.id
-
-      if (id) {
-        setMessages((prev) => {
-          setLoadingId(id)
-          prev[id] = {
-            ...prev[id],
-            message:
-              // @ts-expect-error type
-              response.response.candidates[0].content.parts[0].text || '',
-            createdAt: new Date()
-          }
-          setLoadingId(undefined)
-          return prev
-        })
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: messages.length,
-            createdAt: new Date(),
-            message:
-              // @ts-expect-error type
-              response.response.candidates[0].content.parts[0].text || '',
-            isFromGemini: true
-          }
-        ])
-        setPrompt('')
+    onSuccess: (response) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: messages.length,
+          createdAt: new Date(),
+          message: response.data.result.message,
+          isFromGemini: true
+        }
+      ])
+      if (!sessionId) {
+        window.location.href = `/ai/?session=${response.data.result.sessionId}`
       }
     },
     onError: () => {
       GToast.error({
         title: 'Something happen. Please try again!'
       })
-      setPrompt(messages[messages.length - 1].message)
-      setMessages((prev) => prev.slice(0, prev.length - 2))
+      setMessages((prev) => prev.slice(0, prev.length - 1))
     }
   })
 
@@ -86,18 +75,21 @@ function RouteComponent() {
       {
         id: messages.length,
         createdAt: new Date(),
-        message: prompt,
+        message,
         isFromGemini: false
       }
     ])
-    sendPrompt({ prompt })
+    sendPrompt({
+      message,
+      sessionId: sessionId ?? uuidv4().replace(/-/g, '').slice(0, 16)
+    })
   }
 
   const regenerateMessage = (id: number) => {
     const message = messages.find((m) => m.id === id)
     if (message) {
       setLoadingId(id + 1)
-      sendPrompt({ prompt: message.message, id: id + 1 })
+      sendPrompt({ message: message.message, sessionId })
     }
   }
 
@@ -162,10 +154,10 @@ function RouteComponent() {
           <TextInput
             size="md"
             radius="md"
-            value={!isSendingPrompt ? prompt : ''}
+            value={!isSendingPrompt ? message : ''}
             color="indigo"
             placeholder="Ask AI something..."
-            onChange={(e) => setPrompt(e.currentTarget.value)}
+            onChange={(e) => setMessage(e.currentTarget.value)}
             className="grow rounded-lg transition-all duration-300 focus-within:shadow-md focus-within:shadow-indigo-200/50"
             onKeyDownCapture={(e) => {
               if (e.key === 'Enter' && !isSendingPrompt) {
@@ -182,11 +174,11 @@ function RouteComponent() {
               }
             }}
             rightSection={
-              prompt && (
+              message && (
                 <ActionIcon
                   color="gray"
                   variant="subtle"
-                  onClick={() => setPrompt('')}
+                  onClick={() => setMessage('')}
                   className="opacity-70 transition-opacity hover:opacity-100"
                 >
                   <GIcon name="X" size={16} />
@@ -199,9 +191,9 @@ function RouteComponent() {
             radius="md"
             rightSection={<GIcon name="Send" size={18} />}
             onClick={() => send()}
-            disabled={isSendingPrompt || !prompt}
+            disabled={isSendingPrompt || !message}
             className="transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:shadow-indigo-300/50"
-            variant={prompt ? 'filled' : 'light'}
+            variant={message ? 'filled' : 'light'}
             color="indigo"
           >
             Send

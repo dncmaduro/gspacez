@@ -632,6 +632,11 @@ export interface GetOwnFeedbackResponse {
   }[]
 }
 
+export interface SendChatMessageRequest {
+  message: string
+  sessionId: string
+}
+
 export interface SearchProfilesResponse {
   result: {
     totalPages: number
