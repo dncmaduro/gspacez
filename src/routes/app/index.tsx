@@ -408,7 +408,7 @@ function RouteComponent() {
               <Loader mt={32} />
             </Box>
           ) : (
-            <Grid mt={32} gutter={{ base: 5, md: 24, xl: 32 }}>
+            <Grid mt={32} gutter={{ base: 16, md: 24, xl: 32 }}>
               {posts.map((post) => (
                 <Grid.Col
                   span={{ base: 12, md: 6, lg: 4, xl: 3 }}
