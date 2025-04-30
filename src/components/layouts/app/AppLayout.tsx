@@ -38,6 +38,14 @@ export const AppLayout = ({
     }
   }, [accessToken])
 
+  const { isMobile } = useMedia()
+
+  useEffect(() => {
+    if (isMobile && opened) {
+      toggle()
+    }
+  }, [isMobile, toggle])
+
   useStompClient<INotification>({
     url: 'wss://gspacez.tech/api/v1/notification/ws',
     token: accessToken,
@@ -53,8 +61,6 @@ export const AppLayout = ({
       })
     }
   })
-
-  const { isMobile } = useMedia()
 
   return (
     <GAuthGuard>

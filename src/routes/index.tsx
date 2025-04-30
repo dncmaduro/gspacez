@@ -61,8 +61,8 @@ function RouteComponent() {
           <Box
             className="animate-fade-in-up rounded-xl bg-white/90 shadow-lg backdrop-blur-sm"
             p={isMobile ? 16 : isTablet ? 20 : 24}
-            w={isMobile ? '100%' : isTablet ? '80%' : 'auto'}
-            maw={isMobile ? '100%' : isTablet ? 450 : 500}
+            w={isMobile ? '100%' : isTablet ? '80%' : '100%'}
+            maw={isMobile ? '100%' : isTablet ? 450 : 550}
           >
             {isSignIn ? <SignInForm /> : <SignUpForm />}
 

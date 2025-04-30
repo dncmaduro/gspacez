@@ -75,7 +75,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           transition: 'all 300ms ease-in-out',
-          width: '100%'
+          width: opened ? 250 : 40
         }}
         className="no-scrollbar"
       >
@@ -90,7 +90,7 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
             className="rounded-full transition-shadow duration-200 focus-within:border-indigo-200/50 hover:shadow-sm"
             onKeyDownCapture={(e) => {
               if (e.key === 'Enter') {
-                navigate({ to: `/search?searchText=${searchText}` })
+                navigate({ to: `/search?searchText=${searchTextAll}` })
               }
             }}
           />
