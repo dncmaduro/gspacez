@@ -43,6 +43,7 @@ interface ProfileType {
   id: string
   firstName: string
   lastName: string
+  profileTag: string
   dob: string
   country?: string
   description?: string
@@ -114,6 +115,7 @@ function RouteComponent() {
       defaultValues: {
         firstName: '',
         lastName: '',
+        profileTag: '',
         dob: '',
         country: '',
         description: '',
@@ -325,6 +327,27 @@ function RouteComponent() {
                       }}
                     />
 
+                    <Controller
+                      control={control}
+                      name="profileTag"
+                      rules={{ required: 'Profile tag is required' }}
+                      render={({ field, fieldState }) => (
+                        <TextInput
+                          {...field}
+                          withAsterisk
+                          label="Profile Tag"
+                          placeholder="Your unique profile tag"
+                          radius="md"
+                          size="md"
+                          error={fieldState.error?.message}
+                          disabled={isLoading}
+                          leftSection={<GIcon name="At" size={16} />}
+                        />
+                      )}
+                    />
+                  </Group>
+
+                  <Group grow>
                     <Controller
                       control={control}
                       name="country"

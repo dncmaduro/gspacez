@@ -202,9 +202,19 @@ function RouteComponent() {
                       radius={100}
                       className="border-4 border-indigo-100 shadow-md"
                     />
-                    <Text className="!text-center !text-xl !font-bold text-indigo-900">
-                      {profileData?.firstName} {profileData?.lastName}
-                    </Text>
+                    <Stack gap={4} align="center">
+                      <Text className="!text-center !text-xl !font-bold text-indigo-900">
+                        {profileData?.firstName} {profileData?.lastName}
+                      </Text>
+                      <Text
+                        size="sm"
+                        c="dimmed"
+                        className="flex items-center gap-1"
+                      >
+                        <GIcon name="At" size={14} color="#6366F1" />
+                        {profileData?.profileTag}
+                      </Text>
+                    </Stack>
 
                     <Divider w="100%" color="gray.2" />
 
