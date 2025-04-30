@@ -37,6 +37,7 @@ import { GLikeButton } from '../../components/common/GLikeButton'
 import { GDislikeButton } from '../../components/common/GDislikeButton'
 import { useMe } from '../../hooks/useMe'
 import { GToast } from '../../components/common/GToast'
+import { useMedia } from '../../hooks/useMedia'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -59,6 +60,7 @@ function RouteComponent() {
   const [disliked, setDisliked] = useState(false)
   const [prevReact, setPrevReact] = useState<'liked' | 'dislike' | undefined>()
   const queryClient = useQueryClient()
+  const { isMobile } = useMedia()
 
   const { getPost, createComment, reactPost } = usePost()
   const { data: profileData } = useMe()
@@ -179,8 +181,8 @@ function RouteComponent() {
             <Loader size="lg" color="indigo" />
           </Flex>
         ) : (
-          <Box className="p-6">
-            <Flex align="center" gap={8} mb={24}>
+          <Box className={`p-${isMobile ? '3' : '6'}`}>
+            <Flex align="center" gap={8} mb={isMobile ? 16 : 24}>
               <Tooltip label="Go to previous page">
                 <ActionIcon
                   variant="light"
@@ -201,7 +203,7 @@ function RouteComponent() {
             <Paper
               shadow="sm"
               radius="md"
-              p="xl"
+              p={isMobile ? 'sm' : 'xl'}
               withBorder
               className="border-indigo-100"
             >
@@ -381,17 +383,30 @@ function RouteComponent() {
                 </Paper>
 
                 <Group>
-                  <Button
-                    variant={opened ? 'filled' : 'light'}
-                    size="md"
-                    onClick={toggle}
-                    radius="xl"
-                    leftSection={<GIcon name="Message" size={20} />}
-                    className="transition-all duration-200 hover:shadow-md"
-                    color="indigo"
-                  >
-                    {opened ? 'Hide comment form' : 'Share your thoughts'}
-                  </Button>
+                  {isMobile ? (
+                    <ActionIcon
+                      variant={opened ? 'filled' : 'light'}
+                      size="xl"
+                      radius="xl"
+                      onClick={toggle}
+                      color="indigo"
+                      className="transition-transform duration-200 hover:scale-110"
+                    >
+                      <GIcon name="Message" size={20} />
+                    </ActionIcon>
+                  ) : (
+                    <Button
+                      variant={opened ? 'filled' : 'light'}
+                      size="md"
+                      onClick={toggle}
+                      radius="xl"
+                      leftSection={<GIcon name="Message" size={20} />}
+                      className="transition-all duration-200 hover:shadow-md"
+                      color="indigo"
+                    >
+                      {opened ? 'Hide comment form' : 'Share your thoughts'}
+                    </Button>
+                  )}
                 </Group>
               </Flex>
 
