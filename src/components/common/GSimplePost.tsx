@@ -69,6 +69,7 @@ export const GSimplePost = ({ post }: Props) => {
     <Box
       className="rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:border-indigo-200"
       p={16}
+      w={'100%'}
       style={{
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
         '&:hover': {
