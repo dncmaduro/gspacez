@@ -171,8 +171,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   )
 
   const { data: streakData } = useQuery({
-    queryKey: ['get-streak', meData?.id || ''],
-    queryFn: () => getStreak(meData?.id || ''),
+    queryKey: ['get-streak', meData?.profileTag || ''],
+    queryFn: () => getStreak(meData?.profileTag || ''),
     select: (data) => {
       return data.data.result.currentStreak
     },

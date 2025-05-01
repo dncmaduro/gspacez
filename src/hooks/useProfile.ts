@@ -49,9 +49,9 @@ export const useProfile = () => {
       onClearAuth: clearAuth
     })
   }
-  const getStreak = async (id: string) => {
+  const getStreak = async (profileTag: string) => {
     return callApi<never, GetStreakResponse>({
-      path: `/v1/profile-service/info/${id}/streak`,
+      path: `/v1/profile-service/info/${profileTag}/streak`,
       method: 'GET',
       accessToken,
       onClearAuth: clearAuth

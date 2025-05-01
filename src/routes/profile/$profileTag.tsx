@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from 'react'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
 import { Helmet } from 'react-helmet-async'
 
-export const Route = createFileRoute('/profile/$profileId')({
+export const Route = createFileRoute('/profile/$profileTag')({
   component: RouteComponent,
   validateSearch: (search) => {
     return {
@@ -41,7 +41,7 @@ export const Route = createFileRoute('/profile/$profileId')({
 })
 
 function RouteComponent() {
-  const { profileId } = useParams({ from: `/profile/$profileId` })
+  const { profileTag } = useParams({ from: `/profile/$profileTag` })
   const search = useSearch({ from: Route.fullPath })
   const navigate = useNavigate({ from: Route.fullPath })
 
@@ -61,17 +61,17 @@ function RouteComponent() {
   }, [search.tab, navigate])
 
   const { data, isLoading } = useQuery({
-    queryKey: ['get-profile', profileId],
+    queryKey: ['get-profile', profileTag],
     queryFn: () => {
-      return getProfile(profileId)
+      return getProfile(profileTag)
     }
   })
 
   const profileData = data?.data.result
 
   const { data: squadsData } = useQuery({
-    queryKey: ['get-joined-squads', profileId],
-    queryFn: () => getJoinedSquads(profileId)
+    queryKey: ['get-joined-squads', profileTag],
+    queryFn: () => getJoinedSquads(profileTag)
   })
 
   const joinedSquads = squadsData?.data.result || []
@@ -83,9 +83,9 @@ function RouteComponent() {
     isFetchingNextPage,
     isLoading: isPostLoading
   } = useInfiniteQuery({
-    queryKey: ['get-posts-by-profile', profileId],
+    queryKey: ['get-posts-by-profile', profileTag],
     queryFn: async ({ pageParam = 0 }) => {
-      const response = await getPostsByProfile(profileId, {
+      const response = await getPostsByProfile(profileTag, {
         pageNum: pageParam,
         pageSize
       })
@@ -106,9 +106,9 @@ function RouteComponent() {
     isFetchingNextPage: isFetchingNextLikedPage,
     isLoading: isLikedPostLoading
   } = useInfiniteQuery({
-    queryKey: ['get-liked-posts-by-profile', profileId],
+    queryKey: ['get-liked-posts-by-profile', profileTag],
     queryFn: async ({ pageParam = 0 }) => {
-      const response = await getLikedPostsByProfile(profileId!, {
+      const response = await getLikedPostsByProfile(profileTag, {
         size: pageSize,
         page: pageParam
       })
@@ -120,7 +120,7 @@ function RouteComponent() {
         : undefined
     },
     initialPageParam: 0,
-    enabled: !!profileId
+    enabled: !!profileTag
   })
 
   const posts = postData?.pages.flatMap((page) => page.result.content) || []
