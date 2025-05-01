@@ -55,7 +55,7 @@ export const SquadPosts = ({ tagName }: Props) => {
   }, [isLoading, hasNextPage, fetchNextPage])
 
   return (
-    <Box mx="auto" w={800} mt={32} className="text-center">
+    <Box mx="auto" w="100%" maw={800} mt={32} className="text-center">
       <Stack gap={24}>
         {postsData && postsData.length > 0 ? (
           <>
