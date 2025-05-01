@@ -339,7 +339,7 @@ function RouteComponent() {
 
               <Box mt={24}>
                 <Text size="sm" fw={500} c="dimmed" mb={8}>
-                  Squad Admins
+                  Squad admins
                 </Text>
                 <Group gap={16}>
                   {adminResults.map(
