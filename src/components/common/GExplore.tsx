@@ -12,30 +12,47 @@ import { IExplore } from '../../hooks/interface'
 import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { GIcon } from './GIcon'
+import { useMedia } from '../../hooks/useMedia'
 
 interface Props {
   article: IExplore
 }
 
 export const GExplore = ({ article }: Props) => {
+  const { isMobile } = useMedia()
+
   return (
     <Box
       className="rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
       px={24}
       py={16}
-      w={1000}
+      maw={'100%'}
       component={Link}
       to={article.url}
       target="blank"
     >
-      <Flex align={'center'} justify={'space-between'} mb={12}>
+      <Flex
+        align={isMobile ? 'flex-start' : 'center'}
+        justify={'space-between'}
+        mb={isMobile ? 20 : 12}
+        gap={isMobile ? 8 : 20}
+        direction={isMobile ? 'column' : 'row'}
+      >
         <Text className="!text-xl !font-bold text-indigo-800">
           {article.title}
         </Text>
-        <Tooltip label={article.source.name} openDelay={300}>
-          <Badge color="indigo" radius="sm" variant="light">
-            {article.source.name}
-          </Badge>
+        <Tooltip withArrow label={article.source.name} openDelay={300}>
+          <Box>
+            <Badge
+              color="indigo"
+              radius="sm"
+              variant="light"
+              className="grow"
+              w={'max-content'}
+            >
+              {article.source.name}
+            </Badge>
+          </Box>
         </Tooltip>
       </Flex>
 

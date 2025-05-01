@@ -68,8 +68,16 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" maw={1000} px={20} pt={10} bg={'white'} mah={'90vh'}>
-        <Stack align="center">
+      <Box
+        mx="auto"
+        maw={'100%'}
+        w={800}
+        mt={32}
+        pt={10}
+        bg={'white'}
+        mah={'90vh'}
+      >
+        <Stack align="center" mx={24}>
           <Group>
             <GIcon name="Flame" size={16} />
             <Text className="!text-xl !font-bold">
