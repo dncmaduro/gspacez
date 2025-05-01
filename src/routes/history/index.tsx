@@ -60,7 +60,7 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box mx="auto" w={800} mt={32} className="text-center">
+      <Box mx="auto" w={800} maw={'100%'} mt={32} className="text-center">
         <Text className="!text-xl !font-bold" my={16}>
           Your recent posts
         </Text>

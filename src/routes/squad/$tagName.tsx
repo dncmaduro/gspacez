@@ -35,6 +35,7 @@ import { useMe } from '../../hooks/useMe'
 import { PendingRequests } from '../../components/squad/admin/PendingRequests'
 import { Members } from '../../components/squad/admin/Members'
 import { SquadPosts } from '../../components/squad/posts/SquadPosts'
+import { useMedia } from '../../hooks/useMedia'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent,
@@ -195,6 +196,8 @@ function RouteComponent() {
     }
   }
 
+  const { isMobile } = useMedia()
+
   const squadTabs = [
     {
       label: 'Posts',
@@ -246,21 +249,30 @@ function RouteComponent() {
               <title>{data?.name} - Squad</title>
             </Helmet>
             <Stack gap={8}>
-              <Flex align={'flex-start'} justify={'space-between'}>
+              <Flex
+                align={'flex-start'}
+                direction={isMobile ? 'column' : 'row'}
+                gap={isMobile ? 32 : 0}
+                justify={'space-between'}
+              >
                 <Group gap={20}>
                   <Avatar
                     src={data?.avatarUrl}
-                    size={'xl'}
+                    size={isMobile ? 'lg' : 'xl'}
                     className="border-2 border-indigo-200 shadow-sm"
                     radius="md"
                   />
                   <Stack gap={4}>
                     <Group>
-                      <Text className="!text-2xl !font-bold">{data?.name}</Text>
+                      <Text
+                        className={`${isMobile ? '!text-xl' : '!text-2xl'} !font-bold`}
+                      >
+                        {data?.name}
+                      </Text>
                       <Badge
                         color={isPrivate ? 'red' : 'indigo'}
                         variant="light"
-                        size="lg"
+                        size={isMobile ? 'md' : 'lg'}
                         leftSection={
                           <GIcon
                             name={isPrivate ? 'LockFilled' : 'World'}
@@ -271,13 +283,22 @@ function RouteComponent() {
                         {data?.privacy}
                       </Badge>
                     </Group>
-                    <Text size="md" c={'dimmed'} className="!font-medium">
+                    <Text
+                      size={isMobile ? 'sm' : 'md'}
+                      c={'dimmed'}
+                      className="!font-medium"
+                    >
                       @{data?.tagName}
                     </Text>
                   </Stack>
                 </Group>
                 {isAdmin ? (
-                  <Group>
+                  <Flex
+                    wrap={'wrap'}
+                    align={'center'}
+                    gap={8}
+                    direction={isMobile ? 'row-reverse' : 'row'}
+                  >
                     <CopyButton
                       value={`${window.location.origin}/squad/invite/${data?.tagName}?id=${profileData?.id}`}
                     >
@@ -302,7 +323,7 @@ function RouteComponent() {
                     >
                       Edit your squad
                     </Button>
-                  </Group>
+                  </Flex>
                 ) : (
                   <GJoinButton
                     status={data?.joinStatus || ''}
