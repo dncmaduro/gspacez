@@ -357,6 +357,7 @@ export interface SearchUsersResponse {
       email: string
       firstName: string
       lastName: string
+      profileTag: string
       avatarUrl: string
       roles: {
         name: string
@@ -629,4 +630,25 @@ export interface GetOwnFeedbackResponse {
     rate: number
     createdAt: string
   }[]
+}
+
+export interface SearchProfilesResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: {
+      id: string
+      profileTag: string
+      firstName: string
+      lastName: string
+      avatarUrl: string
+    }[]
+  }
 }

@@ -11,6 +11,7 @@ export interface IPost {
   updatedAt: Date
   profileId: string
   profileName: string
+  profileTag: string
   avatarUrl: string
   hashTags: string[]
   comments: IComment[]

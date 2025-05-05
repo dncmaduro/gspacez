@@ -34,16 +34,18 @@ export const useProfile = () => {
     })
   }
 
-  const getProfile = async (id: string) => {
+  const getProfile = async (profileTag: string) => {
     return callApi<never, GetProfileResponse>({
-      path: `/v1/profile-service/info/${id}`,
-      method: 'GET'
+      path: `/v1/profile-service/info/${profileTag}`,
+      method: 'GET',
+      accessToken,
+      onClearAuth: clearAuth
     })
   }
 
-  const getJoinedSquads = async (id: string) => {
+  const getJoinedSquads = async (profileTag: string) => {
     return callApi<never, JoinedSquadsResponse>({
-      path: `/v1/profile-service/squads/joined/${id}`,
+      path: `/v1/profile-service/squads/joined/${profileTag}`,
       method: 'GET',
       accessToken,
       onClearAuth: clearAuth
@@ -58,9 +60,9 @@ export const useProfile = () => {
     })
   }
 
-  const lastPostedSquads = async (id: string) => {
+  const lastPostedSquads = async (profileTag: string) => {
     return callApi<never, GetLatestPostedSquads>({
-      path: `/v1/profile-service/squads/recently-posted/by/${id}`,
+      path: `/v1/profile-service/squads/recently-posted/by/${profileTag}`,
       method: 'GET',
       accessToken,
       onClearAuth: clearAuth

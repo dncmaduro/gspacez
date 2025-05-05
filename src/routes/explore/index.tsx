@@ -96,7 +96,11 @@ function RouteComponent() {
 
               {hasNextExplorePage &&
                 ['a', 'b', 'c', 'd'].map((key) => (
-                  <div key={key} ref={key === 'a' ? loaderRef : undefined}>
+                  <div
+                    key={key}
+                    ref={key === 'a' ? loaderRef : undefined}
+                    className="w-full"
+                  >
                     <GExploreSkeleton />
                   </div>
                 ))}

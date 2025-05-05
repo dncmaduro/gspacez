@@ -30,7 +30,7 @@ import { HeaderNotifications } from '../HeaderNotifications'
 import { useProfile } from '../../../hooks/useProfile'
 import { useNotificationStore } from '../../../store/notificationStore'
 import { useNotification } from '../../../hooks/useNotification'
-import { useMediaQuery } from '@mantine/hooks'
+import { useDebouncedValue, useMediaQuery } from '@mantine/hooks'
 import { useSidebarStore } from '../../../store/sidebarStore'
 
 interface Props {
@@ -51,6 +51,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { clearAuth } = useAuthStore()
   const { clearCallbackUrl } = useCallbackStore()
   const [searchText, setSearchText] = useState<string>('')
+  const deboucedSearchText = useDebouncedValue(searchText, 300)[0]
   const { data: meData } = useMe()
   const { signOut } = useAuth()
   const { getStreak } = useProfile()
@@ -80,11 +81,11 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     }
   })
 
-  const { searchPosts, searchSquads, searchUsers } = useGSearch()
+  const { searchPosts, searchSquads, searchProfiles } = useGSearch()
 
   const { data: usersData } = useQuery({
-    queryKey: ['search-users', searchText],
-    queryFn: () => searchUsers({ searchText, size: 2, page: 0 }),
+    queryKey: ['search-users', deboucedSearchText],
+    queryFn: () => searchProfiles({ searchText, size: 2, page: 0 }),
     select: (data) => {
       return data.data.result.content
     },
@@ -92,7 +93,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   })
 
   const { data: squadsData } = useQuery({
-    queryKey: ['search-squads', searchText],
+    queryKey: ['search-squads', deboucedSearchText],
     queryFn: () => searchSquads({ searchText, size: 2, page: 0 }),
     select: (data) => {
       return data.data.result.content
@@ -101,7 +102,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   })
 
   const { data: postsData } = useQuery({
-    queryKey: ['search-posts', searchText],
+    queryKey: ['search-posts', deboucedSearchText],
     queryFn: () => searchPosts({ searchText, size: 2, page: 0 }),
     select: (data) => {
       return data.data.result.content
@@ -116,8 +117,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     const convertedUsers = (usersData || []).map((user) => ({
       type: 'user',
       label: `${user.firstName} ${user.lastName}`,
-      value: user.id,
-      description: user.email,
+      value: user.profileTag,
+      description: `@${user.profileTag}`,
       image: user.avatarUrl
     })) as AutocompleteItem[]
 
@@ -125,7 +126,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
       type: 'post',
       label: post.title,
       value: post.id,
-      description: `By ${post.profileName}`,
+      description: `By ${post.profileName} (@${post.profileTag})`,
       image: post.avatarUrl
     })) as AutocompleteItem[]
 
@@ -133,15 +134,39 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
       type: 'squad',
       label: squad.name,
       value: squad.tagName,
-      description: squad.tagName,
+      description: `@${squad.tagName}`,
       image: squad.avatarUrl
     })) as AutocompleteItem[]
 
     return {
       data: [
-        { group: 'Posts', items: convertedPosts.map((post) => post.value) },
-        { group: 'Squads', items: convertedSquads.map((squad) => squad.value) },
-        { group: 'Users', items: convertedUsers.map((user) => user.value) }
+        {
+          group: 'Posts',
+          items: convertedPosts
+            .filter((post) => !!post.value)
+            .map((post) => ({
+              value: post.value,
+              label: post.label
+            }))
+        },
+        {
+          group: 'Squads',
+          items: convertedSquads
+            .filter((squad) => !!squad.value)
+            .map((squad) => ({
+              value: squad.value,
+              label: squad.label
+            }))
+        },
+        {
+          group: 'Users',
+          items: convertedUsers
+            .filter((user) => !!user.value)
+            .map((user) => ({
+              value: user.value,
+              label: user.label
+            }))
+        }
       ],
       byValues: [
         ...convertedPosts,
@@ -159,7 +184,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({
     option
   }) => (
-    <Group gap={8}>
+    <Flex gap={8}>
       <Avatar src={data.byValues[option.value].image} size={36} radius="xl" />
       <Stack gap={0}>
         <Text size="sm">{data.byValues[option.value].label}</Text>
@@ -167,7 +192,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           {data.byValues[option.value].description}
         </Text>
       </Stack>
-    </Group>
+    </Flex>
   )
 
   const { data: streakData } = useQuery({
@@ -176,13 +201,13 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     select: (data) => {
       return data.data.result.currentStreak
     },
-    enabled: !!meData?.id
+    enabled: !!meData?.profileTag
   })
 
   const { data: notificationsData, isLoading: isNotificationLoading } =
     useQuery({
-      queryKey: ['get-notifications', meData?.id || ''],
-      queryFn: () => getNotifications(meData?.id || ''),
+      queryKey: ['get-notifications', meData?.profileTag || ''],
+      queryFn: () => getNotifications(meData?.profileTag || ''),
       select: (data) => {
         return {
           notifications: data.data.result || [],
@@ -225,7 +250,9 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           <Autocomplete
             leftSection={<GIcon name="ZoomCode" size={20} color="#4F46E5" />}
             w={isTablet ? 300 : 450}
+            limit={10}
             radius="xl"
+            filter={() => data.data}
             placeholder={isTablet ? 'Search' : 'Search in GspaceZ'}
             onChange={(e) => setSearchText(e)}
             value={searchText}
@@ -241,7 +268,6 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
                 navigate({ to: `/search?searchText=${searchText}` })
               }
             }}
-            data={data.data}
             renderOption={renderAutocompleteOption}
             onOptionSubmit={(value) => {
               const item = data.byValues[value]

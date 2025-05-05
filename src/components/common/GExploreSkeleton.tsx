@@ -4,9 +4,9 @@ export const GExploreSkeleton = () => {
   return (
     <Box
       className="rounded-lg border border-gray-300"
-      w={'100%'}
       px={16}
       py={12}
+      w={'100%'}
     >
       <Flex align={'center'} justify={'space-between'}>
         <Skeleton height={24} width="60%" radius="sm" />

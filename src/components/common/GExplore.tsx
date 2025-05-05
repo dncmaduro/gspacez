@@ -26,7 +26,7 @@ export const GExplore = ({ article }: Props) => {
       className="rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
       px={24}
       py={16}
-      maw={'100%'}
+      w={'100%'}
       component={Link}
       to={article.url}
       target="blank"
