@@ -7,7 +7,8 @@ import {
   SearchUsersResponse,
   SearchTagsResponse,
   SearchTagsRequest,
-  SearchPostByTagRequest
+  SearchPostByTagRequest,
+  SearchProfilesResponse
 } from './models'
 
 export const useGSearch = () => {
@@ -58,11 +59,21 @@ export const useGSearch = () => {
     })
   }
 
+  const searchProfiles = async (req: BaseSearchRequest) => {
+    return callApi<never, SearchProfilesResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/info/search?searchText=${req.searchText}&size=${req.size}&page=${req.page}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     searchUsers,
     searchPosts,
     searchSquads,
     searchTags,
-    searchPostsByTag
+    searchPostsByTag,
+    searchProfiles
   }
 }

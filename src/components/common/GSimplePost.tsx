@@ -82,11 +82,18 @@ export const GSimplePost = ({ post }: Props) => {
           src={post.avatarUrl}
           radius="xl"
           size="md"
-          className="border-2 border-indigo-100"
+          className="cursor-pointer border-2 border-indigo-100 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
+          component={Link}
+          to={`/profile/${post.profileTag}`}
         />
         <Stack gap={1} align="flex-start">
           <Group gap={8} align="center">
-            <Text fw={600} className="text-gray-800">
+            <Text
+              fw={600}
+              className="cursor-pointer text-gray-800 hover:text-indigo-600"
+              component={Link}
+              to={`/profile/${post.profileTag}`}
+            >
               {post.profileName}
             </Text>
             {post.hashTags && post.hashTags[0] && (

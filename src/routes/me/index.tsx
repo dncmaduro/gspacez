@@ -58,12 +58,12 @@ function RouteComponent() {
   const { getPostsByProfile, getLikedPostsByProfile } = usePost()
 
   const { data: profileData, isLoading } = useMe()
-  const profileId = profileData?.id
+  const profileTag = profileData?.profileTag
 
   const { data: squadsData } = useQuery({
-    queryKey: ['get-joined-squads', profileId],
-    queryFn: () => getJoinedSquads(profileId!),
-    enabled: !!profileId
+    queryKey: ['get-joined-squads', profileTag],
+    queryFn: () => getJoinedSquads(profileTag!),
+    enabled: !!profileTag
   })
 
   const joinedSquads = squadsData?.data.result || []
@@ -75,9 +75,9 @@ function RouteComponent() {
     isFetchingNextPage,
     isLoading: isPostLoading
   } = useInfiniteQuery({
-    queryKey: ['get-posts-by-profile', profileId],
+    queryKey: ['get-posts-by-profile', profileTag],
     queryFn: async ({ pageParam = 0 }) => {
-      const response = await getPostsByProfile(profileId!, {
+      const response = await getPostsByProfile(profileTag!, {
         pageNum: pageParam,
         pageSize
       })
@@ -89,7 +89,7 @@ function RouteComponent() {
         : undefined
     },
     initialPageParam: 0,
-    enabled: !!profileId
+    enabled: !!profileTag
   })
 
   const {
@@ -99,9 +99,9 @@ function RouteComponent() {
     isFetchingNextPage: isFetchingNextLikedPage,
     isLoading: isLikedPostLoading
   } = useInfiniteQuery({
-    queryKey: ['get-liked-posts-by-profile', profileId],
+    queryKey: ['get-liked-posts-by-profile', profileTag],
     queryFn: async ({ pageParam = 0 }) => {
-      const response = await getLikedPostsByProfile(profileId!, {
+      const response = await getLikedPostsByProfile(profileTag!, {
         size: pageSize,
         page: pageParam
       })
@@ -113,7 +113,7 @@ function RouteComponent() {
         : undefined
     },
     initialPageParam: 0,
-    enabled: !!profileId
+    enabled: !!profileTag
   })
   const posts = postData?.pages.flatMap((page) => page.result.content) || []
   const likedPosts =
@@ -202,9 +202,19 @@ function RouteComponent() {
                       radius={100}
                       className="border-4 border-indigo-100 shadow-md"
                     />
-                    <Text className="!text-center !text-xl !font-bold text-indigo-900">
-                      {profileData?.firstName} {profileData?.lastName}
-                    </Text>
+                    <Stack gap={4} align="center">
+                      <Text className="!text-center !text-xl !font-bold text-indigo-900">
+                        {profileData?.firstName} {profileData?.lastName}
+                      </Text>
+                      <Text
+                        size="sm"
+                        c="dimmed"
+                        className="flex items-center gap-1"
+                      >
+                        <GIcon name="At" size={14} color="#6366F1" />
+                        {profileData?.profileTag}
+                      </Text>
+                    </Stack>
 
                     <Divider w="100%" color="gray.2" />
 
@@ -221,12 +231,6 @@ function RouteComponent() {
                           {profileData?.country || 'Not specified'}
                         </Text>
                       </Group>
-                      {/* <Group gap={12}>
-                        <GIcon name="Mail" size={18} color="#4F46E5" />
-                        <Text size="sm" fw={500}>
-                          {profileData?.email || 'Not specified'}
-                        </Text>
-                      </Group> */}
                     </Stack>
 
                     <Button

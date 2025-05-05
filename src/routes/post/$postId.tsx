@@ -209,7 +209,7 @@ function RouteComponent() {
             >
               <Group justify="space-between" mb={24}>
                 <Flex align="center" gap={12}>
-                  <Link to={`/profile/${postData?.profileId}`}>
+                  <Link to={`/profile/${postData?.profileTag}`}>
                     <Avatar
                       src={postData?.avatarUrl}
                       size="lg"
@@ -218,7 +218,7 @@ function RouteComponent() {
                     />
                   </Link>
                   <Stack gap={2}>
-                    <Link to={`/profile/${postData?.profileId}`}>
+                    <Link to={`/profile/${postData?.profileTag}`}>
                       <Text className="text-xl font-semibold text-indigo-900 transition-colors duration-200 hover:text-indigo-600">
                         {postData?.profileName || 'Name Name'}
                       </Text>

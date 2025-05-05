@@ -113,14 +113,14 @@ export const usePost = () => {
   }
 
   const getLikedPostsByProfile = async (
-    id: string,
+    profileTag: string,
     req: GetLikedPostsByProfileRequest
   ) => {
     return callApi<
       GetLikedPostsByProfileRequest,
       GetLikedPostsByProfileResponse
     >({
-      path: `/v1/post-service/posts/liked/by/${id}?size=${req.size}&page=${req.page}`,
+      path: `/v1/post-service/posts/liked/by/${profileTag}?size=${req.size}&page=${req.page}`,
       method: 'GET',
       accessToken,
       onClearAuth: clearAuth

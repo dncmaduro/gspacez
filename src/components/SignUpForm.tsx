@@ -20,6 +20,7 @@ type SignUpType = {
   email: string
   password: string
   confirmation: string
+  profileTag: string
   firstName: string
   lastName: string
 }
@@ -34,6 +35,7 @@ export const SignUpForm = () => {
       email: '',
       password: '',
       confirmation: '',
+      profileTag: '',
       firstName: '',
       lastName: ''
     }
@@ -70,6 +72,7 @@ export const SignUpForm = () => {
       mutateSignUp({
         email: values.email,
         password: values.password,
+        profileTag: values.profileTag,
         firstName: values.firstName,
         lastName: values.lastName
       })
@@ -111,9 +114,14 @@ export const SignUpForm = () => {
                 withAsterisk
                 disabled={isSignUpLoading}
               />
-              <Group w="100%" grow={isMobile} gap={isMobile ? 8 : 16}>
+              <Group
+                w="100%"
+                grow={isMobile}
+                justify="space-between"
+                gap={isMobile ? 8 : 16}
+              >
                 <TextInput
-                  w={isMobile ? '100%' : 190}
+                  w={isMobile ? '100%' : '48%'}
                   {...register('firstName', {
                     required: { value: true, message: 'Required' }
                   })}
@@ -125,7 +133,7 @@ export const SignUpForm = () => {
                   disabled={isSignUpLoading}
                 />
                 <TextInput
-                  w={isMobile ? '100%' : 190}
+                  w={isMobile ? '100%' : '48%'}
                   {...register('lastName', {
                     required: { value: true, message: 'Required' }
                   })}
@@ -137,6 +145,24 @@ export const SignUpForm = () => {
                   disabled={isSignUpLoading}
                 />
               </Group>
+              <TextInput
+                w="100%"
+                {...register('profileTag', {
+                  required: { value: true, message: 'Profile tag is required' },
+                  pattern: {
+                    value: /^[a-zA-Z0-9_]{3,15}$/,
+                    message:
+                      'Only letters, numbers and underscore. 3-15 characters'
+                  }
+                })}
+                error={errors.profileTag?.message}
+                placeholder="Choose a unique username..."
+                leftSection={<GIcon name="At" size={isMobile ? '16' : '18'} />}
+                label="Profile Tag"
+                size={isMobile ? 'sm' : 'md'}
+                withAsterisk
+                disabled={isSignUpLoading}
+              />
               <TextInput
                 w="100%"
                 {...register('password', {

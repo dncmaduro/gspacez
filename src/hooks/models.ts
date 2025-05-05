@@ -25,6 +25,7 @@ export interface SignInResponse {
 export interface SignUpRequest {
   email: string
   password: string
+  profileTag: string
   firstName: string
   lastName: string
 }
@@ -182,6 +183,7 @@ export interface GetMeResponse {
   message?: string
   result: {
     id: string
+    profileTag: string
     avatarUrl?: string
     country?: string
     description?: string
@@ -225,6 +227,7 @@ export interface GetProfileResponse {
   message?: string
   result: {
     id: string
+    profileTag: string
     avatarUrl?: string
     country?: string
     description?: string
@@ -254,6 +257,7 @@ export interface GetCountriesResponse {
 }
 
 export interface UpdateMeRequest {
+  profileTag: string
   avatarUrl?: string
   country?: string
   description?: string
@@ -270,6 +274,7 @@ export interface UpdateMeResponse {
   message?: string
   result: {
     id: string
+    profileTag: string
     avatarUrl?: string
     country?: string
     description?: string
@@ -352,6 +357,7 @@ export interface SearchUsersResponse {
       email: string
       firstName: string
       lastName: string
+      profileTag: string
       avatarUrl: string
       roles: {
         name: string
@@ -624,4 +630,25 @@ export interface GetOwnFeedbackResponse {
     rate: number
     createdAt: string
   }[]
+}
+
+export interface SearchProfilesResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: {
+      id: string
+      profileTag: string
+      firstName: string
+      lastName: string
+      avatarUrl: string
+    }[]
+  }
 }
