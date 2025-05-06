@@ -222,7 +222,12 @@ export const AppSidebar = ({ opened, toggle }: Props) => {
                 href="/tags"
                 opened={opened}
               />
-              <SidebarItem icon="Message" label="Discussions" opened={opened} />
+              <SidebarItem
+                icon="Message"
+                label="Discussions"
+                opened={opened}
+                href="/discussions"
+              />
             </Stack>
           </SidebarPart>
 

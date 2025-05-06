@@ -19,6 +19,7 @@ import { Route as MeIndexImport } from './routes/me/index'
 import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as FeedbackIndexImport } from './routes/feedback/index'
 import { Route as ExploreIndexImport } from './routes/explore/index'
+import { Route as DiscussionsIndexImport } from './routes/discussions/index'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as AiIndexImport } from './routes/ai/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
@@ -29,6 +30,7 @@ import { Route as PostNewImport } from './routes/post/new'
 import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as MeEditImport } from './routes/me/edit'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
+import { Route as DiscussionsNewImport } from './routes/discussions/new'
 import { Route as DevCropImport } from './routes/dev/crop'
 import { Route as SquadInviteTagNameImport } from './routes/squad/invite.$tagName'
 import { Route as SquadEditTagNameImport } from './routes/squad/edit.$tagName'
@@ -39,133 +41,145 @@ import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const TagsIndexRoute = TagsIndexImport.update({
   id: '/tags/',
   path: '/tags/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SearchIndexRoute = SearchIndexImport.update({
   id: '/search/',
   path: '/search/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeIndexRoute = MeIndexImport.update({
   id: '/me/',
   path: '/me/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const HistoryIndexRoute = HistoryIndexImport.update({
   id: '/history/',
   path: '/history/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const FeedbackIndexRoute = FeedbackIndexImport.update({
   id: '/feedback/',
   path: '/feedback/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ExploreIndexRoute = ExploreIndexImport.update({
   id: '/explore/',
   path: '/explore/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DiscussionsIndexRoute = DiscussionsIndexImport.update({
+  id: '/discussions/',
+  path: '/discussions/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AdminIndexRoute = AdminIndexImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadTagNameRoute = SquadTagNameImport.update({
   id: '/squad/$tagName',
   path: '/squad/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProfileProfileTagRoute = ProfileProfileTagImport.update({
   id: '/profile/$profileTag',
   path: '/profile/$profileTag',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeEditRoute = MeEditImport.update({
   id: '/me/edit',
   path: '/me/edit',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DiscussionsNewRoute = DiscussionsNewImport.update({
+  id: '/discussions/new',
+  path: '/discussions/new',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadInviteTagNameRoute = SquadInviteTagNameImport.update({
   id: '/squad/invite/$tagName',
   path: '/squad/invite/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadEditTagNameRoute = SquadEditTagNameImport.update({
   id: '/squad/edit/$tagName',
   path: '/squad/edit/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -191,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/crop'
       fullPath: '/dev/crop'
       preLoaderRoute: typeof DevCropImport
+      parentRoute: typeof rootRoute
+    }
+    '/discussions/new': {
+      id: '/discussions/new'
+      path: '/discussions/new'
+      fullPath: '/discussions/new'
+      preLoaderRoute: typeof DiscussionsNewImport
       parentRoute: typeof rootRoute
     }
     '/integration/callback': {
@@ -261,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/discussions/': {
+      id: '/discussions/'
+      path: '/discussions'
+      fullPath: '/discussions'
+      preLoaderRoute: typeof DiscussionsIndexImport
       parentRoute: typeof rootRoute
     }
     '/explore/': {
@@ -335,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -345,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/discussions': typeof DiscussionsIndexRoute
   '/explore': typeof ExploreIndexRoute
   '/feedback': typeof FeedbackIndexRoute
   '/history': typeof HistoryIndexRoute
@@ -360,6 +390,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -370,6 +401,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/discussions': typeof DiscussionsIndexRoute
   '/explore': typeof ExploreIndexRoute
   '/feedback': typeof FeedbackIndexRoute
   '/history': typeof HistoryIndexRoute
@@ -386,6 +418,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
   '/post/$postId': typeof PostPostIdRoute
@@ -396,6 +429,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
+  '/discussions/': typeof DiscussionsIndexRoute
   '/explore/': typeof ExploreIndexRoute
   '/feedback/': typeof FeedbackIndexRoute
   '/history/': typeof HistoryIndexRoute
@@ -413,6 +447,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
     | '/post/$postId'
@@ -423,6 +458,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/discussions'
     | '/explore'
     | '/feedback'
     | '/history'
@@ -437,6 +473,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
     | '/post/$postId'
@@ -447,6 +484,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/discussions'
     | '/explore'
     | '/feedback'
     | '/history'
@@ -461,6 +499,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
     | '/post/$postId'
@@ -471,6 +510,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ai/'
     | '/app/'
+    | '/discussions/'
     | '/explore/'
     | '/feedback/'
     | '/history/'
@@ -487,6 +527,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RecoveryRoute: typeof RecoveryRoute
   DevCropRoute: typeof DevCropRoute
+  DiscussionsNewRoute: typeof DiscussionsNewRoute
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
   MeEditRoute: typeof MeEditRoute
   PostPostIdRoute: typeof PostPostIdRoute
@@ -497,6 +538,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
+  DiscussionsIndexRoute: typeof DiscussionsIndexRoute
   ExploreIndexRoute: typeof ExploreIndexRoute
   FeedbackIndexRoute: typeof FeedbackIndexRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
@@ -512,6 +554,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RecoveryRoute: RecoveryRoute,
   DevCropRoute: DevCropRoute,
+  DiscussionsNewRoute: DiscussionsNewRoute,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
   MeEditRoute: MeEditRoute,
   PostPostIdRoute: PostPostIdRoute,
@@ -522,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
+  DiscussionsIndexRoute: DiscussionsIndexRoute,
   ExploreIndexRoute: ExploreIndexRoute,
   FeedbackIndexRoute: FeedbackIndexRoute,
   HistoryIndexRoute: HistoryIndexRoute,
@@ -530,7 +574,7 @@ const rootRouteChildren: RootRouteChildren = {
   TagsIndexRoute: TagsIndexRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
   SquadEditTagNameRoute: SquadEditTagNameRoute,
-  SquadInviteTagNameRoute: SquadInviteTagNameRoute
+  SquadInviteTagNameRoute: SquadInviteTagNameRoute,
 }
 
 export const routeTree = rootRoute
@@ -546,6 +590,7 @@ export const routeTree = rootRoute
         "/",
         "/recovery",
         "/dev/crop",
+        "/discussions/new",
         "/integration/callback",
         "/me/edit",
         "/post/$postId",
@@ -556,6 +601,7 @@ export const routeTree = rootRoute
         "/admin/",
         "/ai/",
         "/app/",
+        "/discussions/",
         "/explore/",
         "/feedback/",
         "/history/",
@@ -575,6 +621,9 @@ export const routeTree = rootRoute
     },
     "/dev/crop": {
       "filePath": "dev/crop.tsx"
+    },
+    "/discussions/new": {
+      "filePath": "discussions/new.tsx"
     },
     "/integration/callback": {
       "filePath": "integration/callback.tsx"
@@ -605,6 +654,9 @@ export const routeTree = rootRoute
     },
     "/app/": {
       "filePath": "app/index.tsx"
+    },
+    "/discussions/": {
+      "filePath": "discussions/index.tsx"
     },
     "/explore/": {
       "filePath": "explore/index.tsx"
