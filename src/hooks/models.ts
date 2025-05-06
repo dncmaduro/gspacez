@@ -1,4 +1,5 @@
 import {
+  IChatMessage,
   IComment,
   IExplore,
   IMember,
@@ -633,7 +634,7 @@ export interface GetOwnFeedbackResponse {
 }
 
 export interface SendChatMessageRequest {
-  message: string
+  content: string
   sessionId: string
 }
 
@@ -655,5 +656,26 @@ export interface SearchProfilesResponse {
       lastName: string
       avatarUrl: string
     }[]
+  }
+}
+
+export interface SendChatMessageResponse {
+  result: {
+    content: string
+    sessionId: string
+    nameChatSession: string
+  }
+}
+
+export interface GetAllChatResponse {
+  result: {
+    sessionId: string
+    nameChatSession: string
+  }[]
+}
+
+export interface GetChatHistoryResponse {
+  result: {
+    messages: IChatMessage[]
   }
 }

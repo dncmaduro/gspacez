@@ -1,48 +1,19 @@
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Flex,
-  Group,
-  ScrollArea,
-  Stack,
-  Text,
-  Textarea
-} from '@mantine/core'
-import { GeminiMessage } from '../../routes/ai'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Box, Flex, ScrollArea, Text } from '@mantine/core'
+import { useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { GIcon } from '../common/GIcon'
-import { Controller, useForm } from 'react-hook-form'
+import { IChatMessage } from '../../hooks/interface'
+import { format } from 'date-fns'
 
 interface Props {
-  messages: GeminiMessage[]
+  messages: IChatMessage[]
   isSendingPrompt: boolean
-  setMessages: React.Dispatch<React.SetStateAction<GeminiMessage[]>>
-  regenerateMessage: (id: number) => void
-  loadingId: number | undefined
+  regenerateMessage: (id: string) => void
 }
 
-export const MessageBox = ({
-  messages,
-  isSendingPrompt,
-  setMessages,
-  regenerateMessage,
-  loadingId
-}: Props) => {
+export const MessageBox = ({ messages, isSendingPrompt }: Props) => {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  const [editIds, setEditIds] = useState<number[]>([])
-
   useEffect(() => {
-    console.log(loadingId)
-  }, [loadingId])
-
-  useEffect(() => {
-    if (!messages.length) {
-      setEditIds([])
-    }
-
     const viewport = scrollAreaRef.current?.children[0] as HTMLDivElement | null
     if (viewport) {
       viewport.scrollTo({
@@ -50,25 +21,9 @@ export const MessageBox = ({
         behavior: 'smooth'
       })
     }
-  }, [messages.length])
+  }, [messages, isSendingPrompt])
 
-  const Content = ({ message }: { message: GeminiMessage }) => {
-    if (loadingId === message.id) {
-      return (
-        <Box
-          p={16}
-          className="rounded-lg"
-          w="fit-content"
-          maw="70%"
-          bg={message.isFromGemini ? 'indigo.1' : 'gray.1'}
-        >
-          <Flex align="center" gap={8}>
-            <Text>Regenerating answer...</Text>
-          </Flex>
-        </Box>
-      )
-    }
-
+  const Content = ({ message }: { message: IChatMessage }) => {
     return (
       <Box
         p={16}
@@ -76,104 +31,25 @@ export const MessageBox = ({
         className="rounded-lg"
         w="fit-content"
         maw="70%"
-        bg={message.isFromGemini ? 'indigo.1' : 'gray.1'}
+        bg={message.role === 'model' ? 'indigo.1' : 'gray.1'}
       >
         <ReactMarkdown>{message.message}</ReactMarkdown>
         <Text c="dimmed" size="xs" mt={8}>
-          {message.createdAt.toLocaleTimeString()}
+          {format(new Date(message.createdAt), 'PPp')}
         </Text>
       </Box>
     )
   }
 
-  const EditBox = ({ id }: { id: number }) => {
-    const formMethods = useForm<GeminiMessage>({
-      defaultValues: messages.find((m) => m.id === id)
-    })
-
-    const { handleSubmit, control } = formMethods
-
-    const onSubmit = (values: GeminiMessage) => {
-      setEditIds((prev) => prev.filter((e) => e !== id))
-      setMessages((prev) => {
-        const index = prev.findIndex((m) => m.id === id)
-        prev[index] = values
-        return prev
-      })
-      regenerateMessage(values.id)
-    }
-
-    const onCancel = () => {
-      setEditIds((prev) => prev.filter((e) => e !== id))
-    }
-
-    return (
-      <form onSubmit={handleSubmit(onSubmit)} className="w-[50%]">
-        <Stack gap={8}>
-          <Controller
-            control={control}
-            name="message"
-            render={({ field }) => (
-              <Textarea
-                {...field}
-                placeholder="Enter your message"
-                radius="md"
-              />
-            )}
-          />
-          <Group className="self-end" gap={8} mr={8}>
-            <Button
-              size="xs"
-              variant="light"
-              color="red"
-              onClick={() => onCancel()}
-            >
-              Cancel
-            </Button>
-            <Button size="xs" type="submit">
-              Send
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    )
-  }
-
-  const onRegenerate = (id: number) => {
-    regenerateMessage(id - 1)
-  }
-
-  const Message = ({ message }: { message: GeminiMessage }) => {
-    const isEditing = useMemo(() => {
-      return editIds.includes(message.id)
-    }, [editIds])
-
+  const Message = ({ message }: { message: IChatMessage }) => {
     return (
       <Flex
-        direction={message.isFromGemini ? 'row' : 'row-reverse'}
+        direction={message.role === 'model' ? 'row' : 'row-reverse'}
         gap={8}
         align="center"
         mb={32}
       >
-        {isEditing ? (
-          <EditBox id={message.id} />
-        ) : (
-          <Content message={message} />
-        )}
-        {!isEditing && (
-          <ActionIcon variant="subtle" color="gray">
-            <GIcon
-              name={message.isFromGemini ? 'Refresh' : 'Pencil'}
-              size={16}
-              onClick={() => {
-                message.isFromGemini
-                  ? // eslint-disable-next-line no-unused-expressions
-                    onRegenerate(message.id)
-                  : setEditIds((prev) => [...prev, message.id])
-              }}
-            />
-          </ActionIcon>
-        )}
+        <Content message={message} />
       </Flex>
     )
   }
@@ -183,10 +59,21 @@ export const MessageBox = ({
       {messages.map((message) => (
         <Message message={message} key={message.id} />
       ))}
-      {isSendingPrompt && !loadingId && (
-        <Box p={16} className="rounded-lg" w="fit-content" bg="indigo.1">
-          <Text>Please wait for the answer...</Text>
-        </Box>
+
+      {/* Loading indicator for AI response */}
+      {isSendingPrompt && (
+        <Flex direction="row" gap={8} align="center" mb={32}>
+          <Box p={16} className="rounded-lg" w="fit-content" bg="indigo.1">
+            <Flex align="center" gap={8}>
+              <div className="flex space-x-1">
+                <div className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 delay-75"></div>
+                <div className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 delay-100"></div>
+                <div className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 delay-150"></div>
+              </div>
+              <Text>AI is thinking...</Text>
+            </Flex>
+          </Box>
+        </Flex>
       )}
     </ScrollArea>
   )

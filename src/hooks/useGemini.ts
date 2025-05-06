@@ -1,6 +1,12 @@
 import { useAuthStore } from '../store/authStore'
 import { callApi } from '../utils/axios'
-import { GenerateTextRequest, SendChatMessageRequest } from './models'
+import {
+  GenerateTextRequest,
+  GetAllChatResponse,
+  GetChatHistoryResponse,
+  SendChatMessageRequest,
+  SendChatMessageResponse
+} from './models'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 export const useGemini = () => {
@@ -14,7 +20,7 @@ export const useGemini = () => {
   }
 
   const sendChatMessage = async (req: SendChatMessageRequest) => {
-    return callApi<SendChatMessageRequest, any>({
+    return callApi<SendChatMessageRequest, SendChatMessageResponse>({
       method: 'POST',
       path: `/v1/profile-service/google-gemini/chat`,
       data: req,
@@ -23,5 +29,23 @@ export const useGemini = () => {
     })
   }
 
-  return { generateText, sendChatMessage }
+  const getAllChat = async () => {
+    return callApi<never, GetAllChatResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/google-gemini/chat/all`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const getChatHistory = async (id: string) => {
+    return callApi<never, GetChatHistoryResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/google-gemini/chat/${id}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  return { generateText, sendChatMessage, getAllChat, getChatHistory }
 }
