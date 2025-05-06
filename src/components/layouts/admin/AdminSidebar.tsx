@@ -8,9 +8,9 @@ import {
   Text
 } from '@mantine/core'
 import { GIcon } from '../../common/GIcon'
-import Logo from '../../../public/Logo.png'
 import { SidebarPart } from '../SidebarPart'
 import { SidebarItem } from '../SidebarItem'
+import { useLogo } from '../../../hooks/useLogo'
 
 interface Props {
   toggle: () => void
@@ -18,6 +18,8 @@ interface Props {
 }
 
 export const AdminSidebar = ({ toggle, opened }: Props) => {
+  const { logo } = useLogo()
+
   return (
     <Box
       pt={12}
@@ -29,7 +31,7 @@ export const AdminSidebar = ({ toggle, opened }: Props) => {
       <Box>
         <Box h={60}>
           <Image
-            src={Logo}
+            src={logo}
             alt="Logo"
             mx={'auto'}
             h={'100%'}
