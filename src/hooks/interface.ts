@@ -188,3 +188,25 @@ export interface IChatMessage {
   role: 'user' | 'model'
   createdAt: string
 }
+
+export interface IDiscussion {
+  result: {
+    profileTag: string
+    profileName: string
+    avatarUrl: string
+    title: string
+    content: string
+    voteResponse: {
+      title: string
+      options: {
+        id: string
+        value: string
+        percentage: string
+      }[]
+      selectedOptionId: string | null
+    }
+    hashTags: string[]
+    isOpen: boolean
+    createdAt: string
+  }
+}

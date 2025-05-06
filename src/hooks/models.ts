@@ -1,6 +1,7 @@
 import {
   IChatMessage,
   IComment,
+  IDiscussion,
   IExplore,
   IMember,
   INotification,
@@ -700,4 +701,18 @@ export interface GetSearchTagsHistoryResponse {
     id: string
     content: string
   }[]
+}
+
+export interface CreateDiscussionRequest {
+  title: string
+  content: string
+  voteRequest?: {
+    title: string
+    options: string[]
+  }
+  hashTags?: string[]
+}
+
+export interface CreateDiscussionResponse {
+  result: IDiscussion
 }
