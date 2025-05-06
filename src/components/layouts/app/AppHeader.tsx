@@ -15,7 +15,6 @@ import {
   Text,
   Tooltip
 } from '@mantine/core'
-import Logo from '../../../public/Logo.png'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { GIcon } from '../../common/GIcon'
 import { GToast } from '../../common/GToast'
@@ -32,6 +31,7 @@ import { useNotificationStore } from '../../../store/notificationStore'
 import { useNotification } from '../../../hooks/useNotification'
 import { useDebouncedValue, useMediaQuery } from '@mantine/hooks'
 import { useSidebarStore } from '../../../store/sidebarStore'
+import { useLogo } from '../../../hooks/useLogo'
 
 interface Props {
   hideSearchInput?: boolean
@@ -57,6 +57,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { getStreak } = useProfile()
   const { getNotifications } = useNotification()
   const { notificationsQuantity } = useNotificationStore()
+  const { logo } = useLogo()
 
   const { mutate: onSignOut } = useMutation({
     mutationKey: ['sign-out'],
@@ -257,7 +258,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const { toggle: toggleSidebar } = useSidebarStore()
 
   return (
-    <Box w="100%" h="100%" className="bg-white shadow-md">
+    <Box w="100%" h="100%" className="shadow-md">
       <Flex
         align="center"
         px={isMobile ? 12 : 24}
@@ -272,7 +273,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           )}
           <Link to="/app" className="transition-transform hover:scale-105">
             <Image
-              src={Logo}
+              src={logo}
               h={isMobile ? 16 : 20}
               fit="contain"
               className="drop-shadow-md"

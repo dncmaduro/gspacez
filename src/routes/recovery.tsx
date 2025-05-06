@@ -1,4 +1,3 @@
-import Logo from '../public/Logo.png'
 import {
   AppShell,
   Box,
@@ -23,6 +22,7 @@ import { ReactNode, useEffect, useState } from 'react'
 import { VerifyForm } from '../components/auth/VerifyForm'
 import { ResetForm } from '../components/auth/ResetForm'
 import { useMedia } from '../hooks/useMedia'
+import { useLogo } from '../hooks/useLogo'
 
 export const Route = createFileRoute('/recovery')({
   component: RouteComponent
@@ -46,6 +46,7 @@ export interface ResetType {
 type RecoveryStatus = 'forgot' | 'verify' | 'recovery'
 
 function RouteComponent() {
+  const { logo } = useLogo()
   const { forgotPassword, verifyOtp, resetPassword } = useAuth()
   const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus>('forgot')
   const navigate = useNavigate()
@@ -200,7 +201,7 @@ function RouteComponent() {
             <Stack align="center" gap={isMobile ? 16 : 24}>
               <Box>
                 <Image
-                  src={Logo}
+                  src={logo}
                   h={isMobile ? 24 : 32}
                   fit="contain"
                   className="drop-shadow-md"

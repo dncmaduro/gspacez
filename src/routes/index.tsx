@@ -1,6 +1,5 @@
 import { AppShell, Box, Button, Flex, Image, Stack, Text } from '@mantine/core'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import Logo from '../public/Logo.png'
 import { SignInForm } from '../components/SignInForm'
 import { useEffect, useState } from 'react'
 import { SignUpForm } from '../components/SignUpForm'
@@ -8,6 +7,7 @@ import { useAuthStore } from '../store/authStore'
 import { useCallbackStore } from '../store/callbackStore'
 import { useMedia } from '../hooks/useMedia'
 import { Helmet } from 'react-helmet-async'
+import { useLogo } from '../hooks/useLogo'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent
@@ -19,6 +19,7 @@ function RouteComponent() {
   const { callbackUrl } = useCallbackStore()
   const { accessToken } = useAuthStore()
   const { isMobile, isTablet } = useMedia()
+  const { logo } = useLogo()
 
   useEffect(() => {
     if (accessToken) {
@@ -72,7 +73,7 @@ function RouteComponent() {
             >
               <Box className="overflow-hidden rounded-2xl">
                 <Image
-                  src={Logo}
+                  src={logo}
                   alt="GspaceZ Logo"
                   w={isMobile ? 150 : isTablet ? 180 : 200}
                   className="drop-shadow-md"
