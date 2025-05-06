@@ -180,3 +180,11 @@ export interface ISettings {
     likes: number
   }
 }
+
+export interface IChatMessage {
+  id: string
+  sessionId: string
+  message: string
+  role: 'user' | 'model'
+  createdAt: string
+}
