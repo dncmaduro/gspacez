@@ -679,3 +679,13 @@ export interface GetChatHistoryResponse {
     messages: IChatMessage[]
   }
 }
+
+export interface PushSearchHistoryRequest {
+  content: string
+}
+
+export interface GetSearchHistoryResponse {
+  result: {
+    content: string
+  }[]
+}

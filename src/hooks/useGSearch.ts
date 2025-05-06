@@ -8,7 +8,9 @@ import {
   SearchTagsResponse,
   SearchTagsRequest,
   SearchPostByTagRequest,
-  SearchProfilesResponse
+  SearchProfilesResponse,
+  PushSearchHistoryRequest,
+  GetSearchHistoryResponse
 } from './models'
 
 export const useGSearch = () => {
@@ -68,12 +70,33 @@ export const useGSearch = () => {
     })
   }
 
+  const pushSearchHistory = async (req: PushSearchHistoryRequest) => {
+    return callApi<PushSearchHistoryRequest, never>({
+      method: 'POST',
+      path: `/v1/profile-service/search/history/create`,
+      data: req,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const getSearchHistory = async () => {
+    return callApi<never, GetSearchHistoryResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/search/history`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     searchUsers,
     searchPosts,
     searchSquads,
     searchTags,
     searchPostsByTag,
-    searchProfiles
+    searchProfiles,
+    pushSearchHistory,
+    getSearchHistory
   }
 }
