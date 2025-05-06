@@ -38,7 +38,7 @@ interface Props {
 }
 
 interface AutocompleteItem {
-  type: 'user' | 'post' | 'squad'
+  type: 'user' | 'post' | 'squad' | 'history'
   label: string
   value: string
   description: string
@@ -81,7 +81,16 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     }
   })
 
-  const { searchPosts, searchSquads, searchProfiles } = useGSearch()
+  const { searchPosts, searchSquads, searchProfiles, getSearchHistory } =
+    useGSearch()
+
+  const { data: searchHistory } = useQuery({
+    queryKey: ['get-search-history'],
+    queryFn: () => getSearchHistory(),
+    select: (data) => {
+      return data.data.result.map((item) => item.content)
+    }
+  })
 
   const { data: usersData } = useQuery({
     queryKey: ['search-users', deboucedSearchText],
@@ -111,6 +120,32 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   })
 
   const data = useMemo(() => {
+    if (!searchText) {
+      const convertedHistory =
+        ((searchHistory || []).map((item) => ({
+          type: 'history',
+          label: item,
+          value: item,
+          description: `History: ${item}`,
+          image: ''
+        })) as AutocompleteItem[]) || ([] as AutocompleteItem[])
+
+      return {
+        data: [
+          {
+            group: 'Search history',
+            items: convertedHistory
+          }
+        ],
+        byValues: convertedHistory.reduce(
+          (acc, item) => {
+            return { ...acc, [item.value]: item }
+          },
+          {} as Record<string, AutocompleteItem>
+        )
+      }
+    }
+
     if (!usersData || !postsData || !squadsData)
       return { data: [], byValues: {} }
 
@@ -179,7 +214,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
         {} as Record<string, AutocompleteItem>
       )
     }
-  }, [usersData, postsData, squadsData])
+  }, [usersData, postsData, squadsData, searchHistory, searchText])
 
   const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({
     option

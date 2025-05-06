@@ -4,9 +4,10 @@ import { Box, Divider, Stack, Tabs, TextInput } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useEffect, useState } from 'react'
 import { UsersSearch } from '../../components/search/UsersSearch'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PostsSearch } from '../../components/search/PostsSearch'
 import { SquadsSearch } from '../../components/search/SquadsSearch'
+import { useGSearch } from '../../hooks/useGSearch'
 
 export const Route = createFileRoute('/search/')({
   component: RouteComponent,
@@ -23,6 +24,7 @@ function RouteComponent() {
   const [triggerSearch, setTriggerSearch] = useState<boolean>(false)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { pushSearchHistory } = useGSearch()
 
   const tabs = [
     {
@@ -44,13 +46,18 @@ function RouteComponent() {
     }
   ]
 
+  const { mutate: push } = useMutation({
+    mutationFn: () => pushSearchHistory({ content: searchText })
+  })
+
   useEffect(() => {
+    push()
     if (!params.tab) {
       navigate({
         to: `/search?searchText=${params.searchText}&tab=${tabs[0].value}`
       })
     }
-  })
+  }, [])
 
   return (
     <AppLayout hideSearchInput>
