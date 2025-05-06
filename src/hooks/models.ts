@@ -682,10 +682,22 @@ export interface GetChatHistoryResponse {
 
 export interface PushSearchHistoryRequest {
   content: string
+  type?: string
 }
 
 export interface GetSearchHistoryResponse {
   result: {
+    content: string
+  }[]
+}
+
+export interface GetPopularTagsResponse {
+  result: string[]
+}
+
+export interface GetSearchTagsHistoryResponse {
+  result: {
+    id: string
     content: string
   }[]
 }

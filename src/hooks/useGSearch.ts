@@ -10,7 +10,9 @@ import {
   SearchPostByTagRequest,
   SearchProfilesResponse,
   PushSearchHistoryRequest,
-  GetSearchHistoryResponse
+  GetSearchHistoryResponse,
+  GetPopularTagsResponse,
+  GetSearchTagsHistoryResponse
 } from './models'
 
 export const useGSearch = () => {
@@ -89,6 +91,24 @@ export const useGSearch = () => {
     })
   }
 
+  const getPopularTags = async () => {
+    return callApi<never, GetPopularTagsResponse>({
+      method: 'GET',
+      path: `/v1/post-service/tags/populars`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const getSearchTagsHistory = async () => {
+    return callApi<never, GetSearchTagsHistoryResponse>({
+      method: 'GET',
+      path: `/v1/profile-service/search/history/tags`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     searchUsers,
     searchPosts,
@@ -97,6 +117,8 @@ export const useGSearch = () => {
     searchPostsByTag,
     searchProfiles,
     pushSearchHistory,
-    getSearchHistory
+    getSearchHistory,
+    getPopularTags,
+    getSearchTagsHistory
   }
 }
