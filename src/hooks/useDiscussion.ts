@@ -115,7 +115,7 @@ export const useDiscussion = () => {
   const upvoteComment = async (id: string) => {
     return callApi<never, never>({
       method: 'PUT',
-      path: `/v1/post-service/discussions/${id}/upvote`,
+      path: `/v1/post-service/discussions/comments/${id}/upvote`,
       accessToken,
       onClearAuth: clearAuth
     })
