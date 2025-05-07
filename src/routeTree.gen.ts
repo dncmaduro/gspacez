@@ -31,6 +31,7 @@ import { Route as PostPostIdImport } from './routes/post/$postId'
 import { Route as MeEditImport } from './routes/me/edit'
 import { Route as IntegrationCallbackImport } from './routes/integration/callback'
 import { Route as DiscussionsNewImport } from './routes/discussions/new'
+import { Route as DiscussionsDiscussionIdImport } from './routes/discussions/$discussionId'
 import { Route as DevCropImport } from './routes/dev/crop'
 import { Route as SquadInviteTagNameImport } from './routes/squad/invite.$tagName'
 import { Route as SquadEditTagNameImport } from './routes/squad/edit.$tagName'
@@ -158,6 +159,12 @@ const DiscussionsNewRoute = DiscussionsNewImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DiscussionsDiscussionIdRoute = DiscussionsDiscussionIdImport.update({
+  id: '/discussions/$discussionId',
+  path: '/discussions/$discussionId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
@@ -205,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/dev/crop'
       fullPath: '/dev/crop'
       preLoaderRoute: typeof DevCropImport
+      parentRoute: typeof rootRoute
+    }
+    '/discussions/$discussionId': {
+      id: '/discussions/$discussionId'
+      path: '/discussions/$discussionId'
+      fullPath: '/discussions/$discussionId'
+      preLoaderRoute: typeof DiscussionsDiscussionIdImport
       parentRoute: typeof rootRoute
     }
     '/discussions/new': {
@@ -363,6 +377,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/$discussionId': typeof DiscussionsDiscussionIdRoute
   '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
@@ -390,6 +405,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/$discussionId': typeof DiscussionsDiscussionIdRoute
   '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
@@ -418,6 +434,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/recovery': typeof RecoveryRoute
   '/dev/crop': typeof DevCropRoute
+  '/discussions/$discussionId': typeof DiscussionsDiscussionIdRoute
   '/discussions/new': typeof DiscussionsNewRoute
   '/integration/callback': typeof IntegrationCallbackRoute
   '/me/edit': typeof MeEditRoute
@@ -447,6 +464,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/$discussionId'
     | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
@@ -473,6 +491,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/$discussionId'
     | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
@@ -499,6 +518,7 @@ export interface FileRouteTypes {
     | '/'
     | '/recovery'
     | '/dev/crop'
+    | '/discussions/$discussionId'
     | '/discussions/new'
     | '/integration/callback'
     | '/me/edit'
@@ -527,6 +547,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RecoveryRoute: typeof RecoveryRoute
   DevCropRoute: typeof DevCropRoute
+  DiscussionsDiscussionIdRoute: typeof DiscussionsDiscussionIdRoute
   DiscussionsNewRoute: typeof DiscussionsNewRoute
   IntegrationCallbackRoute: typeof IntegrationCallbackRoute
   MeEditRoute: typeof MeEditRoute
@@ -554,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RecoveryRoute: RecoveryRoute,
   DevCropRoute: DevCropRoute,
+  DiscussionsDiscussionIdRoute: DiscussionsDiscussionIdRoute,
   DiscussionsNewRoute: DiscussionsNewRoute,
   IntegrationCallbackRoute: IntegrationCallbackRoute,
   MeEditRoute: MeEditRoute,
@@ -590,6 +612,7 @@ export const routeTree = rootRoute
         "/",
         "/recovery",
         "/dev/crop",
+        "/discussions/$discussionId",
         "/discussions/new",
         "/integration/callback",
         "/me/edit",
@@ -621,6 +644,9 @@ export const routeTree = rootRoute
     },
     "/dev/crop": {
       "filePath": "dev/crop.tsx"
+    },
+    "/discussions/$discussionId": {
+      "filePath": "discussions/$discussionId.tsx"
     },
     "/discussions/new": {
       "filePath": "discussions/new.tsx"
