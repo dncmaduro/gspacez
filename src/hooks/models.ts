@@ -716,3 +716,36 @@ export interface CreateDiscussionRequest {
 export interface CreateDiscussionResponse {
   result: IDiscussion
 }
+
+export interface UpdateDiscussionRequest {
+  title: string
+  content: string
+  voteRequest?: {
+    title: string
+    options: string[]
+  }
+  hashTags?: string[]
+}
+
+export interface ChangeDiscussionStatusRequest {
+  isOpen: boolean
+}
+
+export interface SearchDiscussionsResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IDiscussion[]
+  }
+}
+
+export interface VotePollRequest {
+  optionId: string
+}
