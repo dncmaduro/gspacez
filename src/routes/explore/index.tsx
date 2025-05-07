@@ -7,6 +7,7 @@ import { GExplore } from '../../components/common/GExplore'
 import { useEffect, useRef } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { GExploreSkeleton } from '../../components/common/GExploreSkeleton'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/explore/')({
   component: RouteComponent
@@ -66,6 +67,8 @@ function RouteComponent() {
     }
   }, [fetchNextExplorePage, hasNextExplorePage, isFetchingNextExplorePage])
 
+  const { isDark } = useDark()
+
   return (
     <AppLayout>
       <Box
@@ -74,8 +77,8 @@ function RouteComponent() {
         w={800}
         mt={32}
         pt={10}
-        bg={'white'}
-        mah={'90vh'}
+        className="rounded-md"
+        bg={isDark ? 'gray.9' : 'white'}
       >
         <Stack align="center" mx={24}>
           <Group>

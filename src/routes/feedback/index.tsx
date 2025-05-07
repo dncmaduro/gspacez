@@ -25,6 +25,7 @@ import { useState } from 'react'
 import { GFeedback } from '../../components/common/GFeedback'
 import { modals } from '@mantine/modals'
 import { OwnFeedbacks } from '../../components/feedback/OwnFeedbacks'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/feedback/')({
   component: RouteComponent
@@ -38,6 +39,7 @@ export type FeedbackType = {
 function RouteComponent() {
   const { sendFeedback, getFeedbacks } = useFeedback()
   const [submitted, setSubmitted] = useState(false)
+  const { isDark } = useDark()
 
   const {
     handleSubmit,
@@ -90,7 +92,8 @@ function RouteComponent() {
         mx={'auto'}
         px={32}
         py={20}
-        className="rounded-lg bg-white shadow-sm"
+        bg={isDark ? 'gray.9' : 'white'}
+        className="rounded-lg shadow-sm"
       >
         <Stack gap={32}>
           <Flex align="center" gap={16}>
@@ -162,7 +165,7 @@ function RouteComponent() {
                   className="border-indigo-100"
                 >
                   <Stack gap={24}>
-                    <div>
+                    <Box>
                       <Text fw={500} size="lg" mb={8}>
                         How would you rate your experience?
                       </Text>
@@ -190,7 +193,7 @@ function RouteComponent() {
                           />
                         )}
                       />
-                    </div>
+                    </Box>
 
                     <div>
                       <Text fw={500} size="lg" mb={8}>

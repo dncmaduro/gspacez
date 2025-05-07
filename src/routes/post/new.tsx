@@ -8,6 +8,7 @@ import { GToast } from '../../components/common/GToast'
 import { CreatePostRequest } from '../../hooks/models'
 import { PostForm } from '../../components/post/PostForm'
 import { GIcon } from '../../components/common/GIcon'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/post/new')({
   component: RouteComponent
@@ -26,6 +27,7 @@ function RouteComponent() {
   const { createPost } = usePost()
   const navigate = useNavigate()
   const router = useRouter()
+  const { isDark } = useDark()
 
   const formMethods = useForm<PostFormType>({
     defaultValues: {
@@ -68,7 +70,8 @@ function RouteComponent() {
         mx="auto"
         px={32}
         py={20}
-        className="rounded-lg bg-white shadow-sm"
+        bg={isDark ? 'gray.9' : 'white'}
+        className="rounded-lg shadow-sm"
       >
         <Group align="center" mt={20} gap={8}>
           <ActionIcon

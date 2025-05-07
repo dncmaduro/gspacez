@@ -3,16 +3,20 @@ import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { GIcon } from './GIcon'
 import { IDiscussion } from '../../hooks/interface'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   discussion: IDiscussion
 }
 
 export const GDiscussion = ({ discussion }: Props) => {
+  const { isDark } = useDark()
+
   return (
     <Box
-      className="rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
+      className={`rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} p-4 shadow-sm transition-all duration-200 hover:border-indigo-300 hover:shadow-md`}
       component={Link}
+      bg={isDark ? '#242424' : 'white'}
       to={`/discussions/${discussion.id}`}
     >
       <Flex direction="column" gap={12}>

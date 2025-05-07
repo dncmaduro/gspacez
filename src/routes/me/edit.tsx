@@ -29,6 +29,7 @@ import { useMe } from '../../hooks/useMe'
 import { UpdateMeRequest } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
 import { cloneDeep } from 'lodash'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/me/edit')({
   component: RouteComponent
@@ -57,6 +58,7 @@ interface ProfileType {
 function RouteComponent() {
   const { updateMe } = useProfile()
   const { getCountries } = useCountries()
+  const { isDark } = useDark()
 
   const { data: profileData } = useMe()
 
@@ -197,7 +199,9 @@ function RouteComponent() {
             >
               {/* Avatar Section */}
               <Box w={{ base: '100%', md: 280 }}>
-                <Box className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                <Box
+                  className={`rounded-xl border ${isDark ? 'border-indigo-700' : 'border-gray-200'} bg-${isDark ? 'gray.8' : 'white'} p-6 shadow-sm`}
+                >
                   <Stack align="center" gap={16}>
                     <Text className="!text-lg !font-semibold text-gray-700">
                       Profile Photo
@@ -248,7 +252,7 @@ function RouteComponent() {
 
               {/* Form Fields */}
               <Box
-                className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm"
+                className={`rounded-xl border ${isDark ? 'border-indigo-700' : 'border-gray-200'} bg-${isDark ? 'gray.8' : 'white'} p-8 shadow-sm`}
                 flex={1}
               >
                 <Stack gap={24}>

@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/react-query'
 import { ReactPostRequest } from '../../hooks/models'
 import { GDislikeButton } from './GDislikeButton'
 import { GToast } from './GToast'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   post: IPost
@@ -65,10 +66,13 @@ export const GSimplePost = ({ post }: Props) => {
     })
   }
 
+  const { isDark } = useDark()
+
   return (
     <Box
-      className="rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:border-indigo-200"
+      className={`rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} transition-all duration-300 ${isDark ? 'hover:border-indigo-700' : 'hover:border-indigo-200'}`}
       p={16}
+      bg={isDark ? 'gray.9' : 'white'}
       w={'100%'}
       style={{
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
@@ -117,7 +121,7 @@ export const GSimplePost = ({ post }: Props) => {
 
       <Box
         mt={12}
-        className="prose prose-sm prose-headings:text-indigo-700 prose-a:text-indigo-600 max-w-none text-gray-700"
+        className={`prose prose-sm ${isDark ? 'prose-headings:text-indigo-200 prose-a:text-indigo-300' : 'prose-headings:text-indigo-700 prose-a:text-indigo-600'} max-w-none ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
       >
         <ReactMarkdown>{post.content.text}</ReactMarkdown>
       </Box>

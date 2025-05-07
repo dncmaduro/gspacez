@@ -31,6 +31,7 @@ import { mediaText } from '../../utils/mediaText'
 import ReactMarkdown from 'react-markdown'
 import { useProfile } from '../../hooks/useProfile'
 import { useMe } from '../../hooks/useMe'
+import { useDark } from '../../hooks/useDark'
 
 export const PostForm = () => {
   const {
@@ -45,6 +46,7 @@ export const PostForm = () => {
   const { uploadMedia } = useCloudinary()
   const { getJoinedSquads } = useProfile()
   const { data: meData } = useMe()
+  const { isDark } = useDark()
 
   const { mutate: upload, isPending: isPosting } = useMutation({
     mutationFn: ({ file, type }: { file: File; type: string }) =>
@@ -259,7 +261,7 @@ export const PostForm = () => {
       </Paper>
 
       <Paper shadow="xs" radius="md" withBorder>
-        <Tabs defaultValue="write" bg={'white'}>
+        <Tabs defaultValue="write" bg={isDark ? 'gray.8' : 'white'}>
           <Tabs.List className="rounded-t-lg border border-gray-300">
             <Tabs.Tab
               value="write"

@@ -14,6 +14,8 @@ import { GIcon } from './GIcon'
 import { useDiscussion } from '../../hooks/useDiscussion'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   comment: IDiscussionComment
@@ -30,9 +32,12 @@ export const GDiscussionComment = ({ comment: initComment }: Props) => {
     }
   })
 
+  const { isDark } = useDark()
+
   return (
     <Box
-      className="rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md"
+      className={`rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-sm transition-shadow duration-200 hover:shadow-md`}
+      bg={isDark ? 'gray.9' : 'white'}
       p={16}
     >
       <Flex align="flex-start" gap={16}>
@@ -83,8 +88,8 @@ export const GDiscussionComment = ({ comment: initComment }: Props) => {
           </Group>
 
           {/* Content */}
-          <Box className="rounded-md bg-gray-50 p-3">
-            <Text>{comment.content}</Text>
+          <Box className="rounded-md p-3" bg={isDark ? 'gray.8' : 'gray.0'}>
+            <ReactMarkdown>{comment.content}</ReactMarkdown>
           </Box>
         </Stack>
       </Flex>

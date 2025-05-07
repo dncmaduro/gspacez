@@ -24,6 +24,7 @@ import { usePost } from '../../hooks/usePost'
 import { CreateCommentRequest } from '../../hooks/models'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { GDislikeButton } from '../common/GDislikeButton'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   comment: IComment
@@ -41,6 +42,7 @@ export const Comment = ({ comment, children, postId }: Props) => {
   const [openedReply, { toggle: toggleReply }] = useDisclosure(false)
   const { createComment } = usePost()
   const queryClient = useQueryClient()
+  const { isDark } = useDark()
 
   const formMethods = useForm<CommentFormType>({
     defaultValues: {
@@ -109,7 +111,9 @@ export const Comment = ({ comment, children, postId }: Props) => {
         </Stack>
       </Flex>
 
-      <Box className="rounded-lg bg-gray-50 p-3">
+      <Box
+        className={`rounded-lg ${isDark ? 'bg-gray-800' : 'bg-gray-50'} p-3`}
+      >
         <ReactMarkdown className="prose prose-sm prose-indigo max-w-none">
           {comment.content.text}
         </ReactMarkdown>
@@ -237,7 +241,9 @@ export const Comment = ({ comment, children, postId }: Props) => {
                 </Stack>
               </Flex>
 
-              <Box className="mt-3 rounded-lg bg-gray-50 p-3">
+              <Box
+                className={`mt-3 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-gray-50'} p-3`}
+              >
                 <ReactMarkdown className="prose prose-sm prose-indigo max-w-none">
                   {reply.content.text}
                 </ReactMarkdown>

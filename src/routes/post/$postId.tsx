@@ -38,6 +38,7 @@ import { GDislikeButton } from '../../components/common/GDislikeButton'
 import { useMe } from '../../hooks/useMe'
 import { GToast } from '../../components/common/GToast'
 import { useMedia } from '../../hooks/useMedia'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -167,12 +168,13 @@ function RouteComponent() {
   }
 
   const hashtags = postData?.hashTags
+  const { isDark } = useDark()
 
   return (
     <AppLayout>
       <Box
         mx="auto"
-        bg={'white'}
+        bg={isDark ? 'gray.9' : 'white'}
         maw={1000}
         className="min-h-screen rounded-lg shadow-sm"
       >
@@ -205,7 +207,7 @@ function RouteComponent() {
               radius="md"
               p={isMobile ? 'sm' : 'xl'}
               withBorder
-              className="border-indigo-100"
+              className={isDark ? 'border-indigo-800' : 'border-indigo-100'}
             >
               <Group justify="space-between" mb={24}>
                 <Flex align="center" gap={12}>
@@ -272,7 +274,8 @@ function RouteComponent() {
                 <Link to={`/squad/${postData?.squad.tagName}`}>
                   <Group
                     gap={8}
-                    className="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50"
+                    className={`rounded-full border ${isDark ? 'border-gray-800' : 'border-gray-100'} bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50`}
+                    bg={isDark ? 'gray.8' : 'gray.0'}
                   >
                     <Avatar src={postData?.squad.avatarUrl} />
                     <Text>{postData?.squad.name}</Text>
@@ -297,7 +300,9 @@ function RouteComponent() {
               </Group>
 
               {postData?.previewImage && (
-                <Box className="mb-8 overflow-hidden rounded-lg border border-gray-200">
+                <Box
+                  className={`mb-8 overflow-hidden rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
+                >
                   <Image
                     src={postData?.previewImage}
                     className="w-full transition-transform duration-500 hover:scale-105"
@@ -310,7 +315,7 @@ function RouteComponent() {
                 radius="md"
                 p="xl"
                 withBorder
-                className="mb-8 border-gray-200 bg-gray-50"
+                className={`mb-8 ${isDark ? 'border-gray-700' : 'border-gray-200'} bg-gray-50`}
               >
                 <Box className="prose prose-lg prose-indigo max-w-none">
                   <ReactMarkdown>{postData?.content.text || ''}</ReactMarkdown>
@@ -329,13 +334,7 @@ function RouteComponent() {
               />
 
               <Flex justify="space-between" align="center" mb={32}>
-                <Paper
-                  shadow="xs"
-                  radius="xl"
-                  p="md"
-                  withBorder
-                  className="border-gray-200"
-                >
+                <Paper shadow="xs" radius="xl" p="md" withBorder>
                   <Group gap={24}>
                     <GLikeButton
                       onClick={() => {

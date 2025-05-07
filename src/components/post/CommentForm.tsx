@@ -15,6 +15,7 @@ import { useCloudinary } from '../../hooks/useCloudinary'
 import { mediaText } from '../../utils/mediaText'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useDark } from '../../hooks/useDark'
 
 export const CommentForm = () => {
   const {
@@ -49,15 +50,19 @@ export const CommentForm = () => {
 
   const [fileValue, setFileValue] = useState<File | null>(null)
   const commentText = watch('text')
+  const { isDark } = useDark()
 
   return (
-    <Box className="rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <Box
+      className={`rounded-xl border ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-sm transition-shadow duration-200 hover:shadow-md`}
+      bg={isDark ? 'gray.9' : 'white'}
+    >
       <Tabs
         value={activeTab}
         onChange={setActiveTab}
         className="overflow-hidden rounded-lg"
       >
-        <Tabs.List className="bg-gray-50">
+        <Tabs.List bg={isDark ? 'gray.8' : 'gray.0'}>
           <Tabs.Tab
             value="write"
             leftSection={<GIcon name="Pencil" size={16} />}
@@ -88,13 +93,20 @@ export const CommentForm = () => {
             autosize
             radius="md"
             size="md"
+            bg={isDark ? 'gray.8' : 'white'}
             disabled={isPosting}
             styles={{
+              root: {
+                borderRadius: '8px'
+              },
+              wrapper: {
+                borderRadius: '8px'
+              },
               input: {
                 border: 'none',
                 padding: '12px',
                 fontSize: '15px',
-                backgroundColor: 'white'
+                backgroundColor: isDark ? 'gray.8' : 'white'
               }
             }}
           />

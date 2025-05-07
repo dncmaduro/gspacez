@@ -36,6 +36,7 @@ import { PendingRequests } from '../../components/squad/admin/PendingRequests'
 import { Members } from '../../components/squad/admin/Members'
 import { SquadPosts } from '../../components/squad/posts/SquadPosts'
 import { useMedia } from '../../hooks/useMedia'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/squad/$tagName')({
   component: RouteComponent,
@@ -197,6 +198,7 @@ function RouteComponent() {
   }
 
   const { isMobile } = useMedia()
+  const { isDark } = useDark()
 
   const squadTabs = [
     {
@@ -234,7 +236,7 @@ function RouteComponent() {
         maw={1200}
         m="auto"
         pt={16}
-        bg={'white'}
+        bg={isDark ? 'gray.9' : 'white'}
         px={24}
         mih={'90vh'}
         className="rounded-lg shadow-sm"
@@ -259,7 +261,7 @@ function RouteComponent() {
                   <Avatar
                     src={data?.avatarUrl}
                     size={isMobile ? 'lg' : 'xl'}
-                    className="border-2 border-indigo-200 shadow-sm"
+                    className={`border-2 ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-sm`}
                     radius="md"
                   />
                   <Stack gap={4}>
@@ -348,7 +350,7 @@ function RouteComponent() {
                         <Group
                           key={data?.adminList[index].profileId}
                           gap={8}
-                          className="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50"
+                          className={`rounded-full border ${isDark ? 'border-gray-800' : 'border-gray-100'} bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50`}
                         >
                           <Avatar
                             src={adminResult.data.avatarUrl}
@@ -373,8 +375,8 @@ function RouteComponent() {
                 <Box
                   p={16}
                   mt={20}
-                  bg={'gray.0'}
-                  className="rounded-lg border border-gray-200 shadow-sm"
+                  bg={isDark ? 'gray.8' : 'gray.0'}
+                  className={`rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-sm`}
                   maw={500}
                 >
                   <Text className="!text-lg !font-bold" mb={8}>
@@ -389,7 +391,10 @@ function RouteComponent() {
               <Divider mt={24} mb={8} />
 
               <Group mt={8} gap={24}>
-                <Group gap={8} className="rounded-full bg-gray-50 px-4 py-2">
+                <Group
+                  gap={8}
+                  className={`rounded-full ${isDark ? 'bg-gray-800' : 'bg-gray-50'} px-4 py-2`}
+                >
                   <GIcon name="Users" size={18} color="#4263eb" />
                   <Text fw={500}>
                     {data?.totalMembers === 1
@@ -397,7 +402,10 @@ function RouteComponent() {
                       : `${data?.totalMembers} members`}
                   </Text>
                 </Group>
-                <Group gap={8} className="rounded-full bg-gray-50 px-4 py-2">
+                <Group
+                  gap={8}
+                  className={`rounded-full ${isDark ? 'bg-gray-800' : 'bg-gray-50'} px-4 py-2`}
+                >
                   <GIcon name="FilePencil" size={18} color="#4263eb" />
                   <Text fw={500}>
                     {data?.totalPosts === 1

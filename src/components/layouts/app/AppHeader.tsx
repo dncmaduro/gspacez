@@ -12,8 +12,11 @@ import {
   Menu,
   Popover,
   Stack,
+  Switch,
   Text,
-  Tooltip
+  Tooltip,
+  useComputedColorScheme,
+  useMantineColorScheme
 } from '@mantine/core'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { GIcon } from '../../common/GIcon'
@@ -32,6 +35,7 @@ import { useNotification } from '../../../hooks/useNotification'
 import { useDebouncedValue, useMediaQuery } from '@mantine/hooks'
 import { useSidebarStore } from '../../../store/sidebarStore'
 import { useLogo } from '../../../hooks/useLogo'
+import { useDark } from '../../../hooks/useDark'
 
 interface Props {
   hideSearchInput?: boolean
@@ -118,6 +122,11 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
       return data.data.result.content
     },
     enabled: !!searchText
+  })
+
+  const { setColorScheme } = useMantineColorScheme()
+  const computedColorScheme = useComputedColorScheme('light', {
+    getInitialValueInEffect: true
   })
 
   const data = useMemo(() => {
@@ -257,6 +266,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
 
   const { toggle: toggleSidebar } = useSidebarStore()
 
+  const { isDark } = useDark()
+
   return (
     <Box w="100%" h="100%" className="shadow-md">
       <Flex
@@ -284,7 +295,13 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
         </Flex>
         {!hideSearchInput && !isMobile && (
           <Autocomplete
-            leftSection={<GIcon name="ZoomCode" size={20} color="#4F46E5" />}
+            leftSection={
+              <GIcon
+                name="ZoomCode"
+                size={20}
+                color={isDark ? '#fff' : '#4F46E5'}
+              />
+            }
             w={isTablet ? 300 : 450}
             limit={10}
             radius="xl"
@@ -321,6 +338,15 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           />
         )}
         <Group gap={isMobile ? 12 : isTablet ? 16 : 20}>
+          <Switch
+            checked={computedColorScheme === 'dark'}
+            onClick={() =>
+              setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')
+            }
+            size="md"
+            onLabel={<GIcon name="Sun" stroke={1.5} />}
+            offLabel={<GIcon name="Moon" stroke={1.5} />}
+          />
           {location.pathname !== '/post/new' && (
             <Button
               component={Link}

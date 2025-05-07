@@ -15,6 +15,7 @@ import { UpdatePostRequest } from '../../hooks/models'
 import { GToast } from '../../components/common/GToast'
 import { GIcon } from '../../components/common/GIcon'
 import { PostForm } from '../../components/post/PostForm'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/post/edit/$postId')({
   component: RouteComponent
@@ -25,6 +26,7 @@ function RouteComponent() {
   const { postId } = useParams({ from: `/post/edit/$postId` })
   const navigate = useNavigate()
   const router = useRouter()
+  const { isDark } = useDark()
 
   const { data, isLoading } = useQuery({
     queryKey: ['edit-post', postId],
@@ -89,7 +91,13 @@ function RouteComponent() {
 
   return (
     <AppLayout>
-      <Box maw={1000} mx="auto" px={32} py={20}>
+      <Box
+        maw={1000}
+        mx="auto"
+        px={32}
+        py={20}
+        bg={isDark ? 'gray.9' : 'white'}
+      >
         {isLoading ? (
           <Loader />
         ) : (
