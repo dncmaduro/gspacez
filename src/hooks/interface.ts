@@ -209,3 +209,12 @@ export interface IDiscussion {
   isOpen: boolean
   createdAt: string
 }
+
+export interface IDiscussionComment {
+  id: string
+  profileName: string
+  profileTag: string
+  avatarUrl: string
+  content: string
+  totalUpvote: number
+}

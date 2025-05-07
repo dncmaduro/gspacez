@@ -3,8 +3,12 @@ import { callApi } from '../utils/axios'
 import {
   BaseSearchRequest,
   ChangeDiscussionStatusRequest,
+  CreateDiscussionCommentRequest,
   CreateDiscussionRequest,
   CreateDiscussionResponse,
+  GetDetailDiscussionResponse,
+  GetDiscussionCommentsRequest,
+  GetDiscussionCommentsResponse,
   SearchDiscussionsResponse,
   UpdateDiscussionRequest,
   VotePollRequest
@@ -33,7 +37,7 @@ export const useDiscussion = () => {
   }
 
   const getDetailDiscussion = async (id: string) => {
-    return callApi<never, never>({
+    return callApi<never, GetDetailDiscussionResponse>({
       method: 'GET',
       path: `/v1/post-service/discussions/${id}`,
       accessToken,
@@ -73,10 +77,26 @@ export const useDiscussion = () => {
     })
   }
 
-  const getDiscussionComments = async (id: string) => {
-    return callApi<never, never>({
+  const createDiscussionComment = async (
+    id: string,
+    req: CreateDiscussionCommentRequest
+  ) => {
+    return callApi<CreateDiscussionCommentRequest, never>({
+      method: 'POST',
+      path: `/v1/post-service/discussions/${id}/comments/create`,
+      data: req,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
+  const getDiscussionComments = async (
+    id: string,
+    req: GetDiscussionCommentsRequest
+  ) => {
+    return callApi<never, GetDiscussionCommentsResponse>({
       method: 'GET',
-      path: `/v1/post-service/discussions/${id}/comments`,
+      path: `/v1/post-service/discussions/${id}/comments?page=${req.page}&size=${req.size}`,
       accessToken,
       onClearAuth: clearAuth
     })
@@ -92,6 +112,15 @@ export const useDiscussion = () => {
     })
   }
 
+  const upvoteComment = async (id: string) => {
+    return callApi<never, never>({
+      method: 'PUT',
+      path: `/v1/post-service/discussions/${id}/upvote`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     createDiscussion,
     searchDiscussions,
@@ -100,6 +129,8 @@ export const useDiscussion = () => {
     deleteDiscussion,
     changeDiscussionStatus,
     getDiscussionComments,
-    votePoll
+    votePoll,
+    createDiscussionComment,
+    upvoteComment
   }
 }

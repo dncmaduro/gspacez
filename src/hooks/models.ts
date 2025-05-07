@@ -2,6 +2,7 @@ import {
   IChatMessage,
   IComment,
   IDiscussion,
+  IDiscussionComment,
   IExplore,
   IMember,
   INotification,
@@ -748,4 +749,32 @@ export interface SearchDiscussionsResponse {
 
 export interface VotePollRequest {
   optionId: string
+}
+
+export interface GetDetailDiscussionResponse {
+  result: IDiscussion
+}
+
+export interface CreateDiscussionCommentRequest {
+  commentContent: string
+}
+
+export interface GetDiscussionCommentsRequest {
+  page: number
+  size: number
+}
+
+export interface GetDiscussionCommentsResponse {
+  result: {
+    totalPages: number
+    totalElements: number
+    pageable: {
+      pageNumber: number
+      pageSize: number
+      offset: number
+    }
+    size: number
+    number: number
+    content: IDiscussionComment[]
+  }
 }
