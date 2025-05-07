@@ -19,6 +19,7 @@ import { Link } from '@tanstack/react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNotification } from '../../hooks/useNotification'
 import { useMe } from '../../hooks/useMe'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   notifications: INotification[]
@@ -77,6 +78,8 @@ export const HeaderNotifications = ({
     }
   })
 
+  const { isDark } = useDark()
+
   return (
     <Box w={'100%'} className="p-2">
       <Box className="mb-3 flex items-center justify-between">
@@ -115,7 +118,7 @@ export const HeaderNotifications = ({
                 {notifications.map((notification) => (
                   <Box
                     key={notification.id}
-                    className={`group relative rounded-md p-2 transition-colors duration-200 hover:bg-gray-100 ${!notification.read ? 'bg-indigo-50 hover:bg-indigo-100' : 'border border-gray-200'}`}
+                    className={`group relative rounded-md p-2 transition-colors duration-200 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} ${!notification.read ? `${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-indigo-50 hover:bg-indigo-100'}` : `${isDark ? 'border border-gray-700' : 'border border-gray-200'}`}`}
                     onClick={() => {
                       if (!notification.read) {
                         markRead(notification.id)

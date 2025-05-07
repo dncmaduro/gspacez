@@ -26,6 +26,7 @@ import { SendChatMessageRequest } from '../../hooks/models'
 import { v4 as uuidv4 } from 'uuid'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import { IChatMessage } from '../../hooks/interface'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/ai/')({
   component: RouteComponent,
@@ -43,6 +44,7 @@ function RouteComponent() {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
+  const { isDark } = useDark()
 
   const { sendChatMessage, getAllChat, getChatHistory } = useGemini()
 
@@ -287,7 +289,7 @@ function RouteComponent() {
         {!isMobile && (
           <Box
             w={300}
-            className="border-r border-indigo-100 bg-white shadow-md transition-all duration-300"
+            className={`border-r ${isDark ? 'border-indigo-700' : 'border-indigo-100'} ${isDark ? 'bg-gray-900' : 'bg-white'} shadow-md transition-all duration-300`}
           >
             <ChatHistorySidebar />
           </Box>
@@ -314,7 +316,7 @@ function RouteComponent() {
             mx="auto"
             px={20}
             pt={10}
-            bg="white"
+            bg={isDark ? 'gray.9' : 'white'}
             h="100%"
             className="flex flex-col"
           >
@@ -355,7 +357,9 @@ function RouteComponent() {
               </Group>
             </Group>
 
-            <Box className="relative flex-1 overflow-hidden rounded-xl border border-indigo-200 shadow-lg transition-all duration-300 hover:shadow-indigo-100/50">
+            <Box
+              className={`relative flex-1 overflow-hidden rounded-xl border ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-lg transition-all duration-300 hover:shadow-indigo-100/50`}
+            >
               <div className="absolute inset-0 animate-pulse rounded-xl border-2 border-indigo-300/30"></div>
 
               {chatHistory && chatHistory.length > 0 ? (
@@ -383,7 +387,9 @@ function RouteComponent() {
                   h="100%"
                   className="relative z-10"
                 >
-                  <div className="flex flex-col items-center gap-4 rounded-xl bg-white/80 p-6 shadow-sm backdrop-blur-sm">
+                  <div
+                    className={`flex flex-col items-center gap-4 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white/80'} p-6 shadow-sm`}
+                  >
                     <GIcon
                       name="Sparkles"
                       size={32}

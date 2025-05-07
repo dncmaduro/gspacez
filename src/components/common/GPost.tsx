@@ -24,6 +24,7 @@ import { GLikeButton } from './GLikeButton'
 import { GDislikeButton } from './GDislikeButton'
 import { GCommentButton } from './GCommentButton'
 import { GToast } from './GToast'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   post: IPost
@@ -82,13 +83,16 @@ export const GPost = ({ post }: Props) => {
     })
   }
 
+  const { isDark } = useDark()
+
   return (
     <Box
-      className="w-full rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
+      className="w-full rounded-lg border border-gray-200 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
       px={0}
       py={0}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      bg={isDark ? 'dark' : 'white'}
     >
       <Link to={`/post/${post.id}`} className="block w-full">
         {post.previewImage && (

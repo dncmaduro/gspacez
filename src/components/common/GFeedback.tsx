@@ -1,6 +1,7 @@
 import { Avatar, Box, Card, Group, Rating, Text } from '@mantine/core'
 import { format } from 'date-fns'
 import { GIcon } from './GIcon'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   feedback: {
@@ -13,8 +14,17 @@ interface Props {
 }
 
 export const GFeedback = ({ feedback }: Props) => {
+  const { isDark } = useDark()
+
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder className="mb-4">
+    <Card
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      className="mb-4"
+      bg={isDark ? 'gray.9' : 'white'}
+    >
       <Group justify="space-between" mb="md">
         <Group>
           <Avatar color="indigo" radius="xl">
@@ -32,7 +42,7 @@ export const GFeedback = ({ feedback }: Props) => {
         <Rating value={feedback.rate} readOnly />
       </Group>
 
-      <Box className="rounded-md bg-gray-50 p-3">
+      <Box className="rounded-md p-3" bg={isDark ? 'gray.8' : 'gray.0'}>
         <Text>{feedback.content}</Text>
       </Box>
     </Card>

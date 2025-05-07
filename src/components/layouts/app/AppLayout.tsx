@@ -1,4 +1,4 @@
-import { AppShell } from '@mantine/core'
+import { AppShell, useComputedColorScheme } from '@mantine/core'
 import { AppHeader } from './AppHeader'
 import { ChildProps } from '../../../utils/props'
 import { AppSidebar } from './AppSidebar'
@@ -62,6 +62,10 @@ export const AppLayout = ({
     }
   })
 
+  const computedColorScheme = useComputedColorScheme('light', {
+    getInitialValueInEffect: true
+  })
+
   return (
     <GAuthGuard>
       <AppShell
@@ -88,7 +92,11 @@ export const AppLayout = ({
         <AppShell.Navbar className="transition-all duration-300 ease-in-out">
           <AppSidebar toggle={toggle} opened={opened} />
         </AppShell.Navbar>
-        <AppShell.Main bg={'gray.0'}>{children}</AppShell.Main>
+        <AppShell.Main
+          bg={computedColorScheme === 'dark' ? 'gray.9' : 'gray.0'}
+        >
+          {children}
+        </AppShell.Main>
       </AppShell>
     </GAuthGuard>
   )

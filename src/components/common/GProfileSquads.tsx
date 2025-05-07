@@ -10,6 +10,7 @@ import {
 } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
 import { GIcon } from './GIcon'
+import { useDark } from '../../hooks/useDark'
 
 interface Squad {
   name: string
@@ -23,11 +24,12 @@ interface Props {
 
 export const GProfileSquads = ({ squads }: Props) => {
   const hasSquads = squads && squads.length > 0
+  const { isDark } = useDark()
 
   return (
     <Box
-      className="rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
-      bg="white"
+      className={`rounded-lg border ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-sm transition-shadow duration-300 hover:shadow-md`}
+      bg={isDark ? 'gray.8' : 'white'}
       p={24}
     >
       <Stack gap={16}>

@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { GIcon } from './GIcon'
 import { useMedia } from '../../hooks/useMedia'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   article: IExplore
@@ -20,10 +21,11 @@ interface Props {
 
 export const GExplore = ({ article }: Props) => {
   const { isMobile } = useMedia()
+  const { isDark } = useDark()
 
   return (
     <Box
-      className="rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
+      className={`rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} transition-all duration-200 hover:border-indigo-300 hover:shadow-md`}
       px={24}
       py={16}
       w={'100%'}
@@ -63,12 +65,15 @@ export const GExplore = ({ article }: Props) => {
       <Image
         src={article.urlToImage}
         w={600}
-        className="rounded-md border border-gray-300 shadow-sm"
+        className={`rounded-md border ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-sm`}
         mt={16}
         mx={'auto'}
       />
 
-      <Box mt={32} className="leading-relaxed text-gray-700">
+      <Box
+        mt={32}
+        className={`${isDark ? 'text-gray-400' : 'text-gray-700'} leading-relax`}
+      >
         {article.content}
       </Box>
 

@@ -4,6 +4,7 @@ import { GIcon } from '../common/GIcon'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useFeedback } from '../../hooks/useFeedback'
 import { GToast } from '../common/GToast'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   feedback: {
@@ -17,6 +18,7 @@ interface Props {
 
 export const OwnFeedback = ({ feedback }: Props) => {
   const queryClient = useQueryClient()
+  const { isDark } = useDark()
 
   const { deleteFeedback } = useFeedback()
 
@@ -44,7 +46,7 @@ export const OwnFeedback = ({ feedback }: Props) => {
       p={24}
       radius="md"
       withBorder
-      className="border-indigo-200 bg-indigo-50/50"
+      className={`border-indigo-200 ${isDark ? 'bg-indigo-700/50' : 'bg-indigo-50/50'}`}
       key={feedback.id}
     >
       <Stack gap={16}>
@@ -54,7 +56,10 @@ export const OwnFeedback = ({ feedback }: Props) => {
           </Text>
           <Rating value={feedback.rate} readOnly size="md" />
         </Flex>
-        <Box className="rounded-md border border-indigo-100 bg-white p-3">
+        <Box
+          className="rounded-md border border-indigo-100 p-3"
+          bg={isDark ? 'gray.8' : 'gray.0'}
+        >
           <Text>{feedback.content}</Text>
         </Box>
         <Button

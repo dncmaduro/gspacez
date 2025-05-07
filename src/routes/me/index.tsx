@@ -25,6 +25,7 @@ import { usePost } from '../../hooks/usePost'
 import { useEffect, useRef, useState } from 'react'
 import GProfilePosts from '../../components/common/GProfilePosts'
 import { GProfileSquads } from '../../components/common/GProfileSquads'
+import { useDark } from '../../hooks/useDark'
 
 export const Route = createFileRoute('/me/')({
   component: RouteComponent,
@@ -41,6 +42,7 @@ export const Route = createFileRoute('/me/')({
 function RouteComponent() {
   const search = useSearch({ from: Route.fullPath })
   const navigate = useNavigate({ from: Route.fullPath })
+  const { isDark } = useDark()
 
   const defaultTab = search.tab === 'upvoted' ? 'upvoted' : 'posts'
   const [activeTab, setActiveTab] = useState<'posts' | 'upvoted'>(defaultTab)
@@ -191,8 +193,8 @@ function RouteComponent() {
               <Stack w="30%" gap={16}>
                 {/* Profile Card */}
                 <Box
-                  className="rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
-                  bg={'white'}
+                  className={`rounded-lg border ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-sm transition-shadow duration-300 hover:shadow-md`}
+                  bg={isDark ? 'gray.8' : 'white'}
                   p={24}
                 >
                   <Stack gap={24} align="center">
@@ -254,9 +256,9 @@ function RouteComponent() {
 
                 {/* Social Accounts Card */}
                 <Box
-                  className="rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                  className={`rounded-lg border ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-sm transition-shadow duration-300 hover:shadow-md`}
                   p={24}
-                  bg={'white'}
+                  bg={isDark ? 'gray.8' : 'white'}
                 >
                   <Stack gap={16}>
                     <Group gap={12}>
@@ -298,9 +300,9 @@ function RouteComponent() {
 
               {/* Main Content */}
               <Box
-                className="grow rounded-lg border border-indigo-200 shadow-sm transition-shadow duration-300 hover:shadow-md"
+                className={`grow rounded-lg border ${isDark ? 'border-indigo-700' : 'border-indigo-200'} shadow-sm transition-shadow duration-300 hover:shadow-md`}
                 maw={'68%'}
-                bg={'white'}
+                bg={isDark ? 'gray.8' : 'white'}
               >
                 <Tabs
                   value={activeTab}
@@ -311,7 +313,7 @@ function RouteComponent() {
                   <Tabs.List
                     h={60}
                     px={16}
-                    className="border-b border-indigo-100 bg-gray-50"
+                    className={`border-b ${isDark ? 'border-indigo-700' : 'border-indigo-100'} ${isDark ? 'bg-gray-800' : 'bg-gray-50'}`}
                   >
                     {Object.values(tabConfig).map((tab, index) => (
                       <Tabs.Tab
