@@ -242,7 +242,7 @@ function RouteComponent() {
                         </Group>
                         <Group gap={8} wrap="nowrap">
                           <Progress
-                            value={parseFloat(option.percentage)}
+                            value={option.percentage}
                             color={
                               discussionData.voteResponse?.selectedOptionId ===
                               option.id

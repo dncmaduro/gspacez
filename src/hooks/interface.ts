@@ -201,7 +201,7 @@ export interface IDiscussion {
     options: {
       id: string
       value: string
-      percentage: string
+      percentage: number
     }[]
     selectedOptionId: string | null
   }

@@ -10,7 +10,7 @@ export const Route = createFileRoute('/discussions/new')({
 function RouteComponent() {
   return (
     <AppLayout>
-      <Box maw={1000} w="100%" mx="auto" mt={32} p={'md'}>
+      <Box maw={1000} w="100%" mx="auto" px={32} py={20}>
         <Stack align="center">
           <Text className="!text-4xl !font-bold">Create a discussion</Text>
           <Text className="!text-lg">

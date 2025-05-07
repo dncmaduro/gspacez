@@ -1,9 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useDiscussion } from '../../hooks/useDiscussion'
 import { useState } from 'react'
-import { Box, Loader, Stack, Text, TextInput } from '@mantine/core'
+import {
+  Box,
+  Button,
+  Flex,
+  Loader,
+  Stack,
+  Text,
+  TextInput
+} from '@mantine/core'
 import { GDiscussion } from '../../components/common/GDiscussion'
 import { GIcon } from '../../components/common/GIcon'
 import { useDebouncedValue } from '@mantine/hooks'
@@ -41,15 +49,24 @@ function RouteComponent() {
         </Text>
 
         <Stack mt={32}>
-          <TextInput
-            leftSection={<GIcon name="Search" size={20} />}
-            onChange={(e) => setSearchText(e.target.value)}
-            value={searchText}
-            placeholder="Search discussions"
-            mb={16}
-            radius={'md'}
-          />
-
+          <Flex gap={16}>
+            <TextInput
+              leftSection={<GIcon name="Search" size={20} />}
+              onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
+              placeholder="Search discussions"
+              mb={16}
+              radius={'md'}
+              className="grow"
+            />
+            <Button
+              leftSection={<GIcon name="Plus" size={20} />}
+              component={Link}
+              to="/discussions/new"
+            >
+              Create a discussion
+            </Button>
+          </Flex>
           {isLoading ? (
             <Loader />
           ) : (
