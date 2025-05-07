@@ -11,6 +11,7 @@ import {
   GetDiscussionCommentsResponse,
   SearchDiscussionsResponse,
   UpdateDiscussionRequest,
+  UpvoteCommentResponse,
   VotePollRequest
 } from './models'
 
@@ -113,7 +114,7 @@ export const useDiscussion = () => {
   }
 
   const upvoteComment = async (id: string) => {
-    return callApi<never, never>({
+    return callApi<never, UpvoteCommentResponse>({
       method: 'PUT',
       path: `/v1/post-service/discussions/comments/${id}/upvote`,
       accessToken,

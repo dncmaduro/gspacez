@@ -13,20 +13,20 @@ import { Link } from '@tanstack/react-router'
 import { GIcon } from './GIcon'
 import { useDiscussion } from '../../hooks/useDiscussion'
 import { useMutation } from '@tanstack/react-query'
-import { useDisclosure } from '@mantine/hooks'
+import { useState } from 'react'
 
 interface Props {
   comment: IDiscussionComment
 }
 
-export const GDiscussionComment = ({ comment }: Props) => {
+export const GDiscussionComment = ({ comment: initComment }: Props) => {
   const { upvoteComment } = useDiscussion()
-  const [upvoted, { toggle: toggleUpvoted }] = useDisclosure(comment.isUpvote)
+  const [comment, setComment] = useState<IDiscussionComment>(initComment)
 
   const { mutate: upvote } = useMutation({
     mutationFn: () => upvoteComment(comment.id),
-    onSuccess: () => {
-      toggleUpvoted()
+    onSuccess: (response) => {
+      setComment(response.data.result)
     }
   })
 
@@ -71,11 +71,14 @@ export const GDiscussionComment = ({ comment }: Props) => {
                   onClick={() => upvote()}
                 >
                   <GIcon
-                    name={upvoted ? 'ThumbUpFilled' : 'ThumbUp'}
+                    name={comment.isUpvote ? 'ThumbUpFilled' : 'ThumbUp'}
                     size={16}
                   />
                 </ActionIcon>
               </Tooltip>
+              <Text c="indigo" size="sm">
+                {comment.totalUpvote}
+              </Text>
             </Group>
           </Group>
 
