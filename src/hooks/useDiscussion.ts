@@ -105,7 +105,7 @@ export const useDiscussion = () => {
   const votePoll = async (id: string, req: VotePollRequest) => {
     return callApi<VotePollRequest, never>({
       method: 'POST',
-      path: `/v1/post-service/discussion/${id}/vote`,
+      path: `/v1/post-service/discussions/${id}/vote`,
       accessToken,
       onClearAuth: clearAuth,
       data: req

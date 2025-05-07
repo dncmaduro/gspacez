@@ -26,7 +26,10 @@ import { format } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
 import { GLikeButton } from '../../components/common/GLikeButton'
 import { GDislikeButton } from '../../components/common/GDislikeButton'
-import { CreateDiscussionCommentRequest } from '../../hooks/models'
+import {
+  CreateDiscussionCommentRequest,
+  VotePollRequest
+} from '../../hooks/models'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CommentFormType } from '../post/$postId'
 import { CommentForm } from '../../components/post/CommentForm'
@@ -71,13 +74,14 @@ function RouteComponent() {
     }
   })
 
-  const handleVote = (optionId: string) => {
-    if (discussionData?.voteResponse) {
-      votePoll(discussionId, {
-        optionId
+  const { mutate: mutateVote } = useMutation({
+    mutationFn: (req: VotePollRequest) => votePoll(discussionId, req),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['get-detail-discussion', discussionId]
       })
     }
-  }
+  })
 
   const formMethods = useForm<CommentFormType>({
     defaultValues: {
@@ -222,9 +226,9 @@ function RouteComponent() {
                       <Box key={option.id}>
                         <Group justify="apart" mb={4}>
                           <Text size="sm">{option.value}</Text>
-                          <Text size="sm" fw={500}>
-                            {option.percentage}
-                          </Text>
+                          <Badge variant="light" size="sm" fw={500}>
+                            {option.percentage} %
+                          </Badge>
                         </Group>
                         <Group gap={8} wrap="nowrap">
                           <Progress
@@ -250,15 +254,12 @@ function RouteComponent() {
                             size="xs"
                             disabled={
                               !discussionData.isOpen ||
-                              discussionData.voteResponse?.selectedOptionId !==
-                                null
+                              discussionData.voteResponse?.selectedOptionId ===
+                                option.id
                             }
-                            onClick={() => handleVote(option.id)}
+                            onClick={() => mutateVote({ optionId: option.id })}
                           >
-                            {discussionData.voteResponse?.selectedOptionId ===
-                            option.id
-                              ? 'Voted'
-                              : 'Vote'}
+                            Vote
                           </Button>
                         </Group>
                       </Box>
