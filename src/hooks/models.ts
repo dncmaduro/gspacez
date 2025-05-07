@@ -778,3 +778,7 @@ export interface GetDiscussionCommentsResponse {
     content: IDiscussionComment[]
   }
 }
+
+export interface UpvoteCommentResponse {
+  result: IDiscussionComment
+}

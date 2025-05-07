@@ -24,8 +24,6 @@ import {
 import { GIcon } from '../../components/common/GIcon'
 import { format } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
-import { GLikeButton } from '../../components/common/GLikeButton'
-import { GDislikeButton } from '../../components/common/GDislikeButton'
 import {
   CreateDiscussionCommentRequest,
   VotePollRequest
@@ -34,6 +32,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { CommentFormType } from '../post/$postId'
 import { CommentForm } from '../../components/post/CommentForm'
 import { GDiscussionComment } from '../../components/common/GDiscussionComment'
+import { useMemo } from 'react'
+import { useMe } from '../../hooks/useMe'
 
 export const Route = createFileRoute('/discussions/$discussionId')({
   component: RouteComponent
@@ -48,6 +48,7 @@ function RouteComponent() {
     createDiscussionComment
   } = useDiscussion()
   const queryClient = useQueryClient()
+  const { data: meData } = useMe()
 
   const { data: commentsData, isLoading: isCommentsLoading } = useInfiniteQuery(
     {
@@ -100,6 +101,10 @@ function RouteComponent() {
     }
   })
 
+  const isAdmin = useMemo(() => {
+    return discussionData?.profileTag === meData?.profileTag
+  }, [discussionData])
+
   if (isDiscussionLoading) {
     return (
       <AppLayout>
@@ -143,8 +148,46 @@ function RouteComponent() {
             {/* Header */}
             <Paper shadow="xs" p="lg" radius="md" withBorder>
               <Stack gap={16}>
+                <Flex justify={'space-between'}>
+                  <Group>
+                    <Avatar
+                      src={discussionData.avatarUrl}
+                      size="md"
+                      radius="xl"
+                      color="indigo"
+                    >
+                      {!discussionData.avatarUrl && (
+                        <GIcon name="User" size={20} />
+                      )}
+                    </Avatar>
+                    <Box>
+                      <Text fw={500}>
+                        {discussionData.profileName ||
+                          discussionData.profileTag}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Posted on{' '}
+                        {format(new Date(discussionData.createdAt), 'PPpp')}
+                      </Text>
+                    </Box>
+                  </Group>
+
+                  {isAdmin && (
+                    <Button
+                      variant="subtle"
+                      component={Link}
+                      size="sm"
+                      color="green"
+                      leftSection={<GIcon name="Pencil" />}
+                      to={`/discussions/edit/${discussionId}`}
+                    >
+                      Edit discussion
+                    </Button>
+                  )}
+                </Flex>
+
                 <Group justify="space-between" wrap="nowrap">
-                  <Text className="text-2xl font-bold text-indigo-800">
+                  <Text size="xl" fw={700}>
                     {discussionData.title}
                   </Text>
                   <Group gap={8}>
@@ -159,28 +202,6 @@ function RouteComponent() {
                       </Badge>
                     )}
                   </Group>
-                </Group>
-
-                <Group>
-                  <Avatar
-                    src={discussionData.avatarUrl}
-                    size="md"
-                    radius="xl"
-                    color="indigo"
-                  >
-                    {!discussionData.avatarUrl && (
-                      <GIcon name="User" size={20} />
-                    )}
-                  </Avatar>
-                  <Box>
-                    <Text fw={500}>
-                      {discussionData.profileName || discussionData.profileTag}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Posted on{' '}
-                      {format(new Date(discussionData.createdAt), 'PPpp')}
-                    </Text>
-                  </Box>
                 </Group>
 
                 <Divider />
@@ -200,28 +221,6 @@ function RouteComponent() {
                     ))}
                   </Group>
                 )}
-
-                {/* Actions */}
-                <Group mt={8}>
-                  <GLikeButton
-                    onClick={() => {}}
-                    quantity={10}
-                    isLiked={false}
-                  />
-                  <GDislikeButton
-                    onClick={() => {}}
-                    quantity={2}
-                    isDisliked={false}
-                  />
-                  <Button
-                    variant="light"
-                    leftSection={<GIcon name="Share" size={16} />}
-                    size="sm"
-                    color="gray"
-                  >
-                    Share
-                  </Button>
-                </Group>
               </Stack>
             </Paper>
 
