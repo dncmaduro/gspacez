@@ -129,6 +129,17 @@ function RouteComponent() {
       <Box w="100%" maw={800} mx="auto" mt={32} px={16}>
         {discussionData && (
           <Stack gap={24}>
+            {/* Back Button */}
+            <Button
+              variant="light"
+              leftSection={<GIcon name="ArrowLeft" size={16} />}
+              component={Link}
+              to="/discussions"
+              w="fit-content"
+            >
+              Back to Discussions
+            </Button>
+
             {/* Header */}
             <Paper shadow="xs" p="lg" radius="md" withBorder>
               <Stack gap={16}>
@@ -323,17 +334,6 @@ function RouteComponent() {
                 )}
               </Stack>
             </Paper>
-
-            {/* Back Button */}
-            <Button
-              variant="light"
-              leftSection={<GIcon name="ArrowLeft" size={16} />}
-              component={Link}
-              to="/discussions"
-              w="fit-content"
-            >
-              Back to Discussions
-            </Button>
           </Stack>
         )}
       </Box>

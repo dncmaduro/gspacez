@@ -217,4 +217,5 @@ export interface IDiscussionComment {
   avatarUrl: string
   content: string
   totalUpvote: number
+  isUpvote: boolean
 }
