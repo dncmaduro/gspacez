@@ -1,7 +1,10 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useDiscussion } from '../../hooks/useDiscussion'
 import { useMutation } from '@tanstack/react-query'
-import { CreateDiscussionRequest } from '../../hooks/models'
+import {
+  CreateDiscussionRequest,
+  UpdateDiscussionRequest
+} from '../../hooks/models'
 import { GToast } from '../common/GToast'
 import {
   Box,
@@ -25,8 +28,10 @@ import { GIcon } from '../common/GIcon'
 import { useCloudinary } from '../../hooks/useCloudinary'
 import { mediaText } from '../../utils/mediaText'
 import ReactMarkdown from 'react-markdown'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
+import { IDiscussion } from '../../hooks/interface'
+import { useNavigate } from '@tanstack/react-router'
 
 type DiscussionType = {
   title: string
@@ -40,8 +45,12 @@ type DiscussionType = {
   hashTags?: string[]
 }
 
-export const DiscussionForm = () => {
-  const { createDiscussion } = useDiscussion()
+interface Props {
+  discussion?: IDiscussion
+}
+
+export const DiscussionForm = ({ discussion }: Props) => {
+  const { createDiscussion, updateDiscussion } = useDiscussion()
   const { uploadMedia } = useCloudinary()
   const [fileValue, setFileValue] = useState<File | null>(null)
 
@@ -55,9 +64,17 @@ export const DiscussionForm = () => {
     handleSubmit
   } = useForm<DiscussionType>({
     defaultValues: {
-      title: '',
-      content: '',
-      hashTags: []
+      title: discussion?.title || '',
+      content: discussion?.content || '',
+      hashTags: [],
+      voteRequest: discussion?.voteResponse
+        ? {
+            title: discussion?.voteResponse.title,
+            options: discussion?.voteResponse.options.map((option) => ({
+              value: option.value
+            }))
+          }
+        : undefined
     }
   })
 
@@ -70,13 +87,32 @@ export const DiscussionForm = () => {
     name: 'voteRequest.options'
   })
 
+  const navigate = useNavigate()
+
+  const { mutate: update, isPending: isUpdating } = useMutation({
+    mutationFn: ({ req }: { req: UpdateDiscussionRequest }) =>
+      updateDiscussion(discussion?.id || '', req),
+    onSuccess: () => {
+      GToast.success({
+        title: 'Update discussion successfully!'
+      })
+      navigate({ to: `/discussions/${discussion?.id}` })
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Update discussion failed!'
+      })
+    }
+  })
+
   const { mutate: create, isPending: isCreating } = useMutation({
     mutationFn: ({ req }: { req: CreateDiscussionRequest }) =>
       createDiscussion(req),
-    onSuccess: () => {
+    onSuccess: (response) => {
       GToast.success({
         title: 'Create discussion successfully!'
       })
+      navigate({ to: `/discussions/${response.data.result.id}` })
     },
     onError: () => {
       GToast.error({
@@ -86,18 +122,34 @@ export const DiscussionForm = () => {
   })
 
   const onSubmit = (values: DiscussionType) => {
-    if (values.voteRequest) {
-      create({
-        req: {
-          ...values,
-          voteRequest: {
-            title: values.voteRequest?.title,
-            options: values.voteRequest?.options.map((option) => option.value)
+    if (discussion) {
+      if (values.voteRequest) {
+        update({
+          req: {
+            ...values,
+            voteRequest: {
+              title: values.voteRequest?.title,
+              options: values.voteRequest?.options.map((option) => option.value)
+            }
           }
-        }
-      })
+        })
+      } else {
+        update({ req: { ...values, voteRequest: undefined } })
+      }
     } else {
-      create({ req: { ...values, voteRequest: undefined } })
+      if (values.voteRequest) {
+        create({
+          req: {
+            ...values,
+            voteRequest: {
+              title: values.voteRequest?.title,
+              options: values.voteRequest?.options.map((option) => option.value)
+            }
+          }
+        })
+      } else {
+        create({ req: { ...values, voteRequest: undefined } })
+      }
     }
   }
 
@@ -120,7 +172,16 @@ export const DiscussionForm = () => {
     }
   }
 
-  const [useVote, { toggle }] = useDisclosure(false)
+  const [useVote, { toggle }] = useDisclosure(
+    discussion?.voteResponse ? true : false
+  )
+
+  const isPollVoted = useMemo(() => {
+    return !!discussion?.voteResponse.options.reduce(
+      (acc, o) => acc + o.percentage,
+      0
+    )
+  }, [discussion])
 
   useEffect(() => {
     if (!useVote) {
@@ -240,6 +301,7 @@ export const DiscussionForm = () => {
             checked={useVote}
             onChange={toggle}
             mt={16}
+            disabled={isPollVoted}
           />
 
           <Collapse in={useVote}>
@@ -253,6 +315,7 @@ export const DiscussionForm = () => {
                     label="Vote request title"
                     placeholder="Your vote request title"
                     size="sm"
+                    disabled={isPollVoted}
                     radius="md"
                   />
                 )
@@ -270,11 +333,13 @@ export const DiscussionForm = () => {
                     placeholder="Option"
                     size="sm"
                     radius="md"
+                    disabled={isPollVoted}
                     className="grow"
                   />
                   <Button
                     variant="subtle"
                     color="gray"
+                    disabled={isPollVoted}
                     onClick={() => removeVoteOption(index)}
                   >
                     Remove
@@ -288,6 +353,7 @@ export const DiscussionForm = () => {
               color="indigo"
               size="xs"
               mt={12}
+              disabled={isPollVoted}
               leftSection={<GIcon name="Plus" size={16} />}
               onClick={() => appendVoteOption({ value: '' })}
             >
@@ -295,8 +361,8 @@ export const DiscussionForm = () => {
             </Button>
           </Collapse>
 
-          <Button type="submit" loading={isCreating} mt={16}>
-            Submit your new discussion
+          <Button type="submit" loading={isCreating || isUpdating} mt={16}>
+            {discussion ? 'Update discussion' : 'Submit your new discussion'}
           </Button>
         </Stack>
       </Paper>
