@@ -15,6 +15,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 import { GIcon } from '../common/GIcon'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   searchText: string
@@ -69,8 +70,13 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
     }
   }, [isLoading, hasNextPage, fetchNextPage])
 
+  const { isDark } = useDark()
+
   return (
-    <Box bg="white" className="rounded-lg shadow-sm">
+    <Box
+      bg={isDark ? 'gray.9' : 'white'}
+      className={`rounded-lg shadow-sm ${isDark ? 'border border-gray-700' : 'border border-gray-200'}`}
+    >
       <ScrollArea.Autosize mah="80vh">
         <Box p="md">
           <Flex align="center" mb="md">
@@ -104,11 +110,12 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
               ) : (
                 usersData?.users.map((user) => (
                   <Box
-                    key={user.id}
+                    key={user.profileTag}
                     p={16}
                     component={Link}
-                    to={`/profile/${user.id}`}
-                    className="cursor-pointer rounded-lg border border-gray-200 bg-white transition-all duration-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:shadow-sm"
+                    to={`/profile/${user.profileTag}`}
+                    bg={isDark ? 'gray.8' : 'white'}
+                    className={`cursor-pointer rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} transition-all duration-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:shadow-sm`}
                   >
                     <Group>
                       <Avatar
@@ -123,7 +130,7 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
                           size="sm"
                         >{`${user.firstName} ${user.lastName}`}</Text>
                         <Text size="xs" c="dimmed">
-                          {user.email}
+                          @{user.profileTag}
                         </Text>
                       </Stack>
                       <GIcon name="ChevronRight" size={16} color="#94A3B8" />
