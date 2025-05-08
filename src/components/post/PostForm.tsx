@@ -70,7 +70,7 @@ export const PostForm = () => {
 
   const { data: squadData } = useQuery({
     queryKey: ['get-joined-squads'],
-    queryFn: () => getJoinedSquads(meData?.id || ''),
+    queryFn: () => getJoinedSquads(meData?.profileTag || ''),
     select: (data) => {
       return data.data.result.map((squad) => ({
         value: squad.tagName,
@@ -156,8 +156,8 @@ export const PostForm = () => {
   }
 
   const { data: recentSquads } = useQuery({
-    queryKey: ['get-recent-squads', meData?.id || ''],
-    queryFn: () => getJoinedSquads(meData?.id || ''),
+    queryKey: ['get-recent-squads', meData?.profileTag || ''],
+    queryFn: () => getJoinedSquads(meData?.profileTag || ''),
     select: (data) => {
       return data.data.result.slice(0, 3).map((squad) => ({
         value: squad.tagName,
@@ -261,8 +261,10 @@ export const PostForm = () => {
       </Paper>
 
       <Paper shadow="xs" radius="md" withBorder>
-        <Tabs defaultValue="write" bg={isDark ? 'gray.8' : 'white'}>
-          <Tabs.List className="rounded-t-lg border border-gray-300">
+        <Tabs defaultValue="write" bg={isDark ? 'dark.7' : 'white'}>
+          <Tabs.List
+            className={`rounded-t-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}
+          >
             <Tabs.Tab
               value="write"
               leftSection={<GIcon name="Pencil" size={16} />}
@@ -278,7 +280,9 @@ export const PostForm = () => {
           </Tabs.List>
 
           <Tabs.Panel value="write">
-            <Box className="rounded-b-lg border-x border-b border-gray-300">
+            <Box
+              className={`rounded-b-lg border-x border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} p-8`}
+            >
               <Textarea
                 w="100%"
                 {...register('text', {
@@ -333,7 +337,9 @@ export const PostForm = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="preview">
-            <Box className="rounded-b-lg border-x border-b border-gray-300 p-8">
+            <Box
+              className={`rounded-b-lg border-x border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} p-8`}
+            >
               <ReactMarkdown>{watch('text')}</ReactMarkdown>
               <PillGroup mt={8}>
                 {getValues('hashTags')?.map((tag, index) => {

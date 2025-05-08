@@ -60,3 +60,21 @@
     animation: gradient-x 5s ease infinite;
   }
 }
+
+/* Gradient animation cho button - chuyển động tuyến tính */
+@keyframes linear-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.modern-gradient-button {
+  background: linear-gradient(90deg, #4361ee, #7209b7, #560bad, #3a0ca3);
+  background-size: 300% 100%;
+  animation: linear-gradient-flow 3s linear infinite alternate;
+  color: white;
+  border: none;
+}

@@ -20,6 +20,7 @@ import { Route as HistoryIndexImport } from './routes/history/index'
 import { Route as FeedbackIndexImport } from './routes/feedback/index'
 import { Route as ExploreIndexImport } from './routes/explore/index'
 import { Route as DiscussionsIndexImport } from './routes/discussions/index'
+import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as AiIndexImport } from './routes/ai/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
@@ -91,6 +92,12 @@ const ExploreIndexRoute = ExploreIndexImport.update({
 const DiscussionsIndexRoute = DiscussionsIndexImport.update({
   id: '/discussions/',
   path: '/discussions/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthIndexRoute = AuthIndexImport.update({
+  id: '/auth/',
+  path: '/auth/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -306,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexImport
       parentRoute: typeof rootRoute
     }
+    '/auth/': {
+      id: '/auth/'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/discussions/': {
       id: '/discussions/'
       path: '/discussions'
@@ -404,6 +418,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/discussions': typeof DiscussionsIndexRoute
   '/explore': typeof ExploreIndexRoute
   '/feedback': typeof FeedbackIndexRoute
@@ -433,6 +448,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/ai': typeof AiIndexRoute
   '/app': typeof AppIndexRoute
+  '/auth': typeof AuthIndexRoute
   '/discussions': typeof DiscussionsIndexRoute
   '/explore': typeof ExploreIndexRoute
   '/feedback': typeof FeedbackIndexRoute
@@ -463,6 +479,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/ai/': typeof AiIndexRoute
   '/app/': typeof AppIndexRoute
+  '/auth/': typeof AuthIndexRoute
   '/discussions/': typeof DiscussionsIndexRoute
   '/explore/': typeof ExploreIndexRoute
   '/feedback/': typeof FeedbackIndexRoute
@@ -494,6 +511,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/auth'
     | '/discussions'
     | '/explore'
     | '/feedback'
@@ -522,6 +540,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai'
     | '/app'
+    | '/auth'
     | '/discussions'
     | '/explore'
     | '/feedback'
@@ -550,6 +569,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ai/'
     | '/app/'
+    | '/auth/'
     | '/discussions/'
     | '/explore/'
     | '/feedback/'
@@ -580,6 +600,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AiIndexRoute: typeof AiIndexRoute
   AppIndexRoute: typeof AppIndexRoute
+  AuthIndexRoute: typeof AuthIndexRoute
   DiscussionsIndexRoute: typeof DiscussionsIndexRoute
   ExploreIndexRoute: typeof ExploreIndexRoute
   FeedbackIndexRoute: typeof FeedbackIndexRoute
@@ -609,6 +630,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AiIndexRoute: AiIndexRoute,
   AppIndexRoute: AppIndexRoute,
+  AuthIndexRoute: AuthIndexRoute,
   DiscussionsIndexRoute: DiscussionsIndexRoute,
   ExploreIndexRoute: ExploreIndexRoute,
   FeedbackIndexRoute: FeedbackIndexRoute,
@@ -647,6 +669,7 @@ export const routeTree = rootRoute
         "/admin/",
         "/ai/",
         "/app/",
+        "/auth/",
         "/discussions/",
         "/explore/",
         "/feedback/",
@@ -704,6 +727,9 @@ export const routeTree = rootRoute
     },
     "/app/": {
       "filePath": "app/index.tsx"
+    },
+    "/auth/": {
+      "filePath": "auth/index.tsx"
     },
     "/discussions/": {
       "filePath": "discussions/index.tsx"

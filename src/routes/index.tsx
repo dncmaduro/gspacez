@@ -1,31 +1,19 @@
 import { AppShell, Box, Button, Flex, Image, Stack, Text } from '@mantine/core'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { SignInForm } from '../components/SignInForm'
-import { useEffect, useState } from 'react'
-import { SignUpForm } from '../components/SignUpForm'
-import { useAuthStore } from '../store/authStore'
-import { useCallbackStore } from '../store/callbackStore'
-import { useMedia } from '../hooks/useMedia'
 import { Helmet } from 'react-helmet-async'
 import { useLogo } from '../hooks/useLogo'
+import { useMedia } from '../hooks/useMedia'
+import { GIcon } from '../components/common/GIcon'
+import PS1 from '../public/Product_Screenshot_1.png'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent
 })
 
 function RouteComponent() {
-  const [isSignIn, setIsSignIn] = useState(true)
   const navigate = useNavigate()
-  const { callbackUrl } = useCallbackStore()
-  const { accessToken } = useAuthStore()
   const { isMobile, isTablet } = useMedia()
-  const { logo } = useLogo()
-
-  useEffect(() => {
-    if (accessToken) {
-      navigate({ to: callbackUrl || '/app' })
-    }
-  }, [accessToken])
+  const { lightLogo } = useLogo()
 
   return (
     <>
@@ -57,59 +45,220 @@ function RouteComponent() {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       <AppShell>
-        <AppShell.Main className="animated-gradient h-screen">
+        {/* Hero Section */}
+        <AppShell.Header h={70} className="border-b border-indigo-100">
           <Flex
-            direction="column"
+            justify="space-between"
             align="center"
-            justify="center"
             h="100%"
             px={isMobile ? 16 : 32}
           >
-            <Stack
-              align="center"
-              mb={isMobile ? 24 : 32}
-              className="animate-fade-in-up"
-              gap={isMobile ? 12 : 16}
-            >
-              <Box className="overflow-hidden rounded-2xl">
-                <Image
-                  src={logo}
-                  alt="GspaceZ Logo"
-                  w={isMobile ? 150 : isTablet ? 180 : 200}
-                  className="drop-shadow-md"
-                />
-              </Box>
-              <Text
-                size={isMobile ? 'lg' : 'xl'}
-                fw={500}
-                c="indigo.8"
-                ta="center"
-              >
-                Join with other tech enthusiasts
-              </Text>
-            </Stack>
-
-            <Box
-              className="animate-fade-in-up rounded-xl bg-white/90 shadow-lg backdrop-blur-sm"
-              p={isMobile ? 16 : isTablet ? 20 : 24}
-              w={isMobile ? '100%' : isTablet ? '80%' : '100%'}
-              maw={isMobile ? '100%' : isTablet ? 450 : 550}
-            >
-              {isSignIn ? <SignInForm /> : <SignUpForm />}
-
+            <Image
+              src={lightLogo}
+              alt="GspaceZ Logo"
+              h={40}
+              fit="contain"
+              w={'auto'}
+            />
+            <Flex gap={16} align="center">
               <Button
                 variant="subtle"
-                size={isMobile ? 'xs' : 'sm'}
-                fullWidth
-                mt={isMobile ? 12 : 16}
-                onClick={() => setIsSignIn(!isSignIn)}
+                color="indigo"
+                onClick={() => navigate({ to: '/auth' })}
               >
-                {isSignIn
-                  ? 'Or create new account'
-                  : 'Or sign in with your account'}
+                Sign In
               </Button>
-            </Box>
+              <Button onClick={() => navigate({ to: '/auth' })}>
+                Get Started
+              </Button>
+            </Flex>
           </Flex>
+        </AppShell.Header>
+
+        <AppShell.Main>
+          {/* Hero Section */}
+          <Box className="bg-gradient-to-br from-indigo-50 to-blue-50 py-20">
+            <Flex
+              direction={isMobile ? 'column' : 'row'}
+              align="center"
+              justify="space-between"
+              gap={32}
+              maw={1200}
+              mx="auto"
+              px={isMobile ? 16 : 32}
+            >
+              <Stack maw={600} gap={24}>
+                <Text className="text-4xl leading-tight font-bold text-indigo-900 md:text-5xl">
+                  Collaborate Smarter with AI-Powered Workspaces
+                </Text>
+                <Text size="xl" c="dimmed" className="leading-relaxed">
+                  GspaceZ brings together tech communities with powerful
+                  collaboration tools, AI assistance, and seamless content
+                  creation.
+                </Text>
+                <Flex gap={16} mt={8}>
+                  <Button size="lg">Start for Free</Button>
+                  <Button size="lg" variant="light">
+                    See How It Works
+                  </Button>
+                </Flex>
+              </Stack>
+
+              {/* Carousel after */}
+              <Box className="flex h-[350px] w-full max-w-[500px] items-center justify-center rounded-xl">
+                <Image src={PS1} />
+              </Box>
+            </Flex>
+          </Box>
+
+          {/* Features Section */}
+          <Box py={80} bg="white">
+            <Stack maw={1200} mx="auto" px={isMobile ? 16 : 32}>
+              <Text
+                ta="center"
+                className="mb-16 text-3xl font-bold text-indigo-900"
+              >
+                Powerful Features for Modern Teams
+              </Text>
+
+              <Flex wrap="wrap" justify="center" gap={32}>
+                {[
+                  {
+                    title: 'AI-Powered Content',
+                    icon: 'Robot',
+                    description:
+                      'Create and refine content with our advanced AI assistant'
+                  },
+                  {
+                    title: 'Squad Collaboration',
+                    icon: 'Users',
+                    description:
+                      'Form specialized teams with shared workspaces and permissions'
+                  },
+                  {
+                    title: 'Rich Markdown Editor',
+                    icon: 'Edit',
+                    description:
+                      'Write beautiful content with our intuitive markdown editor'
+                  },
+                  {
+                    title: 'Personalized Feeds',
+                    icon: 'Rss',
+                    description:
+                      'Stay updated with content tailored to your interests'
+                  }
+                ].map((feature, i) => (
+                  <Box
+                    key={i}
+                    className="rounded-xl bg-indigo-50 p-6"
+                    w={isMobile ? '100%' : isTablet ? '45%' : '22%'}
+                  >
+                    <Stack align="center" gap={16}>
+                      <Box className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600">
+                        <GIcon name={feature.icon} color="white" size={24} />
+                      </Box>
+                      <Text fw={700} size="xl" ta="center">
+                        {feature.title}
+                      </Text>
+                      <Text c="dimmed" ta="center">
+                        {feature.description}
+                      </Text>
+                    </Stack>
+                  </Box>
+                ))}
+              </Flex>
+            </Stack>
+          </Box>
+
+          {/* Testimonials */}
+          <Box
+            py={80}
+            className="bg-gradient-to-br from-indigo-900 to-blue-900 text-white"
+          >
+            <Stack
+              maw={1200}
+              mx="auto"
+              px={isMobile ? 16 : 32}
+              align="center"
+              gap={40}
+            >
+              <Text ta="center" className="text-3xl font-bold">
+                Trusted by Tech Teams Worldwide
+              </Text>
+
+              {/* Product Image Placeholder */}
+              <Box className="flex h-[250px] w-full max-w-[800px] items-center justify-center rounded-xl bg-red-500">
+                <Text c="white" fw={700}>
+                  TESTIMONIALS CAROUSEL HERE
+                </Text>
+              </Box>
+            </Stack>
+          </Box>
+
+          {/* CTA Section */}
+          <Box py={80} bg="white">
+            <Stack
+              maw={800}
+              mx="auto"
+              px={isMobile ? 16 : 32}
+              align="center"
+              gap={24}
+            >
+              <Text ta="center" className="text-3xl font-bold text-indigo-900">
+                Ready to Transform Your Collaboration?
+              </Text>
+              <Text size="xl" c="dimmed" ta="center">
+                Join thousands of tech professionals already using GspaceZ to
+                build better together.
+              </Text>
+              <Button
+                size="xl"
+                mt={16}
+                onClick={() => navigate({ to: '/auth' })}
+              >
+                Get Started for Free
+              </Button>
+            </Stack>
+          </Box>
+
+          {/* Footer */}
+          <Box py={40} className="border-t border-gray-200 bg-gray-100">
+            <Flex
+              direction={isMobile ? 'column' : 'row'}
+              justify="space-between"
+              align={isMobile ? 'center' : 'flex-start'}
+              maw={1200}
+              mx="auto"
+              px={isMobile ? 16 : 32}
+              gap={isMobile ? 32 : 0}
+            >
+              <Stack align={isMobile ? 'center' : 'flex-start'} gap={16}>
+                <Image src={lightLogo} alt="GspaceZ Logo" h={32} w={'auto'} />
+                <Text c="dimmed" size="sm" ta={isMobile ? 'center' : 'left'}>
+                  © 2023 GspaceZ. All rights reserved.
+                </Text>
+              </Stack>
+
+              <Flex gap={40} wrap="wrap" justify="center">
+                {[
+                  'Features',
+                  'Pricing',
+                  'Documentation',
+                  'About Us',
+                  'Blog',
+                  'Contact'
+                ].map((item) => (
+                  <Text
+                    key={item}
+                    fw={500}
+                    className="cursor-pointer hover:text-indigo-600"
+                  >
+                    {item}
+                  </Text>
+                ))}
+              </Flex>
+            </Flex>
+          </Box>
         </AppShell.Main>
       </AppShell>
     </>

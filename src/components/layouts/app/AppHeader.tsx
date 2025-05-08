@@ -45,7 +45,7 @@ interface AutocompleteItem {
   type: 'user' | 'post' | 'squad' | 'history'
   label: string
   value: string
-  description: string
+  description?: string
   image: string
 }
 
@@ -136,7 +136,6 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
           type: 'history',
           label: item,
           value: item,
-          description: `History: ${item}`,
           image: ''
         })) as AutocompleteItem[]) || ([] as AutocompleteItem[])
 
@@ -229,13 +228,17 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
   const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({
     option
   }) => (
-    <Flex gap={8}>
-      <Avatar src={data.byValues[option.value].image} size={36} radius="xl" />
+    <Flex gap={8} align={'center'}>
+      {data.byValues[option.value].type !== 'history' && (
+        <Avatar src={data.byValues[option.value].image} size={36} radius="xl" />
+      )}
       <Stack gap={0}>
         <Text size="sm">{data.byValues[option.value].label}</Text>
-        <Text size="xs" c="dimmed">
-          {data.byValues[option.value].description}
-        </Text>
+        {data.byValues[option.value].description && (
+          <Text size="xs" c="dimmed">
+            {data.byValues[option.value].description}
+          </Text>
+        )}
       </Stack>
     </Flex>
   )
@@ -304,15 +307,16 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
             }
             w={isTablet ? 300 : 450}
             limit={10}
+            maxDropdownHeight={300}
             radius="xl"
             filter={() => data.data}
             placeholder={isTablet ? 'Search' : 'Search in GspaceZ'}
             onChange={(e) => setSearchText(e)}
             value={searchText}
-            className="rounded-full transition-shadow duration-200 focus-within:border-indigo-200/50 hover:shadow-sm"
+            className={`rounded-full transition-shadow duration-200 focus-within:border-indigo-200/50 hover:shadow-sm`}
             styles={{
               input: {
-                border: '1px solid #E5E7EB',
+                border: `1px solid ${isDark ? '#3730A3' : '#E5E7EB'}`,
                 height: '42px'
               }
             }}
@@ -344,8 +348,12 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')
             }
             size="md"
-            onLabel={<GIcon name="Sun" stroke={1.5} />}
-            offLabel={<GIcon name="Moon" stroke={1.5} />}
+            onLabel={
+              <GIcon name="SunFilled" stroke={1.5} size={18} color="yellow" />
+            }
+            offLabel={
+              <GIcon name="MoonFilled" stroke={1.5} size={18} color="purple" />
+            }
           />
           {location.pathname !== '/post/new' && (
             <Button
@@ -353,7 +361,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               to="/post/new"
               radius="xl"
               variant="filled"
-              className="bg-indigo-600 transition-colors duration-200 hover:bg-indigo-700"
+              className="modern-gradient-button transition-all duration-200 hover:scale-105 hover:shadow-md"
               leftSection={
                 <GIcon
                   name="Sparkles"
