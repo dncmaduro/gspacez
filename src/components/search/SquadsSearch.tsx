@@ -15,6 +15,7 @@ import {
 } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
 import { GIcon } from '../../components/common/GIcon'
+import { useDark } from '../../hooks/useDark'
 
 interface Props {
   searchText: string
@@ -24,6 +25,7 @@ interface Props {
 export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
   const { searchSquads } = useGSearch()
   const loaderRef = useRef<HTMLDivElement | null>(null)
+  const { isDark } = useDark()
 
   const {
     data: squadsData,
@@ -71,7 +73,7 @@ export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
   }, [isLoading, hasNextPage, fetchNextPage])
 
   return (
-    <Box bg="white" className="rounded-lg shadow-sm">
+    <Box bg={isDark ? 'gray.9' : 'white'} className="rounded-lg shadow-sm">
       <ScrollArea.Autosize mah="80vh">
         <Box p="md">
           <Flex align="center" mb="md">
@@ -108,7 +110,7 @@ export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
                     p={16}
                     component={Link}
                     to={`/squad/${squad.tagName}`}
-                    className="cursor-pointer rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-200 hover:bg-indigo-50 hover:shadow-sm"
+                    className={`cursor-pointer rounded-lg border border-gray-300 transition-all duration-200 hover:border-indigo-200 ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} hover:shadow-sm`}
                   >
                     <Group gap={12}>
                       <Avatar src={squad.avatarUrl} size="md" radius="xl" />
@@ -140,7 +142,8 @@ export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
                         <Group mt={8} gap={12}>
                           <Group
                             gap={4}
-                            className="rounded-full bg-gray-50 px-2 py-1"
+                            bg={isDark ? 'gray.8' : 'gray.0'}
+                            className="rounded-full px-2 py-1"
                           >
                             <GIcon name="Users" size={14} color="#4263eb" />
                             <Text size="xs" fw={500}>
@@ -149,7 +152,8 @@ export const SquadsSearch = ({ searchText, triggerSearch }: Props) => {
                           </Group>
                           <Group
                             gap={4}
-                            className="rounded-full bg-gray-50 px-2 py-1"
+                            bg={isDark ? 'gray.8' : 'gray.0'}
+                            className="rounded-full px-2 py-1"
                           >
                             <GIcon
                               name="FilePencil"

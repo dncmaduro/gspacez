@@ -92,7 +92,7 @@ export const GPost = ({ post }: Props) => {
       py={0}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      bg={isDark ? 'dark' : 'white'}
+      bg={isDark ? 'dark.7' : 'white'}
     >
       <Link to={`/post/${post.id}`} className="block w-full">
         {post.previewImage && (
