@@ -8,23 +8,36 @@ import {
   Text,
   Badge,
   Flex,
-  Divider
+  Divider,
+  Loader
 } from '@mantine/core'
 import { useGSearch } from '../../hooks/useGSearch'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { GIcon } from '../common/GIcon'
 import { useDark } from '../../hooks/useDark'
+import { v4 as uuidv4 } from 'uuid'
+import { useGemini } from '../../hooks/useGemini'
+import { usersPrompt } from '../../utils/search-prompt'
 
 interface Props {
   searchText: string
   triggerSearch: boolean
+  promptSearch: string
+  useSupport: boolean
 }
 
-export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
+export const UsersSearch = ({
+  searchText,
+  triggerSearch,
+  promptSearch,
+  useSupport
+}: Props) => {
   const { searchUsers } = useGSearch()
   const loaderRef = useRef<HTMLDivElement | null>(null)
+  const { sendChatMessage } = useGemini()
+  const [highlightIds, setHighlightIds] = useState<string[]>([])
 
   const {
     data: usersData,
@@ -47,6 +60,28 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
       return nextPage < lastPage.data.result.totalPages ? nextPage : undefined
     }
   })
+
+  const { mutate: highlightUser, isPending: isHighlighting } = useMutation({
+    mutationFn: () => {
+      if (usersData && promptSearch) {
+        return sendChatMessage({
+          content: usersPrompt(usersData.users, promptSearch),
+          sessionId: uuidv4().replace(/-/g, '').slice(0, 20)
+        })
+      }
+      return Promise.reject(new Error('No user data available'))
+    },
+    onSuccess: (response) => {
+      const result = JSON.parse(response.data.result.content) as string[]
+      setHighlightIds(result)
+    }
+  })
+
+  useEffect(() => {
+    if (useSupport) {
+      highlightUser()
+    }
+  }, [useSupport, highlightUser, usersData, triggerSearch])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,21 +112,25 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
       bg={isDark ? 'gray.9' : 'white'}
       className={`rounded-lg shadow-sm ${isDark ? 'border border-gray-700' : 'border border-gray-200'}`}
     >
-      <ScrollArea.Autosize mah="80vh">
-        <Box p="md">
-          <Flex align="center" mb="md">
+      <Box p="md">
+        <Flex align="center" mb="md" justify={'space-between'}>
+          <Flex align={'center'}>
             <GIcon name="Users" size={20} color="#4F46E5" />
             <Text ml={8} fw={600} size="lg" c="indigo.8">
               Users
             </Text>
+          </Flex>
+          <Group gap={8}>
+            {(isHighlighting || isLoading) && <Loader size={'sm'} />}
             {usersData && (
               <Badge ml="auto" color="indigo" variant="light" radius="sm">
                 {usersData?.total} results
               </Badge>
             )}
-          </Flex>
-          <Divider mb="md" />
-
+          </Group>
+        </Flex>
+        <Divider mb="md" />
+        <ScrollArea.Autosize mah="70vh">
           {isLoading && !usersData ? (
             <Stack>
               {[...Array(5)].map((_, i) => (
@@ -115,7 +154,13 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
                     component={Link}
                     to={`/profile/${user.profileTag}`}
                     bg={isDark ? 'gray.8' : 'white'}
-                    className={`cursor-pointer rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} transition-all duration-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:shadow-sm`}
+                    className={`cursor-pointer rounded-lg border ${
+                      highlightIds.includes(user.id) && useSupport
+                        ? `animate-gradient-x border-indigo-300 !bg-gradient-to-r ${isDark ? 'from-indigo-900/20 to-purple-900/20' : 'from-indigo-100/70 to-purple-100/70'}`
+                        : isDark
+                          ? 'border-gray-700'
+                          : 'border-gray-200'
+                    } transition-all duration-200 hover:border-indigo-300 hover:bg-indigo-50/50 hover:shadow-sm`}
                   >
                     <Group>
                       <Avatar
@@ -148,8 +193,8 @@ export const UsersSearch = ({ searchText, triggerSearch }: Props) => {
               )}
             </Stack>
           )}
-        </Box>
-      </ScrollArea.Autosize>
+        </ScrollArea.Autosize>
+      </Box>
     </Box>
   )
 }

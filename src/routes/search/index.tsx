@@ -1,6 +1,17 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { Box, Button, Flex, Stack, Tabs, TextInput } from '@mantine/core'
+import {
+  Box,
+  Button,
+  Flex,
+  Group,
+  Stack,
+  Switch,
+  Tabs,
+  Text,
+  Textarea,
+  TextInput
+} from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useEffect, useState } from 'react'
 import { UsersSearch } from '../../components/search/UsersSearch'
@@ -8,6 +19,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { PostsSearch } from '../../components/search/PostsSearch'
 import { SquadsSearch } from '../../components/search/SquadsSearch'
 import { useGSearch } from '../../hooks/useGSearch'
+import { useDisclosure } from '@mantine/hooks'
 
 export const Route = createFileRoute('/search/')({
   component: RouteComponent,
@@ -22,6 +34,8 @@ function RouteComponent() {
   const params = useSearch({ strict: false })
   const [searchText, setSearchText] = useState<string>(params.searchText)
   const [triggerSearch, setTriggerSearch] = useState<boolean>(false)
+  const [useSupport, { toggle: toggleSupport }] = useDisclosure(false)
+  const [promptSearch, setPromptSearch] = useState<string>('')
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { pushSearchHistory } = useGSearch()
@@ -30,7 +44,14 @@ function RouteComponent() {
     {
       label: 'Users',
       value: 'users',
-      tab: <UsersSearch searchText={searchText} triggerSearch={triggerSearch} />
+      tab: (
+        <UsersSearch
+          searchText={searchText}
+          triggerSearch={triggerSearch}
+          promptSearch={promptSearch}
+          useSupport={useSupport}
+        />
+      )
     },
     {
       label: 'Posts',
@@ -102,6 +123,7 @@ function RouteComponent() {
               navigate({ to: `/search?searchText=${searchText}&tab=${e}` })
             }
             mx={'auto'}
+            className="grow"
             p={16}
           >
             <Tabs.List grow mb={24} justify="center">
@@ -123,6 +145,38 @@ function RouteComponent() {
               </Tabs.Panel>
             ))}
           </Tabs>
+
+          <Stack w={'30%'} p={16}>
+            <Flex align={'center'} justify={'space-between'}>
+              <Group gap={8} className="!text-indigo-800">
+                <GIcon name="Sparkles" />
+                <Text fw={500} size="lg">
+                  AI Support
+                </Text>
+              </Group>
+              <Switch checked={useSupport} onChange={toggleSupport} />
+            </Flex>
+            <Textarea
+              placeholder="Need help? Ask AI"
+              onChange={(e) => setPromptSearch(e.target.value)}
+              value={promptSearch}
+              minRows={12}
+              hidden={!useSupport}
+              autosize
+              radius="md"
+            />
+            <Button
+              className="self-end"
+              variant="gradient"
+              hidden={!useSupport}
+              gradient={{ from: 'indigo', to: 'violet' }}
+              onClick={() => {
+                setTriggerSearch((prev) => !prev)
+              }}
+            >
+              Apply
+            </Button>
+          </Stack>
         </Flex>
       </Box>
     </AppLayout>
