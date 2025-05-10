@@ -56,13 +56,25 @@ function RouteComponent() {
     {
       label: 'Posts',
       value: 'posts',
-      tab: <PostsSearch searchText={searchText} triggerSearch={triggerSearch} />
+      tab: (
+        <PostsSearch
+          searchText={searchText}
+          triggerSearch={triggerSearch}
+          promptSearch={promptSearch}
+          useSupport={useSupport}
+        />
+      )
     },
     {
       label: 'Squads',
       value: 'squads',
       tab: (
-        <SquadsSearch searchText={searchText} triggerSearch={triggerSearch} />
+        <SquadsSearch
+          searchText={searchText}
+          triggerSearch={triggerSearch}
+          promptSearch={promptSearch}
+          useSupport={useSupport}
+        />
       )
     }
   ]
@@ -146,7 +158,7 @@ function RouteComponent() {
             ))}
           </Tabs>
 
-          <Stack w={'30%'} p={16}>
+          <Stack miw={'30%'} p={16}>
             <Flex align={'center'} justify={'space-between'}>
               <Group gap={8} className="!text-indigo-800">
                 <GIcon name="Sparkles" />
