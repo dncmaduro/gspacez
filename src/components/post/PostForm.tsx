@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Divider,
   FileInput,
   Flex,
   Group,
@@ -281,7 +280,7 @@ export const PostForm = () => {
 
           <Tabs.Panel value="write">
             <Box
-              className={`rounded-b-lg border-x border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} p-8`}
+              className={`rounded-b-lg border-x border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} p-4`}
             >
               <Textarea
                 w="100%"
@@ -292,43 +291,56 @@ export const PostForm = () => {
                 placeholder="What do you want to share?"
                 minRows={8}
                 autosize
-                radius="md"
+                radius={'sm'}
                 disabled={isPosting}
                 styles={{
+                  root: {
+                    borderRadius: '8px'
+                  },
                   input: {
-                    border: 'none'
-                  }
+                    border: 'none',
+                    backgroundColor: 'transparent'
+                  },
+                  wrapper: {}
                 }}
               />
-              <Divider w="100%" h={2} />
-              <Flex h={36}>
+              <Flex h={36} gap={8}>
                 <FileInput
                   w={200}
                   size="sm"
-                  radius="md"
                   placeholder="Upload media"
                   accept="image/*,video/*"
                   clearable
                   leftSection={<GIcon name="PhotoScan" size={18} />}
                   styles={{
                     input: {
-                      border: 'none'
+                      border: 'none',
+                      backgroundColor: 'transparent'
+                    },
+                    root: {
+                      borderRadius: '8px'
                     }
                   }}
+                  bg={isDark ? 'dark.6' : 'gray.1'}
                   onChange={chooseFile}
                   value={fileValue}
                 />
-                <Divider h="100%" orientation="vertical" w={1} />
+
                 <TagsInput
                   placeholder="Write your tags"
                   styles={{
                     input: {
-                      border: 'none'
+                      border: 'none',
+                      backgroundColor: 'transparent'
+                    },
+                    root: {
+                      borderRadius: '8px'
                     }
                   }}
                   value={watch('hashTags')}
                   size="sm"
                   className="grow"
+                  bg={isDark ? 'dark.6' : 'gray.1'}
                   onChange={(value) => setValue('hashTags', value)}
                   leftSection={<GIcon name="Hash" size={18} />}
                 />
