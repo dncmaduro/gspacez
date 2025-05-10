@@ -5,6 +5,9 @@ import { useLogo } from '../hooks/useLogo'
 import { useMedia } from '../hooks/useMedia'
 import { GIcon } from '../components/common/GIcon'
 import PS1 from '../public/Product_Screenshot_1.png'
+import PS2 from '../public/Product_Screenshot_2.png'
+import PS3 from '../public/Product_Screenshot_3.png'
+import { Carousel } from '@mantine/carousel'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent
@@ -46,7 +49,11 @@ function RouteComponent() {
       </Helmet>
       <AppShell>
         {/* Hero Section */}
-        <AppShell.Header h={70} className="border-b border-indigo-100">
+        <AppShell.Header
+          h={70}
+          bg={'white'}
+          className="border-b !border-indigo-100"
+        >
           <Flex
             justify="space-between"
             align="center"
@@ -79,6 +86,7 @@ function RouteComponent() {
           {/* Hero Section */}
           <Box className="bg-gradient-to-br from-indigo-50 to-blue-50 py-20">
             <Flex
+              mt={40}
               direction={isMobile ? 'column' : 'row'}
               align="center"
               justify="space-between"
@@ -104,9 +112,26 @@ function RouteComponent() {
                 </Flex>
               </Stack>
 
-              {/* Carousel After */}
               <Box className="flex h-[350px] w-full max-w-[500px] items-center justify-center rounded-xl">
-                <Image src={PS1} />
+                <Carousel
+                  withControls={true}
+                  emblaOptions={{
+                    loop: true
+                  }}
+                  classNames={{
+                    root: 'h-[350px] w-full max-w-[500px]'
+                  }}
+                >
+                  <Carousel.Slide className="flex items-center justify-center">
+                    <Image src={PS1} />
+                  </Carousel.Slide>
+                  <Carousel.Slide className="flex items-center justify-center">
+                    <Image src={PS2} />
+                  </Carousel.Slide>
+                  <Carousel.Slide className="flex items-center justify-center">
+                    <Image src={PS3} />
+                  </Carousel.Slide>
+                </Carousel>
               </Box>
             </Flex>
           </Box>
