@@ -104,7 +104,7 @@ function RouteComponent() {
                 </Flex>
               </Stack>
 
-              {/* Carousel after */}
+              {/* Carousel After */}
               <Box className="flex h-[350px] w-full max-w-[500px] items-center justify-center rounded-xl">
                 <Image src={PS1} />
               </Box>
