@@ -25,6 +25,7 @@ import { GIcon } from '../../components/common/GIcon'
 import { format } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
 import {
+  ChangeDiscussionStatusRequest,
   CreateDiscussionCommentRequest,
   VotePollRequest
 } from '../../hooks/models'
@@ -45,7 +46,8 @@ function RouteComponent() {
     getDetailDiscussion,
     getDiscussionComments,
     votePoll,
-    createDiscussionComment
+    createDiscussionComment,
+    changeDiscussionStatus
   } = useDiscussion()
   const queryClient = useQueryClient()
   const { data: meData } = useMe()
@@ -100,6 +102,17 @@ function RouteComponent() {
       reset()
     }
   })
+
+  const { mutate: mutateChangeStatus, isPending: isChangingStatus } =
+    useMutation({
+      mutationFn: (req: ChangeDiscussionStatusRequest) =>
+        changeDiscussionStatus(discussionId, req),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['get-detail-discussion', discussionId]
+        })
+      }
+    })
 
   const isAdmin = useMemo(() => {
     return discussionData?.profileTag === meData?.profileTag
@@ -173,16 +186,30 @@ function RouteComponent() {
                   </Group>
 
                   {isAdmin && (
-                    <Button
-                      variant="subtle"
-                      component={Link}
-                      size="sm"
-                      color="green"
-                      leftSection={<GIcon name="Pencil" />}
-                      to={`/discussions/edit/${discussionId}`}
-                    >
-                      Edit discussion
-                    </Button>
+                    <Group>
+                      <Button
+                        size="xs"
+                        color={discussionData.isOpen ? 'red' : 'green'}
+                        variant="outline"
+                        onClick={() =>
+                          mutateChangeStatus({
+                            isOpen: !discussionData.isOpen
+                          })
+                        }
+                        loading={isChangingStatus}
+                      >
+                        {discussionData.isOpen ? 'Close' : 'Open'} discussion
+                      </Button>
+                      <Button
+                        variant="subtle"
+                        component={Link}
+                        size="xs"
+                        leftSection={<GIcon name="Pencil" size={14} />}
+                        to={`/discussions/edit/${discussionId}`}
+                      >
+                        Edit discussion
+                      </Button>
+                    </Group>
                   )}
                 </Flex>
 
@@ -287,13 +314,17 @@ function RouteComponent() {
                 </Text>
 
                 {/* Comment Form */}
-                <Box>
+                <Box hidden={!discussionData.isOpen}>
                   <FormProvider {...formMethods}>
                     <CommentForm />
                   </FormProvider>
                 </Box>
 
-                <Group justify="flex-end" mt={16}>
+                <Group
+                  justify="flex-end"
+                  mt={16}
+                  hidden={!discussionData.isOpen}
+                >
                   <Button
                     disabled={!isDirty}
                     loading={issCreatingComment}
@@ -315,7 +346,11 @@ function RouteComponent() {
                 ) : commentsData && commentsData.length > 0 ? (
                   <Stack gap={16}>
                     {commentsData.map((comment) => (
-                      <GDiscussionComment comment={comment} key={comment.id} />
+                      <GDiscussionComment
+                        comment={comment}
+                        key={comment.id}
+                        isClose={!discussionData.isOpen}
+                      />
                     ))}
                   </Stack>
                 ) : (

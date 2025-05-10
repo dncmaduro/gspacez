@@ -105,8 +105,7 @@ export const CommentForm = () => {
               input: {
                 border: 'none',
                 padding: '12px',
-                fontSize: '15px',
-                backgroundColor: isDark ? 'gray.8' : 'white'
+                fontSize: '15px'
               }
             }}
           />
