@@ -19,9 +19,13 @@ import { useDark } from '../../hooks/useDark'
 
 interface Props {
   comment: IDiscussionComment
+  isClose?: boolean
 }
 
-export const GDiscussionComment = ({ comment: initComment }: Props) => {
+export const GDiscussionComment = ({
+  comment: initComment,
+  isClose
+}: Props) => {
   const { upvoteComment } = useDiscussion()
   const [comment, setComment] = useState<IDiscussionComment>(initComment)
 
@@ -73,6 +77,7 @@ export const GDiscussionComment = ({ comment: initComment }: Props) => {
                   variant="light"
                   color="blue"
                   radius="xl"
+                  disabled={isClose}
                   onClick={() => upvote()}
                 >
                   <GIcon
