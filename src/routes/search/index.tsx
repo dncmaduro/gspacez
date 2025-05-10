@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { AppLayout } from '../../components/layouts/app/AppLayout'
-import { Box, Divider, Stack, Tabs, TextInput } from '@mantine/core'
+import { Box, Button, Flex, Stack, Tabs, TextInput } from '@mantine/core'
 import { GIcon } from '../../components/common/GIcon'
 import { useEffect, useState } from 'react'
 import { UsersSearch } from '../../components/search/UsersSearch'
@@ -61,12 +61,19 @@ function RouteComponent() {
 
   return (
     <AppLayout hideSearchInput>
-      <Box maw={1000} mx={'auto'} px={32}>
-        <Stack align="center">
+      <Box maw={1200} mx={'auto'} px={32} py={24} className="animate-fade-in">
+        <Stack align="center" mb={32}>
           <TextInput
             leftSection={<GIcon name="ZoomCode" size={20} />}
-            w={400}
+            w={{ base: '100%', sm: 400, md: 500 }}
             radius="xl"
+            styles={{
+              root: {
+                borderRadius: '30px'
+              }
+            }}
+            size="md"
+            className="shadow-sm transition-all duration-200 hover:shadow-md"
             placeholder="Search in GspaceZ"
             onChange={(e) => setSearchText(e.target.value)}
             value={searchText}
@@ -81,36 +88,43 @@ function RouteComponent() {
             }}
           />
         </Stack>
+
+        <Flex
+          gap={16}
+          className="rounded-lg bg-white/80 shadow-sm backdrop-blur-sm"
+        >
+          <Tabs
+            orientation="horizontal"
+            variant="pills"
+            radius={'xl'}
+            defaultValue={params.tab ?? 'users'}
+            onChange={(e) =>
+              navigate({ to: `/search?searchText=${searchText}&tab=${e}` })
+            }
+            mx={'auto'}
+            p={16}
+          >
+            <Tabs.List grow mb={24} justify="center">
+              {tabs.map((tab) => (
+                <Tabs.Tab
+                  value={tab.value}
+                  key={tab.value}
+                  bg={tab.value === params.tab ? 'indigo' : 'indigo.0'}
+                  className="transition-colors duration-200"
+                >
+                  {tab.label}
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+
+            {tabs.map((tab) => (
+              <Tabs.Panel value={tab.value} key={tab.value}>
+                {tab.tab}
+              </Tabs.Panel>
+            ))}
+          </Tabs>
+        </Flex>
       </Box>
-
-      <Tabs
-        mt={32}
-        orientation="vertical"
-        variant="pills"
-        radius={'xl'}
-        defaultValue={params.tab ?? 'users'}
-        onChange={(e) =>
-          navigate({ to: `/search?searchText=${searchText}&tab=${e}` })
-        }
-        maw={1000}
-        mx={'auto'}
-      >
-        <Tabs.List>
-          {tabs.map((tab) => (
-            <Tabs.Tab value={tab.value} key={tab.value}>
-              {tab.label}
-            </Tabs.Tab>
-          ))}
-        </Tabs.List>
-
-        <Divider orientation="vertical" mx={16} color="indigo.3" />
-
-        {tabs.map((tab) => (
-          <Tabs.Panel value={tab.value} key={tab.value}>
-            {tab.tab}
-          </Tabs.Panel>
-        ))}
-      </Tabs>
     </AppLayout>
   )
 }

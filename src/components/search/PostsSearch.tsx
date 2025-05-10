@@ -1,8 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { useGSearch } from '../../hooks/useGSearch'
-import { Box, ScrollArea, Stack } from '@mantine/core'
+import { Box, ScrollArea, Stack, Text, Badge, Flex } from '@mantine/core'
 import { GSimplePost } from '../common/GSimplePost'
+import { GSimplePostSkeleton } from '../common/GSimplePostSkeleton'
+import { GIcon } from '../common/GIcon'
 
 interface Props {
   searchText: string
@@ -23,7 +25,10 @@ export const PostsSearch = ({ searchText, triggerSearch }: Props) => {
     queryFn: ({ pageParam }) =>
       searchPosts({ searchText, page: pageParam, size: 20 }),
     select: (data) => {
-      return data.pages.map((page) => page.data.result.content).flat()
+      return {
+        posts: data.pages.map((page) => page.data.result.content).flat(),
+        total: data.pages[0]?.data.result.totalElements || 0
+      }
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -57,9 +62,40 @@ export const PostsSearch = ({ searchText, triggerSearch }: Props) => {
   return (
     <Box>
       <ScrollArea.Autosize mah={'80vh'}>
-        <Stack gap={8}>
-          {postsData?.map((post) => <GSimplePost key={post.id} post={post} />)}
-        </Stack>
+        <Box p="md">
+          <Flex align="center" mb="md">
+            <GIcon name="FilePencil" size={20} color="#4F46E5" />
+            <Text ml={8} fw={600} size="lg" c="indigo.8">
+              Posts
+            </Text>
+            {postsData && (
+              <Badge ml="auto" color="indigo" variant="light" radius="sm">
+                {postsData.total} results
+              </Badge>
+            )}
+          </Flex>
+
+          <Stack gap={8}>
+            {isLoading ? (
+              [...Array(5)].map((_, i) => <GSimplePostSkeleton key={i} />)
+            ) : postsData?.posts.length === 0 ? (
+              <Box py={20} className="text-center">
+                <Text c="dimmed">No posts found matching "{searchText}"</Text>
+              </Box>
+            ) : (
+              <>
+                {postsData?.posts.map((post) => (
+                  <GSimplePost key={post.id} post={post} />
+                ))}
+                {hasNextPage && (
+                  <Box ref={loaderRef}>
+                    <GSimplePostSkeleton />
+                  </Box>
+                )}
+              </>
+            )}
+          </Stack>
+        </Box>
       </ScrollArea.Autosize>
     </Box>
   )
