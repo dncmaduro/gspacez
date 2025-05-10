@@ -87,7 +87,7 @@ export const GPost = ({ post }: Props) => {
 
   return (
     <Box
-      className="w-full rounded-lg border border-gray-200 shadow-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:border-indigo-400 hover:bg-[#f8f9ff] hover:shadow-lg"
+      className={`w-full rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'} shadow-md transition-all duration-300 ease-in-out hover:-translate-y-1 ${isDark ? 'hover:border-indigo-800' : 'hover:border-indigo-400'} hover:bg-[#f8f9ff] hover:shadow-lg`}
       px={0}
       py={0}
       onMouseEnter={() => setIsHovered(true)}
