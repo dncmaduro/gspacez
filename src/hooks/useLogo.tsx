@@ -8,6 +8,8 @@ export const useLogo = () => {
   })
 
   return {
-    logo: computedColorScheme === 'dark' ? LogoDark : LogoLight
+    logo: computedColorScheme === 'dark' ? LogoDark : LogoLight,
+    darkLogo: LogoDark,
+    lightLogo: LogoLight
   }
 }
