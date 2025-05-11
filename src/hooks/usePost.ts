@@ -22,7 +22,7 @@ import {
 } from './models'
 
 export const usePost = () => {
-  const { accessToken } = useAuthStore()
+  const { accessToken, clearAuth } = useAuthStore()
 
   const getNewsfeed = async (req: GetNewsfeedRequest) => {
     return callApi<GetNewsfeedRequest, GetNewsfeedResponse>({
@@ -127,6 +127,15 @@ export const usePost = () => {
     })
   }
 
+  const deletePost = async (id: string) => {
+    return callApi<never, never>({
+      method: 'DELETE',
+      path: `/v1/post-service/posts/delete/${id}`,
+      accessToken,
+      onClearAuth: clearAuth
+    })
+  }
+
   return {
     getNewsfeed,
     getPost,
@@ -137,9 +146,7 @@ export const usePost = () => {
     reactPost,
     getHistory,
     getPostsByProfile,
-    getLikedPostsByProfile
+    getLikedPostsByProfile,
+    deletePost
   }
-}
-function clearAuth(): void {
-  throw new Error('Function not implemented.')
 }

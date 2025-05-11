@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   createFileRoute,
   Link,
+  useNavigate,
   useParams,
   useRouter,
   useSearch
@@ -20,6 +21,7 @@ import {
   Group,
   Image,
   Loader,
+  Menu,
   Paper,
   Stack,
   Text,
@@ -39,6 +41,7 @@ import { useMe } from '../../hooks/useMe'
 import { GToast } from '../../components/common/GToast'
 import { useMedia } from '../../hooks/useMedia'
 import { useDark } from '../../hooks/useDark'
+import { modals } from '@mantine/modals'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -62,8 +65,9 @@ function RouteComponent() {
   const [prevReact, setPrevReact] = useState<'liked' | 'dislike' | undefined>()
   const queryClient = useQueryClient()
   const { isMobile } = useMedia()
+  const navigate = useNavigate()
 
-  const { getPost, createComment, reactPost } = usePost()
+  const { getPost, createComment, reactPost, deletePost } = usePost()
   const { data: profileData } = useMe()
 
   const {
@@ -167,6 +171,24 @@ function RouteComponent() {
     }
   }
 
+  const { mutate: handleDelete } = useMutation({
+    mutationKey: ['delete-post'],
+    mutationFn: () => {
+      return deletePost(postId)
+    },
+    onSuccess: () => {
+      GToast.success({
+        title: 'Delete post successfully!'
+      })
+      navigate({ to: '/app' })
+    },
+    onError: () => {
+      GToast.error({
+        title: 'Delete post failed!'
+      })
+    }
+  })
+
   const hashtags = postData?.hashTags
   const { isDark } = useDark()
 
@@ -252,16 +274,74 @@ function RouteComponent() {
                   </Stack>
                 </Flex>
                 {profileData?.id === postData?.profileId && (
-                  <Button
-                    component={Link}
-                    to={`/post/edit/${postId}`}
-                    variant="light"
-                    leftSection={<GIcon name="Pencil" size={18} />}
-                    radius="md"
-                    className="transition-transform duration-200 hover:scale-105"
-                  >
-                    Edit post
-                  </Button>
+                  // <Group>
+                  //   <Button
+                  //     variant="light"
+                  //     color="red"
+                  //     onClick={() => handleDelete()}
+                  //     radius={'md'}
+                  //     leftSection={<GIcon name="Trash" size={18} />}
+                  //   >
+                  //     Delete post
+                  //   </Button>
+                  //   <Button
+                  //     component={Link}
+                  //     to={`/post/edit/${postId}`}
+                  //     variant="light"
+                  //     leftSection={<GIcon name="Pencil" size={18} />}
+                  //     radius="md"
+                  //     className="transition-transform duration-200 hover:scale-105"
+                  //   >
+                  //     Edit post
+                  //   </Button>
+                  // </Group>
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon
+                        variant="subtle"
+                        size="lg"
+                        radius="xl"
+                        color="indigo"
+                      >
+                        <GIcon name="Dots" size={20} />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        component={Link}
+                        to={`/post/edit/${postId}`}
+                        leftSection={<GIcon name="Pencil" size={16} />}
+                        className="rounded-md py-2 hover:bg-indigo-50"
+                      >
+                        Edit post
+                      </Menu.Item>
+                      <Menu.Item
+                        leftSection={<GIcon name="Trash" size={16} />}
+                        color="red"
+                        onClick={() =>
+                          modals.openConfirmModal({
+                            title: <b>Delete post</b>,
+                            children: (
+                              <Text>Are you sure to delete this post?</Text>
+                            ),
+                            onConfirm: () => {
+                              handleDelete()
+                              modals.closeAll()
+                            },
+                            onCancel: () => modals.closeAll(),
+                            labels: {
+                              confirm: 'Delete',
+                              cancel: 'Cancel'
+                            },
+                            confirmProps: { color: 'red' }
+                          })
+                        }
+                        className="rounded-md py-2 hover:bg-red-50"
+                      >
+                        Delete post
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 )}
               </Group>
 
