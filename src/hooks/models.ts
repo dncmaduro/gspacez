@@ -782,3 +782,13 @@ export interface GetDiscussionCommentsResponse {
 export interface UpvoteCommentResponse {
   result: IDiscussionComment
 }
+
+export interface SummarizePostRequest {
+  content: string
+}
+
+export interface SummarizePostResponse {
+  result: {
+    content: string
+  }
+}
