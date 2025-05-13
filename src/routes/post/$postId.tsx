@@ -23,6 +23,7 @@ import {
   Loader,
   Menu,
   Paper,
+  Popover,
   Stack,
   Text,
   Tooltip
@@ -42,6 +43,7 @@ import { GToast } from '../../components/common/GToast'
 import { useMedia } from '../../hooks/useMedia'
 import { useDark } from '../../hooks/useDark'
 import { modals } from '@mantine/modals'
+import { Summary } from '../../components/post/Summary'
 
 export const Route = createFileRoute('/post/$postId')({
   component: RouteComponent,
@@ -274,27 +276,6 @@ function RouteComponent() {
                   </Stack>
                 </Flex>
                 {profileData?.id === postData?.profileId && (
-                  // <Group>
-                  //   <Button
-                  //     variant="light"
-                  //     color="red"
-                  //     onClick={() => handleDelete()}
-                  //     radius={'md'}
-                  //     leftSection={<GIcon name="Trash" size={18} />}
-                  //   >
-                  //     Delete post
-                  //   </Button>
-                  //   <Button
-                  //     component={Link}
-                  //     to={`/post/edit/${postId}`}
-                  //     variant="light"
-                  //     leftSection={<GIcon name="Pencil" size={18} />}
-                  //     radius="md"
-                  //     className="transition-transform duration-200 hover:scale-105"
-                  //   >
-                  //     Edit post
-                  //   </Button>
-                  // </Group>
                   <Menu>
                     <Menu.Target>
                       <ActionIcon
@@ -350,34 +331,56 @@ function RouteComponent() {
               </Text>
 
               {/* Hashtags section */}
-              <Group gap="md" mb={16}>
-                <Link to={`/squad/${postData?.squad.tagName}`}>
-                  <Group
-                    gap={8}
-                    className={`rounded-full border ${isDark ? 'border-gray-800' : 'border-gray-100'} bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50`}
-                    bg={isDark ? 'gray.8' : 'gray.0'}
-                  >
-                    <Avatar src={postData?.squad.avatarUrl} />
-                    <Text>{postData?.squad.name}</Text>
-                  </Group>
-                </Link>
-                {hashtags && hashtags.length > 0 && (
-                  <>
-                    {hashtags.map((tag: string) => (
-                      <Badge
-                        color="indigo"
-                        variant="outline"
-                        radius="xl"
-                        size="sm"
-                        key={tag}
-                        style={{ textTransform: 'initial' }}
-                      >
-                        # {tag}
-                      </Badge>
-                    ))}
-                  </>
-                )}
-              </Group>
+              <Flex justify={'space-between'}>
+                <Group gap="md" mb={16}>
+                  <Link to={`/squad/${postData?.squad.tagName}`}>
+                    <Group
+                      gap={8}
+                      className={`rounded-full border ${isDark ? 'border-gray-800' : 'border-gray-100'} bg-gray-50 px-3 py-1 transition-colors hover:bg-indigo-50`}
+                      bg={isDark ? 'gray.8' : 'gray.0'}
+                    >
+                      <Avatar src={postData?.squad.avatarUrl} />
+                      <Text>{postData?.squad.name}</Text>
+                    </Group>
+                  </Link>
+                  {hashtags && hashtags.length > 0 && (
+                    <>
+                      {hashtags.map((tag: string) => (
+                        <Badge
+                          color="indigo"
+                          variant="outline"
+                          radius="xl"
+                          size="sm"
+                          key={tag}
+                          style={{ textTransform: 'initial' }}
+                        >
+                          # {tag}
+                        </Badge>
+                      ))}
+                    </>
+                  )}
+                </Group>
+                <Popover
+                  withArrow
+                  width={400}
+                  position="bottom-start"
+                  shadow="md"
+                >
+                  <Popover.Target>
+                    <Button
+                      variant="gradient"
+                      radius={'xl'}
+                      gradient={{ from: 'violet', to: 'pink' }}
+                    >
+                      Summarize it
+                    </Button>
+                  </Popover.Target>
+
+                  <Popover.Dropdown p={16}>
+                    <Summary content={postData?.content.text || ''} />
+                  </Popover.Dropdown>
+                </Popover>
+              </Flex>
 
               {postData?.previewImage && (
                 <Box

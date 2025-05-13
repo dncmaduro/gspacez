@@ -4,7 +4,9 @@ import {
   GetAllChatResponse,
   GetChatHistoryResponse,
   SendChatMessageRequest,
-  SendChatMessageResponse
+  SendChatMessageResponse,
+  SummarizePostRequest,
+  SummarizePostResponse
 } from './models'
 
 export const useGemini = () => {
@@ -38,5 +40,15 @@ export const useGemini = () => {
     })
   }
 
-  return { sendChatMessage, getAllChat, getChatHistory }
+  const summarizePost = async (req: SummarizePostRequest) => {
+    return callApi<SummarizePostRequest, SummarizePostResponse>({
+      method: 'POST',
+      path: `/v1/profile-service/google-gemini/chat/summarize`,
+      accessToken,
+      onClearAuth: clearAuth,
+      data: req
+    })
+  }
+
+  return { sendChatMessage, getAllChat, getChatHistory, summarizePost }
 }
