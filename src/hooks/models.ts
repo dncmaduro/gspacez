@@ -792,3 +792,7 @@ export interface SummarizePostResponse {
     content: string
   }
 }
+
+export interface SendQuickChatRequest {
+  content: string
+}
