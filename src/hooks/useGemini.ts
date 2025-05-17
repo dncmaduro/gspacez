@@ -5,6 +5,7 @@ import {
   GetChatHistoryResponse,
   SendChatMessageRequest,
   SendChatMessageResponse,
+  SendQuickChatRequest,
   SummarizePostRequest,
   SummarizePostResponse
 } from './models'
@@ -50,5 +51,21 @@ export const useGemini = () => {
     })
   }
 
-  return { sendChatMessage, getAllChat, getChatHistory, summarizePost }
+  const sendQuickChat = async (req: SendQuickChatRequest) => {
+    return callApi<SendQuickChatRequest, SendChatMessageResponse>({
+      method: 'POST',
+      path: `/v1/profile-service/google-gemini/chat/quick`,
+      accessToken,
+      onClearAuth: clearAuth,
+      data: req
+    })
+  }
+
+  return {
+    sendChatMessage,
+    getAllChat,
+    getChatHistory,
+    summarizePost,
+    sendQuickChat
+  }
 }

@@ -15,10 +15,10 @@ import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { GIcon } from '../common/GIcon'
 import { useDark } from '../../hooks/useDark'
-import { v4 as uuidv4 } from 'uuid'
 import { useGemini } from '../../hooks/useGemini'
 import { postsPrompt } from '../../utils/search-prompt'
 import { GSimplePost } from '../common/GSimplePost'
+import { extractArrayFromLlmOutput } from '../../utils/llm-clean'
 
 interface Props {
   searchText: string
@@ -35,7 +35,7 @@ export const PostsSearch = ({
 }: Props) => {
   const { searchPosts } = useGSearch()
   const loaderRef = useRef<HTMLDivElement | null>(null)
-  const { sendChatMessage } = useGemini()
+  const { sendQuickChat } = useGemini()
   const [highlightIds, setHighlightIds] = useState<string[]>([])
   const { isDark } = useDark()
 
@@ -64,16 +64,24 @@ export const PostsSearch = ({
   const { mutate: highlightPost, isPending: isHighlighting } = useMutation({
     mutationFn: () => {
       if (postsData && promptSearch) {
-        return sendChatMessage({
-          content: postsPrompt(postsData.posts, promptSearch),
-          sessionId: uuidv4().replace(/-/g, '').slice(0, 20)
+        return sendQuickChat({
+          content: postsPrompt(postsData.posts, promptSearch)
         })
       }
       return Promise.reject(new Error('No post data available'))
     },
     onSuccess: (response) => {
-      const result = JSON.parse(response.data.result.content) as string[]
-      setHighlightIds(result)
+      try {
+        const arr = extractArrayFromLlmOutput(response.data.result.content)
+        console.log('Highlight ids:', arr)
+        setHighlightIds(arr)
+      } catch (err) {
+        console.error(
+          'Failed to extract array from LLM response:',
+          response.data.result.content,
+          err
+        )
+      }
     }
   })
 
@@ -113,7 +121,7 @@ export const PostsSearch = ({
       <Box p="md">
         <Flex align="center" mb="md" justify={'space-between'}>
           <Flex align={'center'}>
-            <GIcon name="Document" size={20} color="#4F46E5" />
+            <GIcon name="Script" size={20} color="#4F46E5" />
             <Text ml={8} fw={600} size="lg" c="indigo.8">
               Posts
             </Text>
@@ -139,7 +147,7 @@ export const PostsSearch = ({
             <Stack gap={16}>
               {postsData?.posts.length === 0 ? (
                 <Flex direction="column" align="center" py={30}>
-                  <GIcon name="Document" size={48} color="#CBD5E1" />
+                  <GIcon name="Script" size={48} color="#CBD5E1" />
                   <Text c="dimmed" mt={10}>
                     No posts found matching "{searchText}"
                   </Text>

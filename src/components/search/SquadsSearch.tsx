@@ -17,9 +17,9 @@ import { Link } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import { GIcon } from '../common/GIcon'
 import { useDark } from '../../hooks/useDark'
-import { v4 as uuidv4 } from 'uuid'
 import { useGemini } from '../../hooks/useGemini'
 import { squadsPrompt } from '../../utils/search-prompt'
+import { extractArrayFromLlmOutput } from '../../utils/llm-clean'
 
 interface Props {
   searchText: string
@@ -36,7 +36,7 @@ export const SquadsSearch = ({
 }: Props) => {
   const { searchSquads } = useGSearch()
   const loaderRef = useRef<HTMLDivElement | null>(null)
-  const { sendChatMessage } = useGemini()
+  const { sendQuickChat } = useGemini()
   const [highlightIds, setHighlightIds] = useState<string[]>([])
   const { isDark } = useDark()
 
@@ -65,16 +65,27 @@ export const SquadsSearch = ({
   const { mutate: highlightSquad, isPending: isHighlighting } = useMutation({
     mutationFn: () => {
       if (squadsData && promptSearch) {
-        return sendChatMessage({
-          content: squadsPrompt(squadsData.squads, promptSearch),
-          sessionId: uuidv4().replace(/-/g, '').slice(0, 20)
+        return sendQuickChat({
+          content: squadsPrompt(squadsData.squads, promptSearch)
         })
       }
       return Promise.reject(new Error('No squad data available'))
     },
     onSuccess: (response) => {
-      const result = JSON.parse(response.data.result.content) as string[]
-      setHighlightIds(result)
+      try {
+        const arr = extractArrayFromLlmOutput(response.data.result.content)
+        console.log('Highlight ids:', arr)
+        setHighlightIds(arr)
+      } catch (err) {
+        console.error(
+          'Failed to extract array from LLM response:',
+          response.data.result.content,
+          err
+        )
+      }
+    },
+    onError: (error) => {
+      console.error('Mutation error:', error)
     }
   })
 
