@@ -1,24 +1,24 @@
-import { Box, MantineColor, Stack, Text } from '@mantine/core'
+import { Box, Stack, Text } from '@mantine/core'
 import { LineChart } from '@mantine/charts'
 
 interface Props {
   data: {
-    data: {
-      [key: string]: number
-    }
-    date: string
+    month: string
+    value: number
   }[]
-  h: number
-  series: {
-    color: MantineColor
-    name: string
-  }[]
+  h?: number
   chartName: string
+  className?: string
 }
 
-export const GLineChart = ({ data, h, series, chartName }: Props) => {
+export const GLineChart = ({
+  data,
+  h = 400,
+  chartName,
+  className = ''
+}: Props) => {
   return (
-    <Box>
+    <Box className={className}>
       <Stack gap={8}>
         <Text size="lg" className="!font-bold" c="dimmed">
           {chartName}
@@ -26,9 +26,18 @@ export const GLineChart = ({ data, h, series, chartName }: Props) => {
         <LineChart
           data={data}
           h={h}
-          series={series}
-          curveType="linear"
-          dataKey="date"
+          series={[{ name: 'value', label: 'Month' }]}
+          curveType="natural"
+          dataKey="month"
+          gradientStops={[
+            { offset: 0, color: 'red.6' },
+            { offset: 20, color: 'orange.6' },
+            { offset: 40, color: 'yellow.5' },
+            { offset: 70, color: 'lime.5' },
+            { offset: 80, color: 'cyan.5' },
+            { offset: 100, color: 'blue.5' }
+          ]}
+          strokeWidth={3}
         />
       </Stack>
     </Box>

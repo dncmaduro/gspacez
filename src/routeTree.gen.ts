@@ -34,6 +34,9 @@ import { Route as IntegrationCallbackImport } from './routes/integration/callbac
 import { Route as DiscussionsNewImport } from './routes/discussions/new'
 import { Route as DiscussionsDiscussionIdImport } from './routes/discussions/$discussionId'
 import { Route as DevCropImport } from './routes/dev/crop'
+import { Route as AdminUsersIndexImport } from './routes/admin/users/index'
+import { Route as AdminSquadsIndexImport } from './routes/admin/squads/index'
+import { Route as AdminPostsIndexImport } from './routes/admin/posts/index'
 import { Route as SquadInviteTagNameImport } from './routes/squad/invite.$tagName'
 import { Route as SquadEditTagNameImport } from './routes/squad/edit.$tagName'
 import { Route as PostEditPostIdImport } from './routes/post/edit.$postId'
@@ -44,164 +47,182 @@ import { Route as DiscussionsEditDiscussionIdImport } from './routes/discussions
 const RecoveryRoute = RecoveryImport.update({
   id: '/recovery',
   path: '/recovery',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const TagsIndexRoute = TagsIndexImport.update({
   id: '/tags/',
   path: '/tags/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SearchIndexRoute = SearchIndexImport.update({
   id: '/search/',
   path: '/search/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeIndexRoute = MeIndexImport.update({
   id: '/me/',
   path: '/me/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const HistoryIndexRoute = HistoryIndexImport.update({
   id: '/history/',
   path: '/history/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const FeedbackIndexRoute = FeedbackIndexImport.update({
   id: '/feedback/',
   path: '/feedback/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ExploreIndexRoute = ExploreIndexImport.update({
   id: '/explore/',
   path: '/explore/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DiscussionsIndexRoute = DiscussionsIndexImport.update({
   id: '/discussions/',
   path: '/discussions/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AuthIndexRoute = AuthIndexImport.update({
   id: '/auth/',
   path: '/auth/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
   id: '/app/',
   path: '/app/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AiIndexRoute = AiIndexImport.update({
   id: '/ai/',
   path: '/ai/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AdminIndexRoute = AdminIndexImport.update({
   id: '/admin/',
   path: '/admin/',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadNewRoute = SquadNewImport.update({
   id: '/squad/new',
   path: '/squad/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadTagNameRoute = SquadTagNameImport.update({
   id: '/squad/$tagName',
   path: '/squad/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProfileProfileTagRoute = ProfileProfileTagImport.update({
   id: '/profile/$profileTag',
   path: '/profile/$profileTag',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostNewRoute = PostNewImport.update({
   id: '/post/new',
   path: '/post/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostPostIdRoute = PostPostIdImport.update({
   id: '/post/$postId',
   path: '/post/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MeEditRoute = MeEditImport.update({
   id: '/me/edit',
   path: '/me/edit',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const IntegrationCallbackRoute = IntegrationCallbackImport.update({
   id: '/integration/callback',
   path: '/integration/callback',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DiscussionsNewRoute = DiscussionsNewImport.update({
   id: '/discussions/new',
   path: '/discussions/new',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DiscussionsDiscussionIdRoute = DiscussionsDiscussionIdImport.update({
   id: '/discussions/$discussionId',
   path: '/discussions/$discussionId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DevCropRoute = DevCropImport.update({
   id: '/dev/crop',
   path: '/dev/crop',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminUsersIndexRoute = AdminUsersIndexImport.update({
+  id: '/admin/users/',
+  path: '/admin/users/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminSquadsIndexRoute = AdminSquadsIndexImport.update({
+  id: '/admin/squads/',
+  path: '/admin/squads/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminPostsIndexRoute = AdminPostsIndexImport.update({
+  id: '/admin/posts/',
+  path: '/admin/posts/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadInviteTagNameRoute = SquadInviteTagNameImport.update({
   id: '/squad/invite/$tagName',
   path: '/squad/invite/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const SquadEditTagNameRoute = SquadEditTagNameImport.update({
   id: '/squad/edit/$tagName',
   path: '/squad/edit/$tagName',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const PostEditPostIdRoute = PostEditPostIdImport.update({
   id: '/post/edit/$postId',
   path: '/post/edit/$postId',
-  getParentRoute: () => rootRoute
+  getParentRoute: () => rootRoute,
 } as any)
 
 const DiscussionsEditDiscussionIdRoute =
   DiscussionsEditDiscussionIdImport.update({
     id: '/discussions/edit/$discussionId',
     path: '/discussions/edit/$discussionId',
-    getParentRoute: () => rootRoute
+    getParentRoute: () => rootRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -397,6 +418,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SquadInviteTagNameImport
       parentRoute: typeof rootRoute
     }
+    '/admin/posts/': {
+      id: '/admin/posts/'
+      path: '/admin/posts'
+      fullPath: '/admin/posts'
+      preLoaderRoute: typeof AdminPostsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/squads/': {
+      id: '/admin/squads/'
+      path: '/admin/squads'
+      fullPath: '/admin/squads'
+      preLoaderRoute: typeof AdminSquadsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -430,6 +472,9 @@ export interface FileRoutesByFullPath {
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
+  '/admin/posts': typeof AdminPostsIndexRoute
+  '/admin/squads': typeof AdminSquadsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -460,6 +505,9 @@ export interface FileRoutesByTo {
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
+  '/admin/posts': typeof AdminPostsIndexRoute
+  '/admin/squads': typeof AdminSquadsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
 }
 
 export interface FileRoutesById {
@@ -491,6 +539,9 @@ export interface FileRoutesById {
   '/post/edit/$postId': typeof PostEditPostIdRoute
   '/squad/edit/$tagName': typeof SquadEditTagNameRoute
   '/squad/invite/$tagName': typeof SquadInviteTagNameRoute
+  '/admin/posts/': typeof AdminPostsIndexRoute
+  '/admin/squads/': typeof AdminSquadsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -523,6 +574,9 @@ export interface FileRouteTypes {
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
+    | '/admin/posts'
+    | '/admin/squads'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -552,6 +606,9 @@ export interface FileRouteTypes {
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
+    | '/admin/posts'
+    | '/admin/squads'
+    | '/admin/users'
   id:
     | '__root__'
     | '/'
@@ -581,6 +638,9 @@ export interface FileRouteTypes {
     | '/post/edit/$postId'
     | '/squad/edit/$tagName'
     | '/squad/invite/$tagName'
+    | '/admin/posts/'
+    | '/admin/squads/'
+    | '/admin/users/'
   fileRoutesById: FileRoutesById
 }
 
@@ -612,6 +672,9 @@ export interface RootRouteChildren {
   PostEditPostIdRoute: typeof PostEditPostIdRoute
   SquadEditTagNameRoute: typeof SquadEditTagNameRoute
   SquadInviteTagNameRoute: typeof SquadInviteTagNameRoute
+  AdminPostsIndexRoute: typeof AdminPostsIndexRoute
+  AdminSquadsIndexRoute: typeof AdminSquadsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -641,7 +704,10 @@ const rootRouteChildren: RootRouteChildren = {
   DiscussionsEditDiscussionIdRoute: DiscussionsEditDiscussionIdRoute,
   PostEditPostIdRoute: PostEditPostIdRoute,
   SquadEditTagNameRoute: SquadEditTagNameRoute,
-  SquadInviteTagNameRoute: SquadInviteTagNameRoute
+  SquadInviteTagNameRoute: SquadInviteTagNameRoute,
+  AdminPostsIndexRoute: AdminPostsIndexRoute,
+  AdminSquadsIndexRoute: AdminSquadsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -680,7 +746,10 @@ export const routeTree = rootRoute
         "/discussions/edit/$discussionId",
         "/post/edit/$postId",
         "/squad/edit/$tagName",
-        "/squad/invite/$tagName"
+        "/squad/invite/$tagName",
+        "/admin/posts/",
+        "/admin/squads/",
+        "/admin/users/"
       ]
     },
     "/": {
@@ -763,6 +832,15 @@ export const routeTree = rootRoute
     },
     "/squad/invite/$tagName": {
       "filePath": "squad/invite.$tagName.tsx"
+    },
+    "/admin/posts/": {
+      "filePath": "admin/posts/index.tsx"
+    },
+    "/admin/squads/": {
+      "filePath": "admin/squads/index.tsx"
+    },
+    "/admin/users/": {
+      "filePath": "admin/users/index.tsx"
     }
   }
 }
