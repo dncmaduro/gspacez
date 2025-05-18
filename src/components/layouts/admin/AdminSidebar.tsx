@@ -11,6 +11,12 @@ import { GIcon } from '../../common/GIcon'
 import { SidebarPart } from '../SidebarPart'
 import { SidebarItem } from '../SidebarItem'
 import { useLogo } from '../../../hooks/useLogo'
+import { useMutation } from '@tanstack/react-query'
+import { useAuth } from '../../../hooks/useAuth'
+import { useNavigate } from '@tanstack/react-router'
+import { useAuthStore } from '../../../store/authStore'
+import { useCallbackStore } from '../../../store/callbackStore'
+import { GToast } from '../../common/GToast'
 
 interface Props {
   toggle: () => void
@@ -19,6 +25,33 @@ interface Props {
 
 export const AdminSidebar = ({ toggle, opened }: Props) => {
   const { logo } = useLogo()
+  const { signOut } = useAuth()
+  const navigate = useNavigate()
+  const { clearAuth } = useAuthStore()
+  const { clearCallbackUrl } = useCallbackStore()
+
+  const { mutate: onSignOut } = useMutation({
+    mutationKey: ['sign-out'],
+    mutationFn: () => signOut(),
+    onSuccess: () => {
+      clearAuth()
+      clearCallbackUrl()
+      navigate({ to: '/auth' })
+      GToast.success({
+        title: 'Sign out successfully!'
+      })
+    },
+    onError: () => {
+      clearAuth()
+      clearCallbackUrl()
+      navigate({ to: '/auth' })
+      GToast.error({
+        title: 'Sign out failed!',
+        subtitle:
+          'Something happen! You should check other devices that you logged in'
+      })
+    }
+  })
 
   return (
     <Box
@@ -95,6 +128,7 @@ export const AdminSidebar = ({ toggle, opened }: Props) => {
           leftSection={<GIcon name="Power" size={16} />}
           color="red"
           w={'100%'}
+          onClick={() => onSignOut()}
         >
           Sign out
         </Button>
