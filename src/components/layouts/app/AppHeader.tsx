@@ -465,6 +465,8 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
               <Menu.Item
                 leftSection={<GIcon name="Settings" size={16} />}
                 className="rounded-md py-2 hover:bg-indigo-50"
+                to="/settings"
+                component={Link}
               >
                 Settings
               </Menu.Item>
