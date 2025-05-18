@@ -69,7 +69,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     onSuccess: () => {
       clearAuth()
       clearCallbackUrl()
-      navigate({ to: '/' })
+      navigate({ to: '/auth' })
       GToast.success({
         title: 'Sign out successfully!'
       })
@@ -77,7 +77,7 @@ export const AppHeader = ({ hideSearchInput }: Props) => {
     onError: () => {
       clearAuth()
       clearCallbackUrl()
-      navigate({ to: '/' })
+      navigate({ to: '/auth' })
       GToast.error({
         title: 'Sign out failed!',
         subtitle:
