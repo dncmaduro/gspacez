@@ -29,14 +29,16 @@ export const AdminSidebar = ({ toggle, opened }: Props) => {
       pb={24}
     >
       <Box>
-        <Box h={60}>
+        <Box h={60} className="flex items-center">
           <Image
             src={logo}
             alt="Logo"
             mx={'auto'}
-            h={'100%'}
+            h={'60%'}
             w={'auto'}
+            fit="contain"
             hidden={!opened}
+            my={'auto'}
           />
         </Box>
         <Group justify={opened ? 'space-between' : 'center'}>

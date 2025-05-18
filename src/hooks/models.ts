@@ -796,3 +796,57 @@ export interface SummarizePostResponse {
 export interface SendQuickChatRequest {
   content: string
 }
+
+export interface GetPostsStatsRequest {
+  fromDate: string
+  toDate: string
+}
+
+export interface GetUsersStatsRequest {
+  fromDate: string
+  toDate: string
+}
+
+export interface GetSquadsStatsRequest {
+  fromDate: string
+  toDate: string
+}
+
+export interface GetPostsStatsResponse {
+  result: {
+    fromDate: string
+    toDate: string
+    wisePosts: {
+      [year: string]: {
+        [month: string]: number
+      }
+    }
+    totalPosts: number
+  }
+}
+
+export interface GetUsersStatsResponse {
+  result: {
+    fromDate: string
+    toDate: string
+    wiseUsers: {
+      [year: string]: {
+        [month: string]: number
+      }
+    }
+    totalUsers: number
+  }
+}
+
+export interface GetSquadsStatsResponse {
+  result: {
+    fromDate: string
+    toDate: string
+    wiseSquads: {
+      [year: string]: {
+        [month: string]: number
+      }
+    }
+    totalSquads: number
+  }
+}

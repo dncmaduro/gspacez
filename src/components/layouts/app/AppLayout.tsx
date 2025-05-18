@@ -34,7 +34,7 @@ export const AppLayout = ({
   useEffect(() => {
     if (!accessToken) {
       setCallbackUrl(window.location.pathname)
-      navigate({ to: '/' })
+      navigate({ to: '/auth' })
     }
   }, [accessToken])
 
